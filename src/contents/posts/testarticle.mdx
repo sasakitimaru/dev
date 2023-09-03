@@ -13,7 +13,7 @@ Go言語は、シンプルで効率的なプログラミング言語として知
 
 Go言語でデータベースに接続するには、`database/sql`パッケージを使用します。
 
-```go
+```go:go
 import (
     "database/sql"
     _ "github.com/go-sql-driver/mysql"
@@ -26,7 +26,7 @@ func main() {
 ```
 ## CRUD操作
 ### create操作
-```go
+```go:go
 _, err := db.Exec("INSERT INTO users(name, age) VALUES(?, ?)", "Alice", 25)
 ```
 ### read操作
