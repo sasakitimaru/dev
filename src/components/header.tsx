@@ -1,36 +1,7 @@
-"use client";
 import Link from "next/link";
+import Image from "next/image";
 import React from "react";
-import { styled, alpha } from "@mui/material/styles";
-import InputBase from "@mui/material/InputBase";
-import SearchIcon from "@mui/icons-material/Search";
-
-const SearchIconWrapper = styled("div")(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: "100%",
-  position: "absolute",
-  pointerEvents: "none",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: "inherit",
-  "& .MuiInputBase-input": {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create("width"),
-    width: "100%",
-    [theme.breakpoints.up("sm")]: {
-      width: "12ch",
-      "&:focus": {
-        width: "20ch",
-      },
-    },
-  },
-}));
+import SearchIcon from "./searchIcon";
 
 const Header = () => {
   return (
@@ -41,24 +12,20 @@ const Header = () => {
         </Link>
       </div>
       <nav>
-        <ul className="text-xl text-center items-center lg:text-lg lg:flex  lg:pt-0">
-          <li className="hidden md:block">
-            <div className="relative rounded-md bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 hover:dark:bg-gray-500 ml-0 w-full">
-              <SearchIconWrapper>
-                <SearchIcon />
-              </SearchIconWrapper>
-              <StyledInputBase
-                placeholder="Search…"
-                inputProps={{ "aria-label": "search" }}
-              />
-            </div>
+        <ul className="text-xl text-center items-center lg:text-lg flex lg:pt-0">
+          <li>
+            <SearchIcon />
           </li>
-          <li className="block md:hidden">
-            <div className="relative cursor-pointer rounded-md hover:opacity-75 h-10 w-10">
-              <SearchIconWrapper>
-                <SearchIcon />
-              </SearchIconWrapper>
-            </div>
+          <li className="hidden sm:block">
+            <Link href="https://github.com/sasakitimaru" target="blank">
+              <Image
+                src="/myLovelyCat.jpg"
+                alt="cat"
+                className="w-10 h-10 ml-4 overflow-hidden rounded-full"
+                width={1000}
+                height={1000}
+              />
+            </Link>
           </li>
         </ul>
       </nav>

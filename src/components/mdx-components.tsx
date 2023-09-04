@@ -2,7 +2,8 @@ import Image from "next/image"
 import { useMDXComponent } from "next-contentlayer/hooks"
 
 const mdxComponents = {
-  Image,
+  // Image,
+  Image: (props: any) => <Image {...props} />,
 }
 
 interface MdxProps {

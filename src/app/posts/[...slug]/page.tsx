@@ -1,10 +1,10 @@
 import React, { Suspense } from "react";
 import { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { allPosts } from "contentlayer/generated";
 import { format, parseISO } from "date-fns";
 import { Mdx } from "@/components/mdx-components";
+import Tag from "@/components/tag";
 
 interface PostProps {
   params: {
@@ -14,8 +14,8 @@ interface PostProps {
 
 async function getPostFromParams(params: PostProps["params"]) {
   const slug = params?.slug?.join("/");
-  const post = allPosts.find((post) => post.slugAsParams === slug);
-
+  const decodedString = decodeURIComponent(slug);
+  const post = allPosts.find((post) => post.slugAsParams === decodedString);
   if (!post) {
     null;
   }
@@ -46,7 +46,6 @@ export async function generateStaticParams(): Promise<PostProps["params"][]> {
 
 const PostPage: React.FC<PostProps> = async ({ params }) => {
   const post = await getPostFromParams(params);
-
   if (!post) {
     notFound();
   }
@@ -66,13 +65,9 @@ const PostPage: React.FC<PostProps> = async ({ params }) => {
             <span>{post.readingTime.text}</span>
             <span>{` • `}</span>
             <span>
-              <Link
-                href={`/categories/${encodeURIComponent(
-                  post.category.toLowerCase()
-                )}`}
-              >
-                {post.category}
-              </Link>
+              {post.categories.map((tag, index) => (
+                <Tag label={tag} key={index}/>
+              ))}
             </span>
           </p>
         </header>
