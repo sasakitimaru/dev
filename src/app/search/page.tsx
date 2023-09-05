@@ -31,7 +31,7 @@ function getPostsFromParams(searchParams: SearchProps["searchParams"]) {
 }
 
 const SearchPage: React.FC<SearchProps> = async ({ searchParams }) => {
-  const articles = searchParams.q?.length !== 0 ? await getPostsFromParams(searchParams) : await allPosts.map((post) => {
+  const articles = searchParams.q ? await getPostsFromParams(searchParams) : await allPosts.map((post) => {
     const article = {
       id: post._id,
       title: post.title,
