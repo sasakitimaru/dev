@@ -10,6 +10,7 @@ const SearchField = () => {
         type="text"
         className="w-full h-10 px-4 p-4 rounded-full outline-blue-400 bg-inherit"
         placeholder="Search"
+        autoFocus
         onChange={(e) => {
           router.push(`/search?q=${e.target.value}`);
         }}

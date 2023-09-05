@@ -1,16 +1,24 @@
+"use client";
 import Link from "next/link";
 import React from "react";
+import { useRouter } from "next/navigation";
 
 interface TagProps {
   label: string;
-  key: number;
+  idx: number;
 }
 
-const Tag: React.FC<TagProps> = ({ label, key }) => {
+const Tag: React.FC<TagProps> = ({ label, idx }) => {
+  const router = useRouter();
+  const handleRouting = () => {
+    router.push(`/categories/${label}`);
+  };
   return (
-    <div key={key} className="border border-gray-300 rounded-full h-6 inline-flex items-center mr-1 px-2 cursor-pointer hover:bg-gray-200 hover:dark:bg-gray-700">
-      {/* <img src={iconLink} className="w-4 h-4 mr-2" /> */}
-      <p className="text-xs whitespace-nowrap">{label}</p>
+    <div onClick={handleRouting} key={idx}>
+      <div className="border border-gray-300 rounded-full h-6 inline-flex items-center mr-2 px-2 cursor-pointer hover:bg-gray-200 hover:dark:bg-gray-700">
+        {/* <img src={iconLink} className="w-4 h-4 mr-2" /> */}
+        <span className="text-xs whitespace-nowrap">{label}</span>
+      </div>
     </div>
   );
 };

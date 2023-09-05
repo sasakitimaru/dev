@@ -16,7 +16,7 @@ export default function Home() {
     return article;
   });
   return (
-    <main className="flex flex-col justify-center items-center mb-10 px-8 sm:px-20 lg:px-40 mx-auto">
+    <main className="flex flex-col justify-center mt-20 items-center mb-10 px-8 sm:px-20 lg:px-40 mx-auto">
       <h1 className="text-2xl sm:text-4xl text-left mb-4 font-bold w-full">
         Tech Articles
       </h1>

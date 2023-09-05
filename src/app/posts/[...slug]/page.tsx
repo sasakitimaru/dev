@@ -50,7 +50,7 @@ const PostPage: React.FC<PostProps> = async ({ params }) => {
     notFound();
   }
   return (
-    <article className="p-6 lg:px-10 prose prose-sm bg-white dark:bg-gray-800 rounded-lg lg:prose-base dark:prose-invert mx-auto mb-10">
+    <article className="mt-20 p-6 lg:px-10 prose prose-sm bg-white dark:bg-gray-800 rounded-lg lg:prose-base dark:prose-invert mx-auto mb-10">
       <Suspense fallback={<div>Loading...</div>}>
         <header>
           <h1 className="mb-2">{post.title}</h1>
@@ -59,17 +59,17 @@ const PostPage: React.FC<PostProps> = async ({ params }) => {
               {post.description}
             </p>
           )}
-          <p className="space-x-1 text-xs text-gray-500">
+          <div className="space-x-1 text-xs text-gray-500">
             <span>{format(parseISO(post.date), "MMMM dd, yyyy")}</span>
             <span>{` • `}</span>
             <span>{post.readingTime.text}</span>
             <span>{` • `}</span>
-            <span>
+            <span className="flex mt-2">
               {post.categories.map((tag, index) => (
-                <Tag label={tag} key={index}/>
+                <Tag label={tag} idx={index}/>
               ))}
             </span>
-          </p>
+          </div>
         </header>
         <hr className="my-6" />
         <Mdx code={post.body.code} />

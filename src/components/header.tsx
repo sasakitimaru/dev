@@ -6,7 +6,14 @@ import SearchIcon from "./searchIcon";
 const Header = () => {
   return (
     <nav className="lg:px-32 px-6 bg-white dark:bg-gray-800 shadow-md flex flex-wrap items-center md:py-2 fixed z-10 w-full top-0">
-      <div className="flex-1 flex justify-between items-center">
+      <div className="flex-1 flex items-center">
+        <Image
+          src="/draw1.svg"
+          alt="homeicon"
+          className="w-10 h-10 overflow-hidden rounded-full"
+          width={100}
+          height={100}
+        />
         <Link href="/" className="m-3">
           <div className="font-bold">sasakitiBlog</div>
         </Link>
