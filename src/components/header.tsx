@@ -15,7 +15,7 @@ const Header = () => {
           height={100}
         />
         <Link href="/" className="m-3">
-          <div className="font-bold">sasakitiBlog</div>
+          <div className="font-bold">sasakiti-dev</div>
         </Link>
       </div>
       <nav>

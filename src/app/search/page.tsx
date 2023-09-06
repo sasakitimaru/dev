@@ -3,7 +3,6 @@ import ArticleCard from "@/components/articlecard";
 import SentimentVeryDissatisfiedIcon from "@mui/icons-material/SentimentVeryDissatisfied";
 import SearchField from "@/components/search";
 import { allPosts } from "contentlayer/generated";
-import { all } from "axios";
 
 interface SearchProps {
   searchParams: {

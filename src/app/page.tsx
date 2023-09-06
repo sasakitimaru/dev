@@ -7,7 +7,6 @@ import { getCsrfToken } from "@/lib/postgresAPI";
 export default async function Home() {
   // await getCsrfToken();
   const res = await getArticles();
-  console.log("articles:", res.data);
   const prevArticleData = res.data;
   const articles = allPosts.map((post) => {
     const article: Article = {

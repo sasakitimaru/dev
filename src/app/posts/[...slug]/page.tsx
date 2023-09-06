@@ -5,11 +5,19 @@ import { allPosts } from "contentlayer/generated";
 import { format, parseISO } from "date-fns";
 import { Mdx } from "@/components/mdx-components";
 import Tag from "@/components/tag";
+import { getArticles } from "@/lib/postgresAPI";
+import { FavoriteIconAnim } from "@/components/likesButton";
 
 interface PostProps {
   params: {
     slug: string[];
   };
+}
+
+async function getArticlesData(title: string) {
+  const res = await getArticles();
+  const articlesData = res.data;
+  return articlesData.find((article) => article.title === title);
 }
 
 async function getPostFromParams(params: PostProps["params"]) {
@@ -49,32 +57,37 @@ const PostPage: React.FC<PostProps> = async ({ params }) => {
   if (!post) {
     notFound();
   }
+  const articleData = await getArticlesData(post.title);
   return (
-    <article className="mt-20 p-6 lg:px-10 prose prose-sm bg-white dark:bg-gray-800 rounded-lg lg:prose-base dark:prose-invert mx-auto mb-10">
-      <Suspense fallback={<div>Loading...</div>}>
-        <header>
-          <h1 className="mb-2">{post.title}</h1>
-          {post.description && (
-            <p className="text-xl mt-0 mb-6 text-gray-700 dark:text-gray-200">
-              {post.description}
-            </p>
-          )}
-          <div className="space-x-1 text-xs text-gray-500">
-            <span>{format(parseISO(post.date), "MMMM dd, yyyy")}</span>
-            <span>{` • `}</span>
-            <span>{post.readingTime.text}</span>
-            <span>{` • `}</span>
-            <span className="flex mt-2">
-              {post.categories.map((tag, index) => (
-                <Tag label={tag} idx={index}/>
-              ))}
-            </span>
-          </div>
-        </header>
-        <hr className="my-6" />
-        <Mdx code={post.body.code} />
-      </Suspense>
-    </article>
+    <div className="flex justify-center">
+      <article className="relative mt-20 p-6 lg:px-10 prose prose-sm bg-white dark:bg-gray-800 rounded-lg lg:prose-base dark:prose-invert mb-10">
+        <Suspense fallback={<div>Loading...</div>}>
+          <header>
+            <h1 className="mb-2">{post.title}</h1>
+            {post.description && (
+              <p className="text-xl mt-0 mb-6 text-gray-700 dark:text-gray-200">
+                {post.description}
+              </p>
+            )}
+            <div className="space-x-1 text-xs text-gray-500">
+              <span>{format(parseISO(post.date), "MMMM dd, yyyy")}</span>
+              <span>{` • `}</span>
+              <span>{post.readingTime.text}</span>
+              <span>{` • `}</span>
+              <span className="flex mt-2">
+                {post.categories.map((tag, index) => (
+                  <Tag label={tag} idx={index} />
+                ))}
+              </span>
+            </div>
+          </header>
+          <hr className="my-6" />
+          <Mdx code={post.body.code} />
+          <hr />
+        <FavoriteIconAnim article={articleData}/>
+        </Suspense>
+      </article>
+    </div>
   );
 };
 

@@ -18,8 +18,8 @@ export type Article = {
 
 export interface ArticlesRequest {
   id?: number;
-  title?: string;
-  likes?: number;
+  title: string;
+  likes: number;
 }
 
 export interface ArticlesResponse extends ArticlesRequest {}
