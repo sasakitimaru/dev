@@ -6,7 +6,6 @@ export const getCsrfToken = async () => {
   const { data } = await axios.get<CsrfToken>(
     `${process.env.BACK_END_API_URL}/csrf`
   );
-  console.log("data is here:",data);
   axios.defaults.headers.common["X-CSRF-Token"] = data.csrfToken;
 };
 

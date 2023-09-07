@@ -12,7 +12,6 @@ interface ContentProps {
 const CommentList: React.FC<ContentProps> = ({ content, articleId }) => {
   const [isClicked, setIsClicked] = React.useState(false);
   const dateObj = new Date(content.created_at);
-  console.log("content:", content);
 
   return (
     <div

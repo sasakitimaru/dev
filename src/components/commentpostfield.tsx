@@ -41,18 +41,14 @@ const CommentPostField: React.FC<CommentPostFieldProps> = ({
   };
 
   const handleSubmit = async (content: CommentRequest | ReplyRequest) => {
-    console.log("content:", content);
     if (content.comment?.length <= 5 || content.comment?.length >= 100) {
       alert("コメントは5文字以上100文字以下で入力してください。");
       return;
     }
-    console.log("isReply:", content.isReply);
-    console.log("isReplyprops:", isReply);
     try {
       if (!isReply) await createComment(content as CommentRequest);
       else {
         const res = await createReply(content as ReplyRequest);
-        console.log("createres:", res);
       }
       router.refresh();
       clearSendedData();
