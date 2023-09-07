@@ -1,5 +1,7 @@
 import type { Config } from "tailwindcss";
-const { fontFamily } = require("tailwindcss/defaultTheme")
+const { fontFamily } = require("tailwindcss/defaultTheme");
+
+const plugin = require("tailwindcss/plugin");
 
 const config: Config = {
   content: [
@@ -8,7 +10,16 @@ const config: Config = {
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   darkMode: "class",
-  plugins: [require("@tailwindcss/typography")],
+  plugins: [
+    require("@tailwindcss/typography"),
+    plugin(({ addUtilities }: { addUtilities: any }) => {
+      addUtilities({
+        ".no-overflow-anchoring": {
+          "overflow-anchor": "none",
+        },
+      });
+    }),
+  ],
   theme: {
     container: {
       center: true,

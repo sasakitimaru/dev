@@ -8,6 +8,7 @@ import Tag from "@/components/tag";
 import { getArticles } from "@/lib/postgresAPI";
 import { FavoriteIconAnim } from "@/components/likesButton";
 import Twittershare from "@/components/twittershare";
+import CommentField from "@/components/comment";
 
 interface PostProps {
   params: {
@@ -60,7 +61,7 @@ const PostPage: React.FC<PostProps> = async ({ params }) => {
   }
   const articleData = await getArticlesData(post.title);
   return (
-    <div className="flex justify-center">
+    <div className="sm:flex sm:flex-col sm:items-center">
       <article className="relative mt-20 p-6 lg:px-10 prose prose-sm bg-white dark:bg-gray-800 rounded-lg lg:prose-base dark:prose-invert mb-10">
         <Suspense fallback={<div>Loading...</div>}>
           <header>
@@ -91,6 +92,7 @@ const PostPage: React.FC<PostProps> = async ({ params }) => {
           </div>
         </Suspense>
       </article>
+      {articleData && <CommentField articleId={articleData.id}/>}
     </div>
   );
 };

@@ -15,7 +15,7 @@ const Twittershare: React.FC<TwitterIconProps> = ({ title }) => {
     <TwitterShareButton title={title} url={url}>
       <div className="flex items-center border border-gray-400 hover:bg-gray-200 dark:hover:bg-slate-700 rounded-xl">
         <TwitterIcon fontSize="medium" className="ml-2"/>
-        <p className="mr-2 my-1">share</p>
+        <p className="mr-2 my-1 md:mt-1 md:mb-1">share</p>
       </div>
     </TwitterShareButton>
   );
