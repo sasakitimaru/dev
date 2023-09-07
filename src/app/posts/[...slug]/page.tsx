@@ -7,6 +7,7 @@ import { Mdx } from "@/components/mdx-components";
 import Tag from "@/components/tag";
 import { getArticles } from "@/lib/postgresAPI";
 import { FavoriteIconAnim } from "@/components/likesButton";
+import Twittershare from "@/components/twittershare";
 
 interface PostProps {
   params: {
@@ -84,7 +85,10 @@ const PostPage: React.FC<PostProps> = async ({ params }) => {
           <hr className="my-6" />
           <Mdx code={post.body.code} />
           <hr />
-        <FavoriteIconAnim article={articleData}/>
+          <div className="flex flex-row items-center justify-between mx-auto w-10/12">
+            <FavoriteIconAnim article={articleData} />
+            <Twittershare title={post.title} />
+          </div>
         </Suspense>
       </article>
     </div>

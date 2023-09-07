@@ -70,7 +70,7 @@ export const FavoriteIconAnim: React.FC<FavoriteIconAnimProps> = ({
           speed={1}
           keepLastFrame
           src={heartAnimation}
-          className="w-48 h-48 overflow-hidden rounded-full absolute -top-[77px] -left-[77px]"
+          className="w-48 h-48 overflow-hidden rounded-full absolute -top-[77.5px] -left-[77.5px]"
         />
       </button>
       <p className="text-center text-sm ml-2">{likes}</p>
