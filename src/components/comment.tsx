@@ -28,6 +28,7 @@ const getComments = async (id: number) => {
 
 const CommentField = async ({ articleId }: { articleId: number }) => {
   const comments = await getComments(articleId);
+  console.log("articleId:",articleId)
   return (
     <div className="bg-white dark:bg-gray-800 w-full rounded-lg prose prose-sm lg:prose-base dark:prose-invert p-4 mt-10 mb-10 lg:px-8 ">
       <h3 className="mb-2 p-2 text-center te border-b-[1px] border-gray-300 dark:border-gray-700">
