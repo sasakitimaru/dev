@@ -11,7 +11,8 @@ interface PostProps {
 
 async function getPostsFromParams(params: PostProps["params"]) {
   const category = params?.category;
-  const lowerCaseCategory = category.toLowerCase();
+  const lowerCaseCategory = decodeURIComponent(category).toLowerCase();
+  console.log(lowerCaseCategory)
   const posts = allPosts.filter((post) => {
     return post.categories.some(
       (cat) => cat.toLowerCase() === lowerCaseCategory
