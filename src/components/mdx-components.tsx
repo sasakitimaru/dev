@@ -11,7 +11,6 @@ interface MdxProps {
 }
 
 export function Mdx({ code }: MdxProps) {
-  /* eslint-disable  @typescript-eslint/no-explicit-any */
   const MDXContent = useMDXComponent(code) as any
 
   return <MDXContent components={mdxComponents} />
