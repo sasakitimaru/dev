@@ -1,8 +1,8 @@
+import React from "react";
 import ArticleCard from "@/components/articlecard";
 import { createArticles, getArticles } from "@/lib/postgresAPI";
 import { Article } from "@/types/type";
 import { allPosts } from "contentlayer/generated";
-import { getCsrfToken } from "@/lib/postgresAPI";
 
 export default async function Home() {
   // await getCsrfToken();
@@ -39,8 +39,10 @@ export default async function Home() {
       </h1>
       <hr className="w-full mb-8" />
       <div className="grid gap-y-8 sm:gap-16 grid-cols-1 sm:grid-cols-2">
-        {articles.map((article) => (
+        {articles.map((article, index) => (
+          <React.Fragment key={index}>
           <ArticleCard article={article} />
+          </React.Fragment>
         ))}
       </div>
     </main>
