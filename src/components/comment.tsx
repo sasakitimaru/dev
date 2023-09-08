@@ -37,12 +37,14 @@ const CommentField = async ({ articleId }: { articleId: number }) => {
         comments.map((comment, index) => (
           <React.Fragment key={index}>
             <CommentList content={comment} articleId={articleId} />
-            {comment.replies?.map((reply) => (
-              <CommentList content={reply} articleId={articleId} />
+            {comment.replies?.map((reply, index) => (
+              <React.Fragment key={index}>
+                <CommentList content={reply} articleId={articleId} />
+              </React.Fragment>
             ))}
           </React.Fragment>
         ))}
-      <CommentPostField articleId={articleId} isReply={false}/>
+      <CommentPostField articleId={articleId} isReply={false} />
     </div>
   );
 };

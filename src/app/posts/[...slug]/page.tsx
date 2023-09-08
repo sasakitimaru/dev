@@ -78,7 +78,9 @@ const PostPage: React.FC<PostProps> = async ({ params }) => {
               <span>{` • `}</span>
               <span className="flex mt-2">
                 {post.categories.map((tag, index) => (
-                  <Tag label={tag} idx={index} />
+                  <React.Fragment key={index}>
+                    <Tag label={tag} />
+                  </React.Fragment>
                 ))}
               </span>
             </div>
@@ -92,7 +94,7 @@ const PostPage: React.FC<PostProps> = async ({ params }) => {
           </div>
         </Suspense>
       </article>
-      {articleData && <CommentField articleId={articleData.id}/>}
+      {articleData && <CommentField articleId={articleData.id} />}
     </div>
   );
 };

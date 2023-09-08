@@ -30,18 +30,20 @@ function getPostsFromParams(searchParams: SearchProps["searchParams"]) {
 }
 
 const SearchPage: React.FC<SearchProps> = async ({ searchParams }) => {
-  const articles = searchParams.q ? await getPostsFromParams(searchParams) : await allPosts.map((post) => {
-    const article = {
-      id: post._id,
-      title: post.title,
-      slug: post.slug,
-      icon: post.icon,
-      description: post.description,
-      date: post.date,
-      categories: post.categories,
-    };
-    return article;
-  });
+  const articles = searchParams.q
+    ? await getPostsFromParams(searchParams)
+    : await allPosts.map((post) => {
+        const article = {
+          id: post._id,
+          title: post.title,
+          slug: post.slug,
+          icon: post.icon,
+          description: post.description,
+          date: post.date,
+          categories: post.categories,
+        };
+        return article;
+      });
   return (
     <main className="flex flex-col bg-white dark:bg-gray-900 h-screen py-24 justify-cente items-center px-8 sm:px-20 lg:px-40 mx-auto">
       <SearchField />
@@ -55,8 +57,10 @@ const SearchPage: React.FC<SearchProps> = async ({ searchParams }) => {
         </div>
       ) : (
         <div className="grid gap-y-8 sm:gap-16 grid-cols-1 sm:grid-cols-2 mt-8">
-          {articles.map((article) => (
-            <ArticleCard article={article} />
+          {articles.map((article, index) => (
+            <React.Fragment key={index}>
+              <ArticleCard article={article} />
+            </React.Fragment>
           ))}
         </div>
       )}

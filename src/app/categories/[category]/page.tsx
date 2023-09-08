@@ -1,3 +1,4 @@
+import React from "react";
 import { allPosts } from "contentlayer/generated";
 import ArticleCard from "@/components/articlecard";
 import { Article } from "@/types/type";
@@ -52,8 +53,10 @@ export default async function Home({
       </h1>
       <hr className="w-full mb-8" />
       <div className="grid gap-y-8 sm:gap-16 grid-cols-1 sm:grid-cols-2">
-        {formatted_articles.map((article) => (
+        {formatted_articles.map((article, idx) => (
+          <React.Fragment key={idx}>
           <ArticleCard article={article} />
+          </React.Fragment>
         ))}
       </div>
     </main>
