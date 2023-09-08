@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import React from "react";
 import SearchIcon from "./searchIcon";
+import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 
 const Header = () => {
   return (
@@ -22,6 +23,11 @@ const Header = () => {
         <ul className="text-xl text-center items-center lg:text-lg flex lg:pt-0">
           <li>
             <SearchIcon />
+          </li>
+          <li>
+            <Link href="/categories">
+              <LocalOfferIcon className="text-md"/>
+            </Link>
           </li>
           <li className="hidden sm:block">
             <Link href="https://github.com/sasakitimaru" target="blank">

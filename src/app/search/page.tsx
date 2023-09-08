@@ -45,7 +45,7 @@ const SearchPage: React.FC<SearchProps> = async ({ searchParams }) => {
         return article;
       });
   return (
-    <main className="flex flex-col bg-white dark:bg-gray-900 h-screen py-24 justify-cente items-center px-8 sm:px-20 lg:px-40 mx-auto">
+    <main className="flex flex-col bg-white dark:bg-gray-900 min-h-screen py-24 justify-cente items-center px-8 sm:px-20 lg:px-40 mx-auto">
       <SearchField />
       <div className="grid gap-y-8 sm:gap-12 grid-cols-1 sm:grid-cols-2"></div>
       {articles.length === 0 ? (
