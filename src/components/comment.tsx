@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { useEffect } from "react";
 import { Comment, Reply } from "@/types/type";
 import {
   getCommentsByArticleId,
@@ -26,9 +27,15 @@ const getComments = async (id: number) => {
   return comments;
 };
 
-const CommentField = async ({ articleId }: { articleId: number }) => {
-  const comments = await getComments(articleId);
-  console.log("articleId:",articleId)
+const CommentField = ({ articleId }: { articleId: number }) => {
+  const [comments, setComments] = React.useState<Comment[]>([]);
+  useEffect(() => {
+    const getAndSetComments = async () => {
+      const comments = await getComments(articleId);
+      setComments(comments);
+    };
+    getAndSetComments();
+  }, [comments]);
   return (
     <div className="bg-white dark:bg-gray-800 w-full rounded-lg prose prose-sm lg:prose-base dark:prose-invert p-4 mt-10 mb-10 lg:px-8 ">
       <h3 className="mb-2 p-2 text-center te border-b-[1px] border-gray-300 dark:border-gray-700">

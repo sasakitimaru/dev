@@ -36,11 +36,15 @@ export const FavoriteIconAnim: React.FC<FavoriteIconAnimProps> = ({
       }
       if (liked) {
         playerRef.current.play();
-        addLikes(article);
+        (async () => {
+          await addLikes(article);
+        })();
         setLikes(article.likes + 1);
       } else {
         playerRef.current.stop();
-        cancelLikes(article);
+        (async () => {
+          await cancelLikes(article);
+        })();
         setTimeout(() => {
           setLikes(article.likes);
         }, 1000);
