@@ -30,6 +30,5 @@ export async function getAllPosts () {
       }
     });
     const sortedArticles = articles.sort((a, b) => b.date.localeCompare(a.date));
-    console.log(articles[0].date);
     return sortedArticles;
 };
