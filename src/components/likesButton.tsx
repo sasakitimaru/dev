@@ -3,7 +3,7 @@ import { Player } from "@lottiefiles/react-lottie-player";
 import { useState, useEffect, useRef } from "react";
 import heartAnimation from "../assets/animation/heart-animation.json";
 import { ArticlesResponse } from "@/types/type";
-import { updateArticles } from "@/lib/postgresAPI";
+import { updateArticles } from "@/api/postgresAPI";
 
 interface FavoriteIconAnimProps {
   article?: ArticlesResponse;

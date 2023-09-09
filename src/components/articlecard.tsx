@@ -2,7 +2,9 @@ import React from "react";
 import Tag from "./tag";
 import Link from "next/link";
 import { Article } from "@/types/type";
+import { dateFormatter } from "@/lib/formatter";
 const ArticleCard = ({ article }: { article: Article }) => {
+  const formattedDate = dateFormatter(article.date);
   return (
     <Link
       href={`${article.slug}`}
@@ -13,15 +15,19 @@ const ArticleCard = ({ article }: { article: Article }) => {
         <p className="text-3xl sm:text-4xl">{article.icon}</p>
       </div>
       <div className="flex flex-col ml-4">
-        <h2 className="text-xl sm:text-2xl font-bold mb-2 line-clamp-2">
+        <h2 className="text-lg sm:text-xl font-bold mb-2 line-clamp-2">
           {article.title}
         </h2>
+        <p className="text-gray-400 text-sm">
+          {formattedDate}
+        </p>
         <div className="inline-flex max-w-full overflow-hidden">
           {article.categories.slice(0, 2).map((tag, index) => (
             <React.Fragment key={index}>
               <Tag label={tag} />
             </React.Fragment>
           ))}
+          {article.categories.length > 2 && <p className="self-end">...</p>}
         </div>
       </div>
     </Link>

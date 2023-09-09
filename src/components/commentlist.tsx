@@ -4,6 +4,7 @@ import { Avatar } from "@mui/material";
 import { Comment, Reply } from "@/types/type";
 import CommentPostField from "./commentpostfield";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
+import { dateFormatter } from "@/lib/formatter";
 
 interface ContentProps {
   content: Comment | Reply;
@@ -11,7 +12,7 @@ interface ContentProps {
 }
 const CommentList: React.FC<ContentProps> = ({ content, articleId }) => {
   const [isClicked, setIsClicked] = React.useState(false);
-  const dateObj = new Date(content.created_at);
+  const formattedDate = dateFormatter(content.created_at);
 
   return (
     <div
@@ -33,9 +34,7 @@ const CommentList: React.FC<ContentProps> = ({ content, articleId }) => {
         <Avatar className="mr-2 h-8 w-8" />
         <b className="mr-1 text-xs">{content.author}</b>
         <p className={content.isReply ? "text-xs" : ""}>
-          {dateObj.getFullYear()}-
-          {String(dateObj.getMonth() + 1).padStart(2, "0")}-
-          {String(dateObj.getDate()).padStart(2, "0")}
+          {formattedDate}
         </p>
       </div>
       <p className={content.isReply ? "ml-12" : ""}>{content.comment}</p>

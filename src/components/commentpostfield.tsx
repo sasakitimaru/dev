@@ -1,5 +1,5 @@
 "use client";
-import { createComment, createReply } from "@/lib/postgresAPI";
+import { createComment, createReply } from "@/api/postgresAPI";
 import { CommentRequest, ReplyRequest } from "@/types/type";
 import React, { useRef } from "react";
 import { useRouter } from "next/navigation";

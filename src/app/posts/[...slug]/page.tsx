@@ -5,7 +5,7 @@ import { allPosts } from "contentlayer/generated";
 import { format, parseISO } from "date-fns";
 import { Mdx } from "@/components/mdx-components";
 import Tag from "@/components/tag";
-import { getArticles } from "@/lib/postgresAPI";
+import { getArticles } from "@/api/postgresAPI";
 import { FavoriteIconAnim } from "@/components/likesButton";
 import Twittershare from "@/components/twittershare";
 import CommentField from "@/components/comment";

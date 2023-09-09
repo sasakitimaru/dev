@@ -4,7 +4,7 @@ import { Comment, Reply } from "@/types/type";
 import {
   getCommentsByArticleId,
   getRepliesByCommentId,
-} from "@/lib/postgresAPI";
+} from "@/api/postgresAPI";
 import CommentPostField from "./commentpostfield";
 import CommentList from "./commentlist";
 

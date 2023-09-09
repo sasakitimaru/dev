@@ -2,7 +2,7 @@ import React from "react";
 import ArticleCard from "@/components/articlecard";
 import SentimentVeryDissatisfiedIcon from "@mui/icons-material/SentimentVeryDissatisfied";
 import SearchField from "@/components/search";
-import { allPosts } from "contentlayer/generated";
+import { getAllPosts } from "@/api/mdxAPI";
 
 interface SearchProps {
   searchParams: {
@@ -10,40 +10,18 @@ interface SearchProps {
   };
 }
 
-function getPostsFromParams(searchParams: SearchProps["searchParams"]) {
-  return allPosts
-    .filter((post) => {
-      return post.title.toLowerCase().includes(searchParams?.q?.toLowerCase());
+async function getPostsFromParams(searchParams: SearchProps["searchParams"]) {
+  const articles = await getAllPosts();
+  return articles
+    .filter((article) => {
+      return article.title.toLowerCase().includes(searchParams?.q?.toLowerCase());
     })
-    .map((post) => {
-      const article = {
-        id: post._id,
-        title: post.title,
-        slug: post.slug,
-        icon: post.icon,
-        description: post.description,
-        date: post.date,
-        categories: post.categories,
-      };
-      return article;
-    });
 }
 
 const SearchPage: React.FC<SearchProps> = async ({ searchParams }) => {
   const articles = searchParams.q
     ? await getPostsFromParams(searchParams)
-    : await allPosts.map((post) => {
-        const article = {
-          id: post._id,
-          title: post.title,
-          slug: post.slug,
-          icon: post.icon,
-          description: post.description,
-          date: post.date,
-          categories: post.categories,
-        };
-        return article;
-      });
+    : await getAllPosts();
   return (
     <main className="flex flex-col bg-white dark:bg-gray-900 min-h-screen py-24 justify-cente items-center px-8 sm:px-20 lg:px-40 mx-auto">
       <SearchField />
