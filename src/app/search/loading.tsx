@@ -4,7 +4,7 @@ import { Skeleton } from "@mui/material"
 const ArticleCardSkeleton = () => {
     return (
         <div className="flex items-center">
-            <div className="flex flex-shrink-0 justify-center items-center bg-white dark:bg-slate-600 rounded-lg w-20 h-20 overflow-hidden">
+            <div className="flex flex-shrink-0 justify-center items-center rounded-lg w-20 h-20 overflow-hidden">
                 <Skeleton variant="rectangular" width={100} height={100} className="rounded"/>
             </div>
             <div className="flex flex-col ml-4 gap-x-2 overflow-hidden">
