@@ -4,7 +4,10 @@ import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import remarkGfm from "remark-gfm";
 import rehypeCodeTitles from "rehype-code-titles";
-import rehypePrism from "rehype-prism-plus";
+import rehypePrism from 'rehype-prism-plus';
+import rehypeExternalLink from 'rehype-external-links';
+import rehypeShiftHeading from 'rehype-shift-heading';
+import { rehypeAccessibleEmojis } from 'rehype-accessible-emojis';
 
 /** @type {import('contentlayer/source-files').ComputedFields} */
 const computedFields: any = {
@@ -64,6 +67,11 @@ export default makeSource({
       rehypeSlug,
       rehypeCodeTitles,
       rehypePrism,
+      rehypeExternalLink,
+      rehypeAccessibleEmojis,
+      () => rehypeShiftHeading(
+        { shift: 1 },
+      ),
       [
         rehypeAutolinkHeadings,
         {
