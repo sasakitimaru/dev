@@ -16,8 +16,9 @@ const HeadeInfoListLargerThanSm = () => {
         <Search />
       </li>
       <li>
-        <Link href="/categories">
-          <LocalOfferIcon className="text-md text-center hover:opacity-50" />
+        <Link href="/categories" className="hover:opacity-75 cursor-pointer flex justify-center items-center">
+          <LocalOfferIcon className="text-[20px] mr-1" />
+          <p className="text-sm">categories</p>
         </Link>
       </li>
       <li className="block">

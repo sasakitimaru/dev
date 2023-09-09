@@ -3,12 +3,9 @@ import Link from "next/link";
 import SearchIcon from "@mui/icons-material/Search";
 const Search = () => {
   return (
-    <Link href="/search">
-      <div className="relative cursor-pointer rounded-md hover:opacity-75 h-10 w-10">
-        <div className="p-2 h-full absolute cursor-pointer flex items-center justify-center">
-          <SearchIcon className="text-md"/>
-        </div>
-      </div>
+    <Link href="/search" className="hover:opacity-75 cursor-pointer flex justify-center items-center mr-4">
+        <SearchIcon className="text-md" />
+        <p className="text-sm">search</p>
     </Link>
   );
 };
