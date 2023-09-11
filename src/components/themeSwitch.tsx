@@ -5,9 +5,9 @@ import { Selected } from "@/types/type";
 
 const ThemeSwitch = () => {
   const [selected, setSelected] = React.useState<Selected>({
-    dark: false,
+    dark: true,
     light: false,
-    system: true,
+    system: false,
   });
   return (
     <div className="inline-flex flex-row border border-gray-300 rounded-3xl p-1 m-4">

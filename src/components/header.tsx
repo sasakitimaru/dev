@@ -16,7 +16,10 @@ const HeadeInfoListLargerThanSm = () => {
         <Search />
       </li>
       <li>
-        <Link href="/categories" className="hover:opacity-75 cursor-pointer flex justify-center items-center">
+        <Link
+          href="/categories"
+          className="hover:opacity-75 cursor-pointer flex justify-center items-center"
+        >
           <LocalOfferIcon className="text-[20px] mr-1" />
           <p className="text-sm">categories</p>
         </Link>
@@ -116,8 +119,8 @@ const Header = () => {
         </aside>
       </nav>
       <div
-        className={`fixed top-0 w-screen h-screen bg-black opacity-50 z-10 ${
-          isClicked ? "block" : "hidden"
+        className={`fixed top-0 w-screen h-screen bg-black z-10 transition-all duration-300 ${
+          isClicked ? "opacity-50 visible" : "opacity-0 invisible"
         }`}
         onClick={() => setIsClicked(false)}
       ></div>
