@@ -1,8 +1,9 @@
 "use client";
 import { createComment, createReply } from "@/api/postgresAPI";
 import { CommentRequest, ReplyRequest } from "@/types/type";
-import React, { useRef } from "react";
-import { useRouter } from "next/navigation";
+import React, { useRef, useContext } from "react";
+import { getComments } from "@/api/postgresAPI";
+import { CommentContext } from "./comment";
 
 interface CommentPostFieldProps {
   articleId: number;
@@ -28,7 +29,7 @@ const CommentPostField: React.FC<CommentPostFieldProps> = ({
     comment_id: commentId as number,
     comment: "",
   });
-  const router = useRouter();
+  const { setComments } = useContext(CommentContext!);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -47,11 +48,9 @@ const CommentPostField: React.FC<CommentPostFieldProps> = ({
     }
     try {
       if (!isReply) await createComment(content as CommentRequest);
-      else {
-        const res = await createReply(content as ReplyRequest);
-      }
-      router.refresh();
+      else await createReply(content as ReplyRequest);
       clearSendedData();
+      setComments(await getComments(articleId));
     } catch (e) {
       alert("コメントの投稿に失敗しました。");
       console.error("posting error:", e);
@@ -63,6 +62,7 @@ const CommentPostField: React.FC<CommentPostFieldProps> = ({
       <textarea
         className="w-full h-28 px-4 p-4 bg-inherit outline-none no-overflow-anchoring resize-none border-b-[1px] border-gray-300 dark:border-gray-700 text-base"
         placeholder="Comment"
+        autoFocus={isReply}
         onChange={(e) => {
           isReply
             ? setReply({ ...reply, comment: e.target.value })
@@ -88,7 +88,7 @@ const CommentPostField: React.FC<CommentPostFieldProps> = ({
             isReply ? handleSubmit(reply) : handleSubmit(comment)
           }
         >
-          Submit
+          {isReply ? "Reply" : "Submit"}
         </button>
       </div>
     </div>

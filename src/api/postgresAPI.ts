@@ -90,3 +90,22 @@ export const createReply = async (reply: ReplyRequest) => {
   );
   return res;
 }
+
+export const getComments = async (id: number) => {
+  const res = await getCommentsByArticleId(id);
+  const comments: Comment[] = res.data.map((comment) => ({
+    ...comment,
+    isReply: false,
+  }));
+  await Promise.all(
+    comments.map(async (comment) => {
+      const res = await getRepliesByCommentId(comment.id);
+      const replies: Reply[] = res.data.map((reply) => ({
+        ...reply,
+        isReply: true,
+      }));
+      comment.replies = replies;
+    })
+  );
+  return comments;
+};

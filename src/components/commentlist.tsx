@@ -9,8 +9,9 @@ import { dateFormatter } from "@/lib/formatter";
 interface ContentProps {
   content: Comment | Reply;
   articleId: number;
+  isEndOfReply?: boolean;
 }
-const CommentList: React.FC<ContentProps> = ({ content, articleId }) => {
+const CommentList: React.FC<ContentProps> = ({ content, articleId, isEndOfReply }) => {
   const [isClicked, setIsClicked] = React.useState(false);
   const formattedDate = dateFormatter(content.created_at);
 
@@ -40,12 +41,16 @@ const CommentList: React.FC<ContentProps> = ({ content, articleId }) => {
       <p className={content.isReply ? "ml-12" : ""}>{content.comment}</p>
       <div className="bg-white dark:bg-gray-800 z-10">
         {content.isReply ? (
+          isEndOfReply ? (
           <button
             className="text-xs mr-auto mb-2 border rounded-lg border-gray-300 dark:border-gray-700 p-1"
             onClick={() => setIsClicked(!isClicked)}
           >
             Add Reply
           </button>
+          ) : (
+            null
+          )
         ) : (
           <button
             className="flex ml-auto mr-4 mb-4"
