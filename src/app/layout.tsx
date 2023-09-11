@@ -9,10 +9,53 @@ import Footer from "@/components/footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
+const title = "sasakiti development blog";
+const description = "バックエンドエンジニアの個人開発ブログ";
+
 export const metadata: Metadata = {
-  title: "sasakitiDev",
-  description: "tech blog by sasakiti",
-};
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL!),
+  title: {
+    default: title,
+    template: `%s | ${title}`,
+  },
+  description,
+  keywords: [
+    "Next.js",
+    "JavaScript",
+    "TypeScript",
+    "React",
+    "TailwindCSS",
+    "contentlayer",
+    "Vercel",
+    "React-Native",
+    "SIer",
+    "バックエンドエンジニア",
+    "個人開発",
+    "ブログ",
+    "フロントエンドエンジニア",
+    "フロントエンド",
+    "バックエンド",
+    "フロントエンド開発",
+    "バックエンド開発",
+    "Web開発",
+    "Webエンジニア",
+    "Webアプリ",
+    "Webサービス",
+    "Webサイト",
+    "App Router",
+  ],
+  authors: [
+    {
+      name: "sasakitimiaru",
+      url: "https://github.com/sasakitimaru",
+    },
+  ],
+  creator: "sasakitimiaru",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "white" },
+    { media: "(prefers-color-scheme: dark)", color: "black" },
+  ],
+}
 
 export default function RootLayout({
   children,

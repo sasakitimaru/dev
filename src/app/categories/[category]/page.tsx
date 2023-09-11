@@ -44,7 +44,7 @@ export default async function CategoryPage({
       <div className="grid gap-y-8 sm:gap-16 grid-cols-1 sm:grid-cols-2 border-b border-gray-200 dark:border-gray-600 pb-4">
         {articles.map((article, idx) => (
           <React.Fragment key={idx}>
-          <ArticleCard article={article} />
+            <ArticleCard article={article} />
           </React.Fragment>
         ))}
       </div>
