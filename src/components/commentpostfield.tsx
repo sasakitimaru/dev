@@ -1,8 +1,8 @@
 "use client";
-import { createComment, createReply } from "@/api/postgresAPI";
+import { createComment, createReply } from "@/api/postgres/postgresAPI";
 import { CommentRequest, ReplyRequest } from "@/types/type";
 import React, { useRef, useContext } from "react";
-import { getComments } from "@/api/postgresAPI";
+import { getComments } from "@/api/postgres/postgresAPI";
 import { CommentContext } from "./comment";
 
 interface CommentPostFieldProps {

@@ -1,6 +1,6 @@
 import { allPosts } from "contentlayer/generated";
 import { Article } from "@/types/type";
-import { getArticles, createArticles } from "./postgresAPI";
+import { getArticles, createArticles } from "../postgres/postgresAPI";
 
 export async function getAllPosts () {
     const res = await getArticles();

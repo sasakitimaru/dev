@@ -3,7 +3,7 @@ import React, { useEffect, createContext } from "react";
 import { Comment, Reply } from "@/types/type";
 import CommentPostField from "./commentpostfield";
 import CommentList from "./commentlist";
-import { getComments } from "@/api/postgresAPI";
+import { getComments } from "@/api/postgres/postgresAPI";
 interface CommentContextProps {
   comments: Comment[];
   setComments: React.Dispatch<React.SetStateAction<Comment[]>>;

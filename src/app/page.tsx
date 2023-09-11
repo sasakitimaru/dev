@@ -1,6 +1,6 @@
 import React from "react";
 import ArticleCard from "@/components/articlecard";
-import { getAllPosts } from "@/api/mdxAPI";
+import { getAllPosts } from "@/api/mdx/mdxAPI";
 
 export default async function Home() {
   // await getCsrfToken();

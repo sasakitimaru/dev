@@ -27,12 +27,12 @@ const ThemeButton: React.FC<ThemeButtonProps> = ({
     });
   };
   useEffect(() => {
-    if (!mode) mode = "system";
+    if (!mode) mode = "dark";
   }, []);
   return (
     <button
       className={`inline-flex flex-row justify-center items-center rounded-2xl p-1
-       ${mode !== "system" && "mr-2"} 
+       ${mode === "dark" && "mr-1"} 
        ${selected[mode] && "bg-gray-400"}
         bg-opacity-50
        `}

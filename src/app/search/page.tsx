@@ -2,7 +2,7 @@ import React from "react";
 import ArticleCard from "@/components/articlecard";
 import SentimentVeryDissatisfiedIcon from "@mui/icons-material/SentimentVeryDissatisfied";
 import SearchField from "@/components/search";
-import { getAllPosts } from "@/api/mdxAPI";
+import { getAllPosts } from "@/api/mdx/mdxAPI";
 
 interface SearchProps {
   searchParams: {
