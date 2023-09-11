@@ -1,60 +1,47 @@
 ---
-title: Deploying Next.js Apps
-icon: 📦
-description: How to deploy your Next.js apps on Vercel.
-date: "2023-05-07"
+title: react-notion-xのSearchが405エラーを返す
+icon: 🐟
+description: notion-rendererのSearchが405エラーを返す問題の代替案について解説します。
+date: "2023-06-10"
 categories:
+  - React
+  - Notion
   - Next.js
-  - Vercel
-image: /posts/deploying-nextjs-apps.jpg
 ---
-# リレーショナルデータベースのGo言語を用いた操作方法
 
-Go言語は、シンプルで効率的なプログラミング言語として知られています。この記事では、Go言語を使用してリレーショナルデータベースを操作する基本的な方法を紹介します。
+以前個人ブログを Notion を使って書いていたのですが、その際に react-notion-x を使って Notion のページをレンダリングしていました。
+このライブラリの中で Search コンポーネントを用いて、記事の検索機能を実装していたのですが突然 405 エラーが返ってくるようになってました。
 
-## データベース接続
+## 原因
 
-Go言語でデータベースに接続するには、`database/sql`パッケージを使用します。
+Notion の API の仕様が変わったことにより、Search コンポーネントが 405 エラーを返すようになったようです。
+Search コンポーネント内でリクエストを投げているエンドポイントが https://www.notion.so/api/v3
+なのですがここが仕様変更されたのかうまく使えませんでした。
 
-```go:go
-import (
-    "database/sql"
-    _ "github.com/go-sql-driver/mysql"
-)
+コードブロック
 
-func main() {
-    db, err := sql.Open("mysql", "user:password@/dbname")
-    // エラーハンドリング
-}
+```js:js
+//react-notion-xのSearchコンポーネントのコード
+constructor({
+  apiBaseUrl = 'https://www.notion.so/api/v3', //ここのエンドポイントが調子悪い
+  authToken,
+  activeUser,
+  userTimeZone = 'America/New_York'
+})
 ```
-## CRUD操作
-### create操作
-```go:go
-_, err := db.Exec("INSERT INTO users(name, age) VALUES(?, ?)", "Alice", 25)
+
+## 解決策
+治るまでの代替案として、Search コンポーネントを使わずに Notion 公式のSearchAPIを用います。
+```TypeScript:TypeScript
+const response = await axios.post('https://api.notion.com/v1/search', params, {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${process.env.NOTION_TOKEN}`,
+      'Notion-Version': '2022-06-28'
+    }
+  });
+return response.data
 ```
-### read操作
-```go
-rows, err := db.Query("SELECT name, age FROM users")
-```
-## その他の便利な機能
+ただ、このAPIはタイトルからしか記事をサーチできません。react-notion-xでは記事のデータ（recordMap）まで見て判断していたのでそこは注意です。
 
-- **トランザクション**: `db.Begin()`を使用してトランザクションを開始できます。
-- **プリペアードステートメント**: SQLインジェクションを防ぐために使用します。
-
-## まとめ
-
-Go言語は、リレーショナルデータベースの操作に関しても非常に強力です。適切なパッケージとメソッドを使用することで、効率的かつ安全にデータベース操作を行うことができます。
-
-> **引用**: "Goはシンプルで強力な言語である" - Rob Pike
-
-### 参考リンク
-
-- [Go公式ドキュメント](https://golang.org/)
-- [Go SQLドライバ](https://github.com/go-sql-driver/mysql)
-
-| 機能       | 説明                           |
-|------------|--------------------------------|
-| Create     | データをデータベースに挿入します |
-| Read       | データを読み取ります           |
-| Update     | データを更新します             |
-| Delete     | データを削除します             |
+See you later👋
