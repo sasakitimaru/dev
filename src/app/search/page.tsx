@@ -15,20 +15,22 @@ interface SearchProps {
 
 const SearchPage: React.FC<SearchProps> = ({ searchParams }) => {
   const [articles, setArticles] = useState<Article[]>([]);
-  async function getPostsFromParams(searchParams: SearchProps["searchParams"]) {
-    const articles = await getAllPosts();
-    return articles.filter((article) => {
-      return article.title
-        .toLowerCase()
-        .includes(searchParams?.q?.toLowerCase());
-    });
-  }
   useEffect(() => {
+    async function getPostsFromParams(
+      searchParams: SearchProps["searchParams"]
+    ) {
+      const articles = await getAllPosts();
+      return articles.filter((article) => {
+        return article.title
+          .toLowerCase()
+          .includes(searchParams?.q?.toLowerCase());
+      });
+    }
     (async () => {
       const articles = searchParams.q
         ? await getPostsFromParams(searchParams)
         : await getAllPosts();
-      await setArticles(articles);
+      setArticles(articles);
     })();
   }, [searchParams]);
   return (
@@ -36,7 +38,7 @@ const SearchPage: React.FC<SearchProps> = ({ searchParams }) => {
       <main className="flex flex-col bg-white dark:bg-gray-900 min-h-screen py-24 justify-cente items-center px-8 sm:px-20 lg:px-40 mx-auto">
         <SearchField />
         <div className="grid gap-y-8 sm:gap-12 grid-cols-1 sm:grid-cols-2"></div>
-        {articles.length !== 0 ? (
+        {searchParams.q?.length !== 0 ? (
           <div className="grid gap-y-8 sm:gap-16 grid-cols-1 sm:grid-cols-2 mt-8">
             {articles.map((article, index) => (
               <React.Fragment key={index}>
