@@ -38,20 +38,20 @@ const SearchPage: React.FC<SearchProps> = ({ searchParams }) => {
       <main className="flex flex-col bg-white dark:bg-gray-900 min-h-screen py-24 justify-cente items-center px-8 sm:px-20 lg:px-40 mx-auto">
         <SearchField />
         <div className="grid gap-y-8 sm:gap-12 grid-cols-1 sm:grid-cols-2"></div>
-        {searchParams.q?.length !== 0 ? (
+        {articles.length === 0 && searchParams.q ? (
+          <div className="flex flex-row items-center">
+            <SentimentVeryDissatisfiedIcon className="text-2xl mr-2" />
+            <h1 className="text-md sm:text-2xl my-4 text-center w-full">
+              {"Not Found, Please try Again another keyword."}
+            </h1>
+          </div>
+            ) : (
           <div className="grid gap-y-8 sm:gap-16 grid-cols-1 sm:grid-cols-2 mt-8">
             {articles.map((article, index) => (
               <React.Fragment key={index}>
                 <ArticleCard article={article} />
               </React.Fragment>
             ))}
-          </div>
-        ) : (
-          <div className="flex flex-row items-center">
-            <SentimentVeryDissatisfiedIcon className="text-2xl mr-2" />
-            <h1 className="text-md sm:text-2xl my-4 text-center w-full">
-              {"Not Found, Please try Again another keyword."}
-            </h1>
           </div>
         )}
       </main>
