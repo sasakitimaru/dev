@@ -1,8 +1,10 @@
-import React from "react";
+"use client";
+import React, { useState, useEffect } from "react";
 import ArticleCard from "@/components/articlecard";
 import SentimentVeryDissatisfiedIcon from "@mui/icons-material/SentimentVeryDissatisfied";
 import SearchField from "@/components/search";
 import { getAllPosts } from "@/api/mdx/mdxAPI";
+import { Article } from "@/types/type";
 
 interface SearchProps {
   searchParams: {
@@ -12,16 +14,21 @@ interface SearchProps {
 
 async function getPostsFromParams(searchParams: SearchProps["searchParams"]) {
   const articles = await getAllPosts();
-  return articles
-    .filter((article) => {
-      return article.title.toLowerCase().includes(searchParams?.q?.toLowerCase());
-    })
+  return articles.filter((article) => {
+    return article.title.toLowerCase().includes(searchParams?.q?.toLowerCase());
+  });
 }
 
-const SearchPage: React.FC<SearchProps> = async ({ searchParams }) => {
-  const articles = searchParams.q
-    ? await getPostsFromParams(searchParams)
-    : await getAllPosts();
+const SearchPage: React.FC<SearchProps> = ({ searchParams }) => {
+  const [articles, setArticles] = useState<Article[]>([]);
+  useEffect(() => {
+    (async () => {
+      const articles = searchParams.q
+        ? await getPostsFromParams(searchParams)
+        : await getAllPosts();
+      setArticles(articles);
+    })();
+  }, [searchParams]);
   return (
     <main className="flex flex-col bg-white dark:bg-gray-900 min-h-screen py-24 justify-cente items-center px-8 sm:px-20 lg:px-40 mx-auto">
       <SearchField />

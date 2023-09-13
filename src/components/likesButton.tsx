@@ -50,7 +50,7 @@ export const FavoriteIconAnim: React.FC<FavoriteIconAnimProps> = ({
         }, 1000);
       }
     }
-  }, [liked]);
+  }, [article, liked]);
 
   const handleLike = () => {
     if (disabled) return;
