@@ -15,7 +15,7 @@ const ArticleCard = ({ article }: { article: Article }) => {
         <p className="text-3xl sm:text-4xl">{article.icon}</p>
       </div>
       <div className="flex flex-col ml-4">
-        <h2 className="text-lg sm:text-xl font-bold mb-2 line-clamp-2">
+        <h2 className="text-lg sm:text-xl font-bold mb-2 line-clamp-2 w-full">
           {article.title}
         </h2>
         <p className="text-gray-400 text-sm">
