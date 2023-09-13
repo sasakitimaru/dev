@@ -9,8 +9,8 @@ import Footer from "@/components/footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
-const title = "sasakiti development blog";
-const description = "バックエンドエンジニアの個人開発ブログ";
+const title = "ささきち開発ブログ";
+const description = "バックエンドエンジニアの個人開発ブログです。適当に日常での技術的なものでもそうでなくても出来事を書き残してます。";
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL!),
@@ -43,6 +43,10 @@ export const metadata: Metadata = {
     "Webサービス",
     "Webサイト",
     "App Router",
+    "ささきちブログ",
+    "ささきち",
+    "sasakiti",
+    "sasakitimaru",
   ],
   authors: [
     {

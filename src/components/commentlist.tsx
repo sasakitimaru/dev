@@ -1,10 +1,20 @@
 "use client";
-import React, { useEffect } from "react";
+import React from "react";
 import { Avatar } from "@mui/material";
 import { Comment, Reply } from "@/types/type";
 import CommentPostField from "./commentpostfield";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import { dateFormatter } from "@/lib/formatter";
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert, { AlertProps } from '@mui/material/Alert';
+import { SnackOpenContext } from "./comment";
+
+const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
+  props,
+  ref,
+) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 interface ContentProps {
   content: Comment | Reply;
@@ -13,14 +23,14 @@ interface ContentProps {
 }
 const CommentList: React.FC<ContentProps> = ({ content, articleId, isEndOfReply }) => {
   const [isClicked, setIsClicked] = React.useState(false);
+  const { successOpen, errorOpen, setSuccessOpen, setErrorOpen } = React.useContext(SnackOpenContext);
   const formattedDate = dateFormatter(content.created_at);
 
   return (
     <div
       className={`flex flex-col border-b-[1px] relative border-gray-300 dark:border-gray-700 p-1
-    ${
-      content.isReply &&
-      `before:absolute
+    ${content.isReply &&
+        `before:absolute
         before:content-['']
         before:h-[70%]
         before:w-[2px]
@@ -28,7 +38,7 @@ const CommentList: React.FC<ContentProps> = ({ content, articleId, isEndOfReply 
         before:left-5
         before:bg-gray-300
         before:dark:bg-gray-500`
-    }
+        }
     `}
     >
       <div className="flex items-center mt-2">
@@ -42,12 +52,12 @@ const CommentList: React.FC<ContentProps> = ({ content, articleId, isEndOfReply 
       <div className="bg-white dark:bg-gray-800 z-10">
         {content.isReply ? (
           isEndOfReply ? (
-          <button
-            className="text-xs mr-auto mb-2 border rounded-lg border-gray-300 dark:border-gray-700 p-1"
-            onClick={() => setIsClicked(!isClicked)}
-          >
-            Add Reply
-          </button>
+            <button
+              className="text-xs mr-auto mb-2 border rounded-lg border-gray-300 dark:border-gray-700 p-1"
+              onClick={() => setIsClicked(!isClicked)}
+            >
+              Add Reply
+            </button>
           ) : (
             null
           )
@@ -80,6 +90,16 @@ const CommentList: React.FC<ContentProps> = ({ content, articleId, isEndOfReply 
           </div>
         )}
       </div>
+      <Snackbar open={successOpen} autoHideDuration={6000} onClose={() => setSuccessOpen(false)}>
+        <Alert severity="success" sx={{ width: '100%' }}>
+          Message sended successfully!
+        </Alert>
+      </Snackbar>
+      <Snackbar open={errorOpen} autoHideDuration={6000} onClose={() => setErrorOpen(false)}>
+        <Alert onClose={() => setErrorOpen(false)} severity="error" sx={{ width: '100%' }}>
+          Error occured when sending message. Please try again later.
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

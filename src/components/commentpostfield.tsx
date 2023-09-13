@@ -3,7 +3,7 @@ import { createComment, createReply } from "@/api/postgres/postgresAPI";
 import { CommentRequest, ReplyRequest } from "@/types/type";
 import React, { useRef, useContext } from "react";
 import { getComments } from "@/api/postgres/postgresAPI";
-import { CommentContext } from "./comment";
+import { CommentContext, SnackOpenContext } from "./comment";
 
 interface CommentPostFieldProps {
   articleId: number;
@@ -29,7 +29,8 @@ const CommentPostField: React.FC<CommentPostFieldProps> = ({
     comment_id: commentId as number,
     comment: "",
   });
-  const { setComments } = useContext(CommentContext!);
+  const { setComments } = useContext(CommentContext);
+  const { setSuccessOpen, setErrorOpen } = useContext(SnackOpenContext);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -49,10 +50,11 @@ const CommentPostField: React.FC<CommentPostFieldProps> = ({
     try {
       if (!isReply) await createComment(content as CommentRequest);
       else await createReply(content as ReplyRequest);
+      setSuccessOpen(true);
       clearSendedData();
       setComments(await getComments(articleId));
     } catch (e) {
-      alert("コメントの投稿に失敗しました。");
+      setErrorOpen(true);
       console.error("posting error:", e);
     }
   };
