@@ -8,16 +8,18 @@ categories:
   - デザインパターン
 ---
 ## Iteratorとは
-
-Iterator=繰り返し　です。
+Iteratorは配列やリストなどのデータ構造を順番に処理するためのインターフェースです。
+iterator=繰り返し　です。
 java.lang.Iterable, java.utils.Iteratorからimportすることで使用できます。
 
+>java.lang.Iterableから抜粋
 >```java:java
 >public interface Iterable<E>{
 >   public abstruct Iterator<E> iterator();
 >}
 >```
 
+>java.utils.Iteratorから抜粋
 >```java:java
 >public interface Iterator<E>{
 >	public abstract boolean hasNext();
