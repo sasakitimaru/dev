@@ -32,7 +32,7 @@ const SearchPage = () => {
   }, [input]);
 
   return (
-    <main className="flex flex-col bg-white dark:bg-gray-900 min-h-screen py-24 justify-cente items-center px-8 sm:px-20 lg:px-40 mx-auto">
+    <main className="flex flex-col bg-white dark:bg-gray-900 min-h-screen w-full py-24 justify-cente items-center px-8 sm:px-20 lg:px-40 mx-auto">
       <div className="w-full max-w-xl border border-gray-300 rounded-full bg-white dark:bg-zinc-700">
         <input
           type="text"
@@ -53,7 +53,7 @@ const SearchPage = () => {
           </h1>
         </div>
       ) : (
-        <div className="grid gap-y-8 sm:gap-16 grid-cols-1 sm:grid-cols-2 mt-8">
+        <div className="grid gap-y-8 sm:gap-16 grid-cols-1 sm:grid-cols-2 mt-8 w-full">
           {searchResult?.map((article, index) => (
             <React.Fragment key={index}>
               <ArticleCard article={article} />
