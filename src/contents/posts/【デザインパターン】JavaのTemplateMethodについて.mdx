@@ -1,0 +1,99 @@
+---
+title: 【デザインパターン】Java の Template Method について
+icon: ☕️
+description: 今回は Java のテンプレートメソッドについて説明します。
+date: "2023-09-15"
+categories:
+  - Java
+  - デザインパターン
+---
+## Template Method
+
+抽象クラスの延長線上で、ある処理はスーパークラスで定義しながらその処理で用いる細かい部分はサブクラスで定義します。
+今回は動物が 3 回鳴く、というテンプレートを作成します。
+
+## 実装
+
+### CryThreeTimes クラス
+
+3 回鳴く、という処理のテンプレートを実装している抽象クラスになります。
+
+```java
+public abstract class CryThreeTimes {
+    protected abstract void printAnimalName();
+
+    protected abstract void printCrySound();
+
+    public final void cryThreeTimes() {
+        printAnimalName();
+        for (int i = 0; i < 3; i++) {
+            printCrySound();
+        }
+    }
+}
+```
+
+補足：
+**protected：**サブクラスと同一パッケージ外からのアクセスを禁止する。
+**final：**オーバーライドを禁止する。
+
+### Cat, Dog クラス
+
+```java
+public class Cat extends CryThreeTimes {
+    @Override
+    public void printAnimalName() {
+        System.out.println("Cat");
+    }
+
+    @Override
+    public void printCrySound() {
+        System.out.println("Meow");
+    }
+}
+```
+
+```java
+public class Dog extends CryThreeTimes {
+    @Override
+    public void printAnimalName() {
+        System.out.println("Dog");
+    }
+
+    @Override
+    public void printCrySound() {
+        System.out.println("Bow");
+    }
+}
+```
+
+### Main クラス
+
+```java
+public class Main {
+    public static void main(String[] args) {
+        CryThreeTimes cat = new Cat();
+        CryThreeTimes dog = new Dog();
+
+        cat.cryThreeTimes();
+        dog.cryThreeTimes();
+    }
+}
+```
+
+実行結果
+
+```
+Cat
+Meow
+Meow
+Meow
+Dog
+Bow
+Bow
+Bow
+```
+
+こんな感じでテンプレートの処理は定義しつつ、サブクラスへ具体的な処理の記述を遅延させることができます。
+
+See you later👋

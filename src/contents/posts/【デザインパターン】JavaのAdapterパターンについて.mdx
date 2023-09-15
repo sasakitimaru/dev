@@ -7,18 +7,19 @@ categories:
   - Java
   - デザインパターン
 ---
-## Adaperパターン
+
+## Adaper パターン
 
 既存のクラスに手を加えずに用途だけを伝えるイメージです。
 既存クラスを直接使おうとすると、その処理がどのようになっているのか知らなければいけませんし依存関係も深くなります。
-これを防ぐために使います。今回はJavaのpropertiesクラスを用いて実際に使っていきます。
+これを防ぐために使います。今回は Java の properties クラスを用いて実際に使っていきます。
 
 ## 実装
 
-### FileIOインターフェース
+### FileIO インターフェース
 
-このインターフェースのメソッドをMainクラスで使用します。
-Mainクラスはこれらのメソッドの引数と返り値だけ分かれば使用することができます。
+このインターフェースのメソッドを Main クラスで使用します。
+Main クラスはこれらのメソッドの引数と返り値だけ分かれば使用することができます。
 
 ```java:java
 import java.io.IOException;
@@ -35,10 +36,10 @@ public interface FileIO {
 }
 ```
 
-### FilePropertiesクラス
+### FileProperties クラス
 
 具体的な処理です。
-Mainクラスからこの処理は見えないため安全に処理を書き換えることができます。
+Main クラスからこの処理は見えないため安全に処理を書き換えることができます。
 
 ```java:java
 import java.io.IOException;
@@ -77,9 +78,9 @@ public class FileProperties implements FileIO {
 }
 ```
 
-### Mainクラス
+### Main クラス
 
-具体的な処理をMainクラスから分離することができました。
+具体的な処理を Main クラスから分離することができました。
 
 ```java:java
 import java.io.IOException;
@@ -101,8 +102,18 @@ public class Main {
     }
 ```
 
+実行結果
+
+```
+#written by FileProperties
+#Fri Sep 15 15:06:23 JST 2023
+day=21
+month=4
+year=2004
+```
+
 ## まとめ
 
-Adapterパターンを用いることで既存のクラスを用いて用途を定義し、その実装をMainクラスから隠して利用することができました。
+Adapter パターンを用いることで既存のクラスを用いて用途を定義し、その実装を Main クラスから隠して利用することができました。
 
 See you later👋
