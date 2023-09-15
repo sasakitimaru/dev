@@ -1,0 +1,108 @@
+---
+title: 【デザインパターン】JavaのAdapterパターンについて
+icon: ☕️
+description: 今回はAdapterパターンについて解説します。
+date: "2023-09-15"
+categories:
+  - Java
+  - デザインパターン
+---
+## Adaperパターン
+
+既存のクラスに手を加えずに用途だけを伝えるイメージです。
+既存クラスを直接使おうとすると、その処理がどのようになっているのか知らなければいけませんし依存関係も深くなります。
+これを防ぐために使います。今回はJavaのpropertiesクラスを用いて実際に使っていきます。
+
+## 実装
+
+### FileIOインターフェース
+
+このインターフェースのメソッドをMainクラスで使用します。
+Mainクラスはこれらのメソッドの引数と返り値だけ分かれば使用することができます。
+
+```java:java
+import java.io.IOException;
+
+public interface FileIO {
+    void createNewFile(String filename) throws IOException;
+    void readFromFile(String filename) throws IOException;
+
+    void writeToFile(String filename) throws IOException;
+
+    void setValue(String key, String value);
+
+    String getValue(String key);
+}
+```
+
+### FilePropertiesクラス
+
+具体的な処理です。
+Mainクラスからこの処理は見えないため安全に処理を書き換えることができます。
+
+```java:java
+import java.io.IOException;
+
+public class FileProperties implements FileIO {
+    public Properties properties;
+
+    public FileProperties() {
+        this.properties = new Properties();
+    }
+
+    @Override
+    public void createNewFile(String filename) throws IOException {
+        this.properties.store(new FileOutputStream(filename));
+    }
+
+    @Override
+    public void readFromFile(String filename) throws IOException {
+        this.properties.load(new FileInputStream(filename));
+    }
+
+    @Override
+    public void writeToFile(String filename) throws IOException {
+        this.properties.store(new FileOutputStream(filename), "written by FileProperties");
+    }
+
+    @Override
+    public void setValue(String key, String value) {
+        this.properties.setProperty(key, value);
+    }
+
+    @Override
+    public String getValue(String key) {
+        return this.properties.getProperty(key);
+    }
+}
+```
+
+### Mainクラス
+
+具体的な処理をMainクラスから分離することができました。
+
+```java:java
+import java.io.IOException;
+
+public class Main {
+    public static void main(String[] args) {
+        FileIO f = new FileProperties();
+        try {
+            f.createNewFile("file.txt");
+            f.readFromFile("newfile.txt");
+            f.setValue("year", "2004");
+            f.setValue("month", "4");
+            f.setValue("day", "21");
+            f.writeToFile("newfile.txt");
+            System.out.println("newfile.txt is created.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+```
+
+## まとめ
+
+Adapterパターンを用いることで既存のクラスを用いて用途を定義し、その実装をMainクラスから隠して利用することができました。
+
+See you later👋
