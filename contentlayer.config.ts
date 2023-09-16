@@ -11,14 +11,6 @@ import { rehypeAccessibleEmojis } from 'rehype-accessible-emojis';
 
 /** @type {import('contentlayer/source-files').ComputedFields} */
 const computedFields: any = {
-  slug: {
-    type: "string",
-    resolve: (doc: any) => `/${doc._raw.flattenedPath}`,
-  },
-  slugAsParams: {
-    type: "string",
-    resolve: (doc: any) => doc._raw.flattenedPath.split("/").slice(1).join("/"),
-  },
   readingTime: {
     type: "json",
     resolve: (doc: any) => readingTime(doc.body.raw),
@@ -31,6 +23,10 @@ export const Post = defineDocumentType(() => ({
   contentType: "mdx",
   fields: {
     title: {
+      type: "string",
+      required: true,
+    },
+    slug: {
       type: "string",
       required: true,
     },
