@@ -18,7 +18,7 @@ categories:
 
 3 回鳴く、という処理のテンプレートを実装している抽象クラスになります。
 
-```java
+```java:java
 public abstract class CryThreeTimes {
     protected abstract void printAnimalName();
 
@@ -34,12 +34,12 @@ public abstract class CryThreeTimes {
 ```
 
 補足：
-**protected：**サブクラスと同一パッケージ外からのアクセスを禁止する。
-**final：**オーバーライドを禁止する。
+**protected**：サブクラスと同一パッケージ外からのアクセスを禁止する。
+**final**：オーバーライドを禁止する。
 
 ### Cat, Dog クラス
 
-```java
+```java:java
 public class Cat extends CryThreeTimes {
     @Override
     public void printAnimalName() {
@@ -53,7 +53,7 @@ public class Cat extends CryThreeTimes {
 }
 ```
 
-```java
+```java:java
 public class Dog extends CryThreeTimes {
     @Override
     public void printAnimalName() {
@@ -69,7 +69,7 @@ public class Dog extends CryThreeTimes {
 
 ### Main クラス
 
-```java
+```java:java
 public class Main {
     public static void main(String[] args) {
         CryThreeTimes cat = new Cat();
