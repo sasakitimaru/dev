@@ -1,0 +1,193 @@
+---
+title: 【デザインパターン】JavaのPrototypeパターンについて
+slug: design-pattern/java-prototype-pattern
+icon: ☕️
+description: 今回はPrototypeパターンについて解説します。
+date: "2023-09-17"
+categories:
+  - Java
+  - デザインパターン
+---
+## Prototype
+
+既存のインスタンスを用いてテンプレートを作り、それを元に別のインスタンスをコピーして作成します。
+Prototypeパターンを適用することで雛形の作成、保存、コピーのロジックを分けて整理することができます。
+
+## 実装
+
+今回はRPG風に、敵モンスターのクラスを作って増殖させます。
+
+### Enemyクラス
+
+敵キャラクターのメソッドを記述したインターフェースです。
+Cloneableとすることで実装先でcloneメソッドを使用してインスタンスを複製することができます。
+
+```java:java
+public interface Enemy extends Cloneable {
+    public void battle_turn();
+    public Enemy createCopy();
+}
+```
+
+### Managerクラス
+
+Enemyインターフェースを利用してインスタンスの複製を行います。
+showcaseにKeyValueの配列でインスタンスを格納して、getメソッドを用いて名前だけで呼び出せるようにします。
+これによりクラス名から解放され任意の設定した名前からメソッドを呼び出せるようになります。
+
+```java:java
+import java.util.HashMap;
+import java.util.Map;
+
+public class Manager {
+    public Map<String, Enemy> showcase = new HashMap<String, Enemy>();
+    public void register(String name, Enemy enemy) {
+        showcase.put(name, enemy);
+    }
+    public Enemy create(String name) {
+        Enemy enemy = showcase.get(name);
+        return enemy.createCopy();
+    }
+}
+```
+
+### Monsterクラス
+
+Enemyインターフェースを実装したモンスターです。
+createCopyでクローンメソッドを用いて自身のクローンを作成し返します。
+この時、現在の名前やhpの情報は引き継がれます。
+
+```java:java
+public class Monster implements Enemy {
+    private final String name;
+    private int hp;
+    private boolean isClone = false;
+    public Monster(String name, int hp) {
+        this.name = name;
+        this.hp = hp;
+    }
+    @Override
+    public void battle_turn() {
+        String MonsterTypeLabel = isClone ? "Monster(Clone): " : "Monster: ";
+        System.out.println("----start battle----");
+        System.out.println(MonsterTypeLabel + name + " HP: " + hp);
+        hp -= 10;
+        System.out.println("get damage");
+        System.out.println(MonsterTypeLabel + name + " HP: " + hp);
+        System.out.println("-----end battle-----");
+    }
+    @Override
+    public Enemy createCopy() {
+        Enemy enemy = null;
+        try {
+            enemy = (Enemy)clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("===Monster created===");
+        System.out.println("Monster(Clone): " + name + " HP: " + hp);
+				return enemy;
+    }
+}
+```
+
+ちなみに、上記ではクローンメソッドを用いていますがクローンする先の型が決まっていれば下記でも動作します。
+
+```java:java
+public class Monster implements Enemy {
+		...
+    public Monster(String name, int hp) {
+			...
+    }
+		// コピーコンストラクタ
+    public Monster(Monster monster) {
+        this.name = monster.name;
+        this.hp = monster.hp;
+        this.isClone = true;
+    }
+    @Override
+    public void battle_turn() {
+			...
+    }
+    @Override
+    public Enemy createCopy() {
+        System.out.println("===Monster created===");
+        System.out.println("Monster(Clone): " + name + " HP: " + hp);
+        return new Monster(this);
+    }
+}
+```
+
+こちらでは**コピーコンストラクタ**を用いてクローンを作成してます。
+上記のコードの方が例外処理もなくスムーズで良いかもしれません。
+クローンはインターフェースやスーパークラスのcloneメソッドをオーバーライドすることで、具体的なサブクラスの型を知らなくてもオブジェクトを複製することができます。
+これは具体的なサブクラスの型がランタイムでのみわかるような場面で役立ちます。
+
+### Mainクラス
+
+ここでは
+
+1. モンスターを作る
+2. 作ったモンスターを登録する
+3. モンスターをコピーする
+
+というフェーズごとにロジックを分離しています。
+これにより、それぞれのメソッドでスケールや改変がしやすくなります。
+
+```java
+public class Main {
+    public static void main(String[] args) {
+				// 1. モンスターを作る
+        Manager manager = new Manager();
+        Enemy slime = new Monster("slime", 100);
+        Enemy dragon = new Monster("dragon", 1000);
+				// 2. 作ったモンスターを登録する
+        manager.register("slime", slime);
+        manager.register("dragon", dragon);
+        slime.battle_turn();
+        dragon.battle_turn();
+				// 3. モンスターをコピーする
+        Enemy slime1 = manager.create("slime");
+        slime1.battle_turn();
+        slime.battle_turn();
+    }
+}
+```
+
+また実行結果から分かる通り、状態もコピーされています。
+
+実行結果
+
+```
+----start battle----
+Monster: slime HP: 100
+get damage
+Monster: slime HP: 90
+-----end battle-----
+----start battle----
+Monster: dragon HP: 1000
+get damage
+Monster: dragon HP: 990
+-----end battle-----
+===Monster created===
+Monster(Clone): slime HP: 90
+----start battle----
+Monster(Clone): slime HP: 90
+get damage
+Monster(Clone): slime HP: 80
+-----end battle-----
+===Monster created===
+Monster(Clone): slime HP: 90
+----start battle----
+Monster(Clone): slime HP: 90
+get damage
+Monster(Clone): slime HP: 80
+-----end battle-----
+----start battle----
+Monster: slime HP: 90
+get damage
+Monster: slime HP: 80
+-----end battle-----
+```
+
+See you later 👋
