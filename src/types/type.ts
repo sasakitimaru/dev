@@ -13,6 +13,7 @@ export type Article = {
   icon: string;
   description?: string;
   date: string;
+  tags: string[];
   categories: string[];
 };
 

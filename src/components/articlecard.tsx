@@ -22,12 +22,12 @@ const ArticleCard = ({ article }: { article: Article }) => {
           {formattedDate}
         </p>
         <div className="inline-flex max-w-full overflow-hidden">
-          {article.categories.slice(0, 2).map((tag, index) => (
+          {article.tags.slice(0, 2).map((tag, index) => (
             <React.Fragment key={index}>
               <Tag label={tag} />
             </React.Fragment>
           ))}
-          {article.categories.length > 2 && <p className="self-end">...</p>}
+          {article.tags.length > 2 && <p className="self-end">...</p>}
         </div>
       </div>
     </Link>

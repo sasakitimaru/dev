@@ -14,7 +14,7 @@ const SearchPage = () => {
       icon: post.icon,
       description: post.description,
       date: post.date,
-      categories: post.categories,
+      tags: post.tags,
     };
     return article;
   });

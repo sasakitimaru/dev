@@ -5,30 +5,30 @@ import { getAllPosts } from "@/api/mdx/mdxAPI";
 
 interface PostProps {
   params: {
-    category: string;
+    tag: string;
   };
 }
 
 async function getPostsFromParams(params: PostProps["params"]) {
-  const category = params?.category;
+  const tag = params?.tag;
   const articles = await getAllPosts();
-  const lowerCaseCategory = decodeURIComponent(category).toLowerCase();
+  const lowerCaseTag = decodeURIComponent(tag).toLowerCase();
   return articles.filter((post) => {
-    return post.categories.some(
-      (cat) => cat.toLowerCase() === lowerCaseCategory
+    return post.tags.some(
+      (cat) => cat.toLowerCase() === lowerCaseTag
     );
   });
 }
 
 export async function generateStaticParams(): Promise<PostProps["params"][]> {
-  const allCategories = allPosts.flatMap((post) => post.categories);
-  const uniqueCategories = [...new Set(allCategories)];
-  return uniqueCategories.map((category) => ({
-    category: category,
+  const allTags = allPosts.flatMap((post) => post.tag);
+  const uniqueTags = [...new Set(allTags)];
+  return uniqueTags.map((uniqueTag) => ({
+    tag: uniqueTag,
   }));
 }
 
-export default async function CategoryPage({
+export default async function TagPage({
   params,
 }: {
   params: PostProps["params"];
@@ -38,10 +38,10 @@ export default async function CategoryPage({
     <main className="flexs flex-col justify-center mt-20 items-center mb-4 px-8 sm:px-20 lg:px-40 sm:mx-auto w-full">
       <div className="inline-flex items-center">
         <h1 className="text-2xl sm:text-4xl text-left mb-4 font-bold w-full">
-          Categories：
+          Tags
         </h1>
         <h2 className="text-md sm:text-2xl text-left mb-4 w-full">
-          {decodeURIComponent(params.category)}
+          {decodeURIComponent(params.tag)}
         </h2>
       </div>
       <hr className="w-full mb-8" />

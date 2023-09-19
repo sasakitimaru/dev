@@ -77,7 +77,7 @@ const PostPage: React.FC<PostProps> = async ({ params }) => {
               <span>{post.readingTime.text}</span>
               <span>{` • `}</span>
               <span className="flex mt-2">
-                {post.categories.map((tag, index) => (
+                {post.tags.map((tag, index) => (
                   <React.Fragment key={index}>
                     <Tag label={tag} />
                   </React.Fragment>

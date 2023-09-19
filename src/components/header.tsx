@@ -17,11 +17,11 @@ const HeadeInfoListLargerThanSm = () => {
       </li>
       <li>
         <Link
-          href="/categories"
+          href="/Tags"
           className="hover:opacity-75 cursor-pointer flex justify-center items-center"
         >
           <LocalOfferIcon className="text-[20px] mr-1" />
-          <p className="text-sm">categories</p>
+          <p className="text-sm">Tags</p>
         </Link>
       </li>
       <li className="block">
@@ -104,9 +104,9 @@ const Header = () => {
             <SearchIcon />
             <span className="text-md">Search Articles</span>
           </InfoLink>
-          <InfoLink href="/categories" setIsClicked={setIsClicked}>
+          <InfoLink href="/Tags" setIsClicked={setIsClicked}>
             <LocalOfferIcon />
-            <span className="text-md">Categories</span>
+            <span className="text-md">Tags</span>
           </InfoLink>
           <InfoLink
             href="https://github.com/sasakitimaru"
