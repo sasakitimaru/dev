@@ -1,0 +1,210 @@
+---
+
+title: 【デザインパターン】JavaのBuilderパターンについて
+slug: design-pattern/java-builder-pattern
+icon: ☕️
+description: 今回はBuilderパターンについて解説します。
+date: "2023-09-17"
+categories:
+
+- Java
+- デザインパターン
+---
+
+## Builder
+
+building（建物）をbuild（建てる）のがbuilderです。
+builderパターンを用いることで設計図と構築作業、その作業の具体的な内容を別々に定義し建物を順序立てて作ることができます。
+
+## 実装
+
+今回は文書を作成するプログラムを作ります。
+
+### Builderクラス
+
+ここでは文書を作るための作業を洗い出します。
+これらは文書を作る道具であり、これらを使って文書を作成することを示しています。
+
+```java:java
+public abstract class Builder {
+    public abstract void makeTitle(String title);
+    public abstract void makeString(String str);
+    public abstract void makeItems(String[] items);
+    public abstract void close();
+}
+```
+
+### Directorクラス
+
+ここではBuilderクラスで定義した道具を使って実際にどのように文書を`作って`いくのかを定義しています。
+
+```java:java
+public class Director {
+    private final Builder builder;
+    public Director(Builder builder) {
+        this.builder = builder;
+    }
+    public void construct(){
+        builder.makeTitle("Types of Pokémon");
+        builder.makeString("There are three types of Pokémon.");
+        builder.makeItems(new String[]{
+            "Fire type",
+            "Water type",
+            "Grass type"
+        });
+        builder.makeString("Following is the Pokémon corresponding to each type.");
+        builder.makeItems(new String[]{
+            "Charmander",
+            "Squirtle",
+            "Bulbasaur"
+        });
+        builder.close();
+    }
+}
+```
+
+### ConcreteBuilderクラス
+
+ここでは`どのような文書を作るのか`を定義しています。
+Builderクラスで定義した道具の具体的な処理（使い方）を記述するイメージです。
+
+HTMLBuilderクラス
+
+```java:java
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
+
+public class HTMLBuilder extends Builder {
+    private String filename = "untitled.html";
+    private final StringBuilder sb = new StringBuilder();
+    @Override
+    public void makeTitle(String title) {
+        this.filename = title + ".html";
+        sb.append("<!DOCTYPE html>");
+        sb.append("<html><head><title>" + title + "</title></head><body>");
+        sb.append("<h1>" + title + "</h1>");
+    }
+    @Override
+    public void makeString(String str) {
+        sb.append("<p>" + str + "</p>");
+    }
+    @Override
+    public void makeItems(String[] items) {
+        sb.append("<ul>");
+        for (String item : items) {
+            sb.append("<li>" + item + "</li>");
+        }
+        sb.append("</ul>");
+    }
+    @Override
+    public void close() {
+        sb.append("<hr/></body></html>");
+        try {
+            Writer writer = new FileWriter(filename);
+            writer.write(sb.toString());
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public String getResult() {
+        return filename;
+    }
+}
+```
+
+TextBuilderクラス
+
+```java:java
+public class TextBuilder extends Builder {
+    private final StringBuilder sb = new StringBuilder();
+    @Override
+    public void makeTitle(String title) {
+        sb.append("==============================\n");
+        sb.append("[" + title + "]\n");
+        sb.append("\n");
+    }
+    @Override
+    public void makeString(String str) {
+        sb.append("■" + str + "\n");
+        sb.append("\n");
+    }
+    @Override
+    public void makeItems(String[] items) {
+        for (String item : items) {
+            sb.append("　・" + item + "\n");
+        }
+        sb.append("\n");
+    }
+    @Override
+    public void close() {
+        sb.append("==============================\n");
+    }
+    public String getResult() {
+        return sb.toString();
+    }
+}
+```
+
+### Mainクラス
+
+コマンドライン引数(args)を用いて作成するドキュメントタイプを指定します。
+何も入力されていなければusageメソッドで使い方を示します。
+
+```java:java
+public class Main {
+    public static void main(String[] args) {
+        if (args.length != 1) {
+            usage();
+            System.exit(0);
+        }
+        if (args[0].equals("plain")) {
+            TextBuilder textBuilder = new TextBuilder();
+            Director director = new Director(textBuilder);
+            director.construct();
+            String result = textBuilder.getResult();
+            System.out.println(result);
+        } else if (args[0].equals("html")) {
+            HTMLBuilder htmlBuilder = new HTMLBuilder();
+            Director director = new Director(htmlBuilder);
+            director.construct();
+            String filename = htmlBuilder.getResult();
+            System.out.println(filename + " has been created.");
+        } else {
+            usage();
+            System.exit(0);
+        }
+    }
+    public static void usage() {
+        System.out.println("Usage: java Main plain");
+        System.out.println("Usage: java Main html");
+    }
+}
+```
+
+実行結果(args == “plain”)
+
+```
+==============================
+[Types of Pokémon]
+
+■There are three types of Pokémon.
+
+  ・Fire type
+  ・Water type
+  ・Grass type
+
+■Following is the Pokémon corresponding to each type.
+
+  ・Charmander
+  ・Squirtle
+  ・Bulbasaur
+
+==============================
+```
+
+引数に”html”を渡して実行すればHTMLドキュメントが作成されます。
+Builderパターンを使用することで設計書、道具、使い方のようにロジックを分離することができました。
+
+See you later 👋

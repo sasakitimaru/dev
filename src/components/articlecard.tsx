@@ -7,7 +7,7 @@ const ArticleCard = ({ article }: { article: Article }) => {
   const formattedDate = dateFormatter(article.date);
   return (
     <Link
-      href={`${article.slug}`}
+      href={`/posts/${article.slug}`}
       key={article.id}
       className="flex flex-row items-center cursor-pointer"
     >

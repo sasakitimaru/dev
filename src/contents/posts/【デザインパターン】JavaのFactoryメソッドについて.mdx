@@ -1,0 +1,191 @@
+---
+title: 【デザインパターン】JavaのFactory Methodについて
+slug: design-pattern/java-factory-method
+icon: ☕️
+description: 今回はJavaのFactoryメソッドについて説明します。
+date: "2023-09-16"
+categories:
+  - Java
+  - デザインパターン
+---
+## Factoryメソッド
+
+Factoryは工場です。
+製品を加工して作るのが工場の役目です。
+今回はパスタ工場を作って、ペペロンチーノやカルボナーラを作れるようにします。
+
+## 実装
+
+### Productクラス
+
+ProductクラスはFactoryで生産される製品の抽象クラスになります。
+Factoryで作られる製品は何であれ、display（展示）できるという事を示しています。
+
+```java:java
+package framework;
+
+public abstract class Product {
+    public abstract void display();
+}
+```
+
+### Factoryクラス
+
+FactoryクラスではTemplateメソッドが使われてます。
+Templateメソッドについては[こちら](./【デザインパターン】JavaのTemplateMethodについて)の記事を参考にしてください。
+ここでは工場はcreateメソッドを用いて製品を作る、と言うことを定義しています。
+またcreateではcreateProductで製品を作り、resisterProductで製品を登録する、と言う手順を定義しています。
+
+```java:java
+package framework;
+
+public abstract class Factory {
+    protected abstract Product createProduct(String name);
+    protected abstract void registerProduct(Product product);
+    public final Product create(String name) {
+        Product p = createProduct(name);
+        registerProduct(p);
+        return p;
+    }
+}
+```
+
+### Pastaクラス
+
+ここからはdishパッケージにクラスを実装します。（フレームワークと分離していることを明示するため）
+Pastaクラスではパスタを構成する材料などを定義するメソッドを実装します。
+また、Productクラスを継承して作成したパスタを確認できるようにしています。
+
+```java:java
+package dish;
+
+import framework.Product;
+public class Pasta extends Product{
+    private String pastaType;
+    private String ingredient;
+    private String sauce;
+
+    public Pasta(String pastaType) {
+        this.pastaType = pastaType;
+    }
+    public void addIngredient(String ingredient) {
+        System.out.println("Making ... ");
+        System.out.println("Add: " + ingredient);
+        this.ingredient = ingredient;
+    }
+    public void addSauce(String sauce) {
+        System.out.println("Add: " + sauce);
+        this.sauce = sauce;
+    }
+    @Override
+    public void display() {
+        System.out.println("--------Created Pasta--------");
+        System.out.println("Pasta: " + pastaType);
+        System.out.println("Ingredient: " + ingredient);
+        System.out.println("Sauce: " + sauce);
+        System.out.println("----------------------------");
+    }
+}
+```
+
+### PastaFactoryクラス
+
+PastaFactoryクラスではPastaのインスタンスを生成して、**工場での製造**を実現しています。
+createProductの手順をあらかじめ定義しておくことでユーザが勝手に色々なペペロンチーノを自作することが無くなります。（勝手にチーズ入れられたりしない）
+このおかげでcreateProductにPeperoncinoを与えれば自動でペペロンチーノを作ってくれます。
+
+```java:java
+package dish;
+
+import framework.Factory;
+import framework.Product;
+
+import java.util.Objects;
+
+public class PastaFactory extends Factory {
+    @Override
+    protected Product createProduct(String name){
+        if(name.equals("Peperoncino")){
+            Pasta pepe = new Pasta(name);
+            pepe.addIngredient("chili pepper");
+            pepe.addSauce("garlic");
+            return pepe;
+        } else if (name.equals("Carbonara")) {
+            Pasta carbo = new Pasta(name);
+            carbo.addIngredient("bacon");
+            carbo.addSauce("egg and milk");
+            return carbo;
+        } else {
+            Pasta plain = new Pasta("Plain");
+            plain.addIngredient("null");
+            plain.addSauce("null");
+            return plain;
+        }
+    }
+    @Override
+    protected void registerProduct(Product product){
+        System.out.println(product + " registered");
+    }
+}
+```
+
+### Mainクラス
+
+Mainクラスでは工場で製品が作られることさえ知っていれば問題ないです。
+以下ではFactory, Productクラスのメソッドしか用いてません。
+これによりMainクラスから実装を隠蔽することができ、PastaFactoryの中身がどのように変わってもMainクラスはそれを知る必要がありません（＝修正不要）
+またcreateには作るパスタの名前で依頼すればそれに応じた具材を足してパスタが作られます。
+勝手にユーザーがオリジナルのペペロンチーノを作る心配を無くすことができます。
+
+```java:java
+package dish;
+
+import framework.Factory;
+import framework.Product;
+
+public class Main {
+    public static void main(String[] args) {
+        Factory factory = new PastaFactory();
+        Product pepe = factory.create("Peperoncino");
+        pepe.display();
+        Product carbo = factory.create("Carbonara");
+        carbo.display();
+        Product plain = factory.create("Plain");
+        plain.display();
+    }
+}
+```
+
+実行結果
+
+```
+Making ... 
+Add: chili pepper
+Add: garlic
+dish.Pasta@13221655 registered
+--------Created Pasta--------
+Pasta: Peperoncino
+Ingredient: chili pepper
+Sauce: garlic
+----------------------------
+Making ... 
+Add: bacon
+Add: egg and milk
+dish.Pasta@2f2c9b19 registered
+--------Created Pasta--------
+Pasta: Carbonara
+Ingredient: bacon
+Sauce: egg and milk
+----------------------------
+Making ... 
+Add: null
+Add: null
+dish.Pasta@31befd9f registered
+--------Created Pasta--------
+Pasta: Plain
+Ingredient: null
+Sauce: null
+----------------------------
+```
+
+See you later👋

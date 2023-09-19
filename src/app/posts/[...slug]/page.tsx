@@ -24,8 +24,7 @@ async function getArticlesData(title: string) {
 
 async function getPostFromParams(params: PostProps["params"]) {
   const slug = params?.slug?.join("/");
-  const decodedString = decodeURIComponent(slug);
-  const post = allPosts.find((post) => post.slugAsParams === decodedString);
+  const post = allPosts.find((post) => post.slug === slug);
   if (!post) {
     null;
   }
@@ -50,7 +49,7 @@ export async function generateMetadata({
 
 export async function generateStaticParams(): Promise<PostProps["params"][]> {
   return allPosts.map((post) => ({
-    slug: post.slugAsParams.split("/"),
+    slug: post.slug.split("/"),
   }));
 }
 

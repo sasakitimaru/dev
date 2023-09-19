@@ -1,0 +1,135 @@
+---
+title: 【デザインパターン】JavaのSingletonパターンについて
+slug: design-pattern/java-singleton-pattern
+icon: ☕️
+description: 今回はSingletonパターンについて解説します。
+date: "2023-09-16"
+categories:
+  - Java
+  - デザインパターン
+---
+## Singleton
+
+「Singletonパターンを採用したクラスのインスタンスは必ず1つしか存在しない」と言うことを約束するものです。
+普通のクラスのインスタンスは複数作成して処理を別々で行なっていますが、それだと困る場合があります。システム全体の設定を管理するクラスや、ダークモードなどの設定を管理するクラスが複数あると参照するインスタンスによって値が変わってしまい一貫性がなくなってしまいます。
+（こっちのページではライトモードなのにこっちだとダークモードになってるみたいな）
+今回は貯金箱を用いてスレッドセーフなSingletonパターンを実装していきます。
+※スレッドセーフ：同時にアクセスされても正しい結果を返すことができる。口座10万円誰かが貯金したのに貯金する前にアクセスしたから残高増えてない、みたいな状況を防ぐ。
+じ
+
+## 実装
+
+### Savingクラス
+
+SavingクラスにSingletonパターンを採用していきます。
+Savingクラスの中でstaticフィールドとしてSaving svが定義されます。
+これによりクラス変数としてsvを持つことができ、最初にSavingを参照した時（ロードした時）のみsvは初期化されます。
+またコンストラクタにprivate修飾子を付けることによって勝手にクラス外部から直接コンストラクタを参照して初期化されることを防いでいます。
+
+```java:java
+package singleton;
+
+public class Saving {
+    private int money = 0;
+		// staticフィールドで定義することで一度しか初期化されず一貫性を保つ
+    private static final Saving sv = new Saving();
+		// private修飾子によってSavingクラス外からコンストラクタの呼び出しを禁止
+    private Saving() {}
+    public static Saving getInstance() {
+        return sv;
+    }
+    public synchronized void addMoney(int money) {
+        this.money += money;
+        System.out.println("Add: " + money);
+        System.out.println("Total: " + this.money);
+    }
+    public synchronized void subtractMoney(int money) {
+        this.money -= money;
+        System.out.println("Subtract: " + money);
+        System.out.println("Total: " + this.money);
+    }
+    public synchronized int getMoney() {
+        return money;
+    }
+}
+```
+
+Savingクラスではお金の貯金（addMoney）と引き落とし（subtractMoney）を実装しています。
+
+### Mainクラス
+
+実際にMainクラスで2つ同時に処理を走らせてみましょう。
+
+```java:java
+package singleton;
+
+public class Main extends Thread {
+
+    public static void main(String[] args) {
+        Main threadA = new Main("TEST A");
+        Main threadB = new Main("TEST B");
+				// それぞれの処理実行
+        threadA.start();
+        threadB.start();
+        try {
+						// 処理を待つ
+            threadA.join();
+            threadB.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+				// 結果の出力
+        System.out.println("Consequence: " + Saving.getInstance().getMoney());
+    }
+
+    @Override
+    public void run() {
+        Saving sv = Saving.getInstance();
+        sv.addMoney(10000);
+        sv.subtractMoney(5000);
+        System.out.println(Thread.currentThread().getName() + " - Money: " + sv.getMoney());
+    }
+
+    public Main(String name) {
+        super(name);
+    }
+}
+```
+
+実行結果①
+
+```
+Add: 10000
+Total: 10000
+Add: 10000
+Total: 20000
+Subtract: 5000
+Total: 15000
+Subtract: 5000
+Total: 10000
+TEST A - Money: 10000
+TEST B - Money: 10000
+Consequence: 10000
+```
+
+実行結果②
+
+```
+Add: 10000
+Total: 10000
+Add: 10000
+Total: 20000
+Subtract: 5000
+Total: 15000
+Subtract: 5000
+Total: 10000
+TEST A - Money: 10000
+TEST B - Money: 15000
+Consequence: 10000
+```
+
+結果からわかる通り、過程は違えど最終的な金額は同じになります。
+これは一つのインスタンスを共有し、そこでスレッドセーフな処理を行なっているためです。
+同じ貯金箱に対して、みんなが順番に並んで貯金・引き落としをしているイメージです。
+
+See you later👋
