@@ -21,7 +21,7 @@ async function getPostsFromParams(params: PostProps["params"]) {
 }
 
 export async function generateStaticParams(): Promise<PostProps["params"][]> {
-  const allTags = allPosts.flatMap((post) => post.tag);
+  const allTags = allPosts.flatMap((post) => post.tags);
   const uniqueTags = [...new Set(allTags)];
   return uniqueTags.map((uniqueTag) => ({
     tag: uniqueTag,
@@ -35,12 +35,12 @@ export default async function TagPage({
 }) {
   const articles = await getPostsFromParams(params);
   return (
-    <main className="flexs flex-col justify-center mt-20 items-center mb-4 px-8 sm:px-20 lg:px-40 sm:mx-auto w-full">
-      <div className="inline-flex items-center">
-        <h1 className="text-2xl sm:text-4xl text-left mb-4 font-bold w-full">
-          Tags
+    <main className="flex flex-col mt-20 mb-4 px-8 sm:px-20 lg:px-40 sm:mx-auto w-full">
+      <div className="flex items-center mb-4 w-full">
+        <h1 className="text-2xl sm:text-4xl text-left font-bold">
+          Tags：
         </h1>
-        <h2 className="text-md sm:text-2xl text-left mb-4 w-full">
+        <h2 className="text-md sm:text-2xl items-center text-left w-full">
           {decodeURIComponent(params.tag)}
         </h2>
       </div>

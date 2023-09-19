@@ -15,6 +15,7 @@ const SearchPage = () => {
       description: post.description,
       date: post.date,
       tags: post.tags,
+      categories: post.categories,
     };
     return article;
   });

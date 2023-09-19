@@ -17,7 +17,7 @@ const HeadeInfoListLargerThanSm = () => {
       </li>
       <li>
         <Link
-          href="/Tags"
+          href="/tags"
           className="hover:opacity-75 cursor-pointer flex justify-center items-center"
         >
           <LocalOfferIcon className="text-[20px] mr-1" />
@@ -104,7 +104,7 @@ const Header = () => {
             <SearchIcon />
             <span className="text-md">Search Articles</span>
           </InfoLink>
-          <InfoLink href="/Tags" setIsClicked={setIsClicked}>
+          <InfoLink href="/tags" setIsClicked={setIsClicked}>
             <LocalOfferIcon />
             <span className="text-md">Tags</span>
           </InfoLink>

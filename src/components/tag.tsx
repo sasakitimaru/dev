@@ -10,7 +10,7 @@ interface TagProps {
 const Tag: React.FC<TagProps> = ({ label }) => {
   const router = useRouter();
   const handleRouting = () => {
-    router.push(`/Tags/${label}`);
+    router.push(`/tags/${label}`);
   };
   return (
     <div onClick={handleRouting}>
