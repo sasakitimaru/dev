@@ -62,7 +62,7 @@ export const metadata: Metadata = {
     { media: "(prefers-color-scheme: dark)", color: "black" },
   ],
   twitter: {
-    card: "summary_large_image",
+    card: "summary",
     title,
     site: "@sasakiti_miaru",
     creator: "@sasakiti_miaru",
