@@ -3,27 +3,34 @@ import React, { useState, useEffect } from "react";
 import SentimentVeryDissatisfiedIcon from "@mui/icons-material/SentimentVeryDissatisfied";
 import { Article } from "@/types/type";
 import ArticleCardList from "@/components/articlecardlist";
-import { getAllPosts } from "@/api/mdx/mdxAPI";
+import { allPosts } from "contentlayer/generated";
 
 const SearchPage = () => {
-  const [articles, setArticles] = useState<Article[]>([]);
   const [searchResult, setSearchResult] = useState<Article[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [input, setInput] = useState<string>("");
 
-  useEffect(() => {
-    (async () => {
-      const res = await getAllPosts();
-      setArticles(res);
-    })();
-  }, []);
+  const articles: Article[] = allPosts
+    .map((post) => ({
+      id: post._id,
+      icon: post.icon,
+      title: post.title,
+      description: post.description,
+      slug: post.slug,
+      tags: post.tags,
+      date: post.date,
+      categories: post.categories,
+    }))
+    .sort((a, b) => {
+      return new Date(b.date).getTime() - new Date(a.date).getTime();
+    });
 
   useEffect(() => {
     const result = articles.filter((article) => {
       return article.title.toLowerCase().includes(input.toLowerCase());
     });
     setSearchResult(result);
-  }, [input, articles]);
+  }, [input]);
 
   // setSearchResultの処理が終わったことをトリガーとしてloadingをfalseにする
   useEffect(() => {
@@ -31,6 +38,7 @@ const SearchPage = () => {
       setLoading(false);
     }
   }, [searchResult]);
+  
   return (
     <div className="flex flex-col px-4">
       <input

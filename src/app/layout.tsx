@@ -63,24 +63,17 @@ export const metadata: Metadata = {
   ],
   twitter: {
     card: "summary_large_image",
+    title,
     site: "@sasakiti_miaru",
     creator: "@sasakiti_miaru",
     images: process.env.NEXT_PUBLIC_BASE_URL! + "/draw1.svg",
   },
-  // openGraph: {
-  //   type: "website",
-  //   url: process.env.NEXT_PUBLIC_BASE_URL!,
-  //   title,
-  //   description,
-  //   images: [
-  //     {
-  //       url: process.env.NEXT_PUBLIC_BASE_URL! + "/draw1.svg",
-  //       width: 1200,
-  //       height: 630,
-  //       alt: title,
-  //     },
-  //   ],
-  // },
+  openGraph: {
+    type: "website",
+    url: process.env.NEXT_PUBLIC_BASE_URL!,
+    title,
+    description,
+  },
 };
 
 export default function RootLayout({
