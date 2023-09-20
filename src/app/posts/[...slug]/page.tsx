@@ -60,8 +60,8 @@ const PostPage: React.FC<PostProps> = async ({ params }) => {
   }
   const articleData = await getArticlesData(post.title);
   return (
-    <div className="sm:flex sm:flex-col sm:items-center">
-      <article className="relative mt-20 p-6 lg:px-10 prose bg-white dark:bg-gray-800 rounded-lg prose-base dark:prose-invert mb-10">
+    <div className="sm:w-screen">
+      <article className="relative mt-20 p-4 lg:px-10 prose bg-white dark:bg-gray-800 sm:rounded-lg prose-base dark:prose-invert mb-10">
         <Suspense fallback={<div>Loading...</div>}>
           <header>
             <h1 className="mb-2">{post.title}</h1>

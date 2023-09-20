@@ -17,10 +17,14 @@ const ArticleCardSkeleton = () => {
 
 const Loading = () => {
     return (
-        <div className="flex flex-col bg-white dark:bg-gray-900 min-h-screen py-24 justify-cente items-center px-8 sm:px-20 lg:px-40 mx-auto">
+        <div className="flex flex-col items-center sm:mt-10 px-4">
             <Skeleton variant="rectangular" className="w-full max-w-3xl h-10 px-4 p-4 rounded-full" />
             <div className="grid gap-y-8 sm:gap-12 grid-cols-1 sm:grid-cols-2"></div>
             <div className="grid gap-y-8 sm:gap-16 grid-cols-1 sm:grid-cols-2 mt-8">
+                <ArticleCardSkeleton />
+                <ArticleCardSkeleton />
+                <ArticleCardSkeleton />
+                <ArticleCardSkeleton />
                 <ArticleCardSkeleton />
                 <ArticleCardSkeleton />
                 <ArticleCardSkeleton />

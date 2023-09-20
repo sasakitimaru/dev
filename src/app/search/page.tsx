@@ -1,48 +1,47 @@
 "use client";
-import React, { useState, useEffect, Suspense, use } from "react";
+import React, { useState, useEffect } from "react";
 import SentimentVeryDissatisfiedIcon from "@mui/icons-material/SentimentVeryDissatisfied";
-import { allPosts } from "contentlayer/generated";
 import { Article } from "@/types/type";
 import ArticleCardList from "@/components/articlecardlist";
+import { getAllPosts } from "@/api/mdx/mdxAPI";
 
 const SearchPage = () => {
-  const articles = allPosts.map((post) => {
-    const article: Article = {
-      id: post._id,
-      title: post.title,
-      slug: post.slug,
-      icon: post.icon,
-      description: post.description,
-      date: post.date,
-      tags: post.tags,
-      categories: post.categories,
-    };
-    return article;
-  });
+  const [articles, setArticles] = useState<Article[]>([]);
   const [searchResult, setSearchResult] = useState<Article[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [input, setInput] = useState<string>("");
+
+  useEffect(() => {
+    (async () => {
+      const res = await getAllPosts();
+      setArticles(res);
+    })();
+  }, []);
+
   useEffect(() => {
     const result = articles.filter((article) => {
       return article.title.toLowerCase().includes(input.toLowerCase());
     });
     setSearchResult(result);
-    setLoading(false);
-  }, [input]);
+  }, [input, articles]);
 
+  // setSearchResultの処理が終わったことをトリガーとしてloadingをfalseにする
+  useEffect(() => {
+    if (searchResult.length !== 0) {
+      setLoading(false);
+    }
+  }, [searchResult]);
   return (
-    <main className="flex flex-col bg-white dark:bg-gray-900 py-24 px-8 sm:px-20 lg:px-40">
-      <div className="w-full self-center max-w-xl border border-gray-300 rounded-full bg-white dark:bg-zinc-700">
-        <input
-          type="text"
-          className="w-full h-10 px-4 p-4 rounded-full outline-blue-400 bg-inherit"
-          placeholder="Search"
-          autoFocus
-          onChange={(e) => {
-            setInput(e.target.value);
-          }}
-        />
-      </div>
+    <div className="flex flex-col px-4">
+      <input
+        type="text"
+        className="w-full max-w-xl h-10 px-4 p-4 self-center border border-gray-300 rounded-full bg-white dark:bg-zinc-700 outline-blue-400 bg-inherit"
+        placeholder="Search"
+        autoFocus
+        onChange={(e) => {
+          setInput(e.target.value);
+        }}
+      />
       {!loading && searchResult.length === 0 ? (
         <div className="flex flex-row self-center items-center">
           <SentimentVeryDissatisfiedIcon className="text-2xl mr-2" />
@@ -53,7 +52,7 @@ const SearchPage = () => {
       ) : (
         <ArticleCardList articles={searchResult} />
       )}
-    </main>
+    </div>
   );
 };
 
