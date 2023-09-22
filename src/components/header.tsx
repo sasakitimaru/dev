@@ -67,7 +67,7 @@ const Header = () => {
   const [isClicked, setIsClicked] = React.useState(false);
   return (
     <>
-      <nav className="md:px-24 lg:px-32 px-6 bg-white dark:bg-gray-800 shadow-md flex flex-wrap items-center md:py-2 fixed z-20 w-full top-0">
+      <nav className="md:px-24 lg:px-32 px-6 bg-white dark:bg-gray-800 shadow-md flex flex-wrap items-center md:py-2 fixed z-30 w-full top-0">
         <div className="flex-1 flex items-center">
           <Image
             src="/draw1.svg"
@@ -119,7 +119,7 @@ const Header = () => {
         </aside>
       </nav>
       <div
-        className={`fixed top-0 w-screen h-screen bg-black z-10 transition-all duration-300 ${
+        className={`fixed top-0 w-screen h-screen bg-black z-20 transition-all duration-300 ${
           isClicked ? "opacity-50 visible" : "opacity-0 invisible"
         }`}
         onClick={() => setIsClicked(false)}
