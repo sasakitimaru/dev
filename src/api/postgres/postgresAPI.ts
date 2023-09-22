@@ -1,5 +1,12 @@
 import axios from "axios";
-import { ArticlesRequest, ArticlesResponse, Comment,CommentRequest, Reply, ReplyRequest } from "@/types/type";
+import {
+  ArticlesRequest,
+  ArticlesResponse,
+  Comment,
+  CommentRequest,
+  Reply,
+  ReplyRequest,
+} from "@/types/type";
 import { CsrfToken } from "@/types/type";
 
 export const getCsrfToken = async () => {
@@ -51,45 +58,57 @@ export const getAllComments = async () => {
     `${process.env.NEXT_PUBLIC_BACK_END_API_URL}/comments`
   );
   return res;
-}
+};
 
 export const getCommentsByArticleId = async (id: number) => {
   const res = await axios.get<Comment[]>(
     `${process.env.NEXT_PUBLIC_BACK_END_API_URL}/comments/article/${id}`
   );
   return res;
-}
+};
 
 export const createComment = async (comment: CommentRequest) => {
-  const res = await axios.post<Comment>(
-    `${process.env.NEXT_PUBLIC_BACK_END_API_URL}/comments`,
-    comment
-  );
-  return res;
-}
+  try {
+    const res = await axios.post<Comment>(
+      `${process.env.NEXT_PUBLIC_BACK_END_API_URL}/comments`,
+      comment
+    );
+    return res;
+  } catch (error) {
+    throw error;
+  }
+};
 
 export const updateComment = async (comment: CommentRequest) => {
-  const res = await axios.put<Comment>(
-    `${process.env.NEXT_PUBLIC_BACK_END_API_URL}/comments/${comment.id}`,
-    comment
-  );
-  return res;
-}
+  try {
+    const res = await axios.put<Comment>(
+      `${process.env.NEXT_PUBLIC_BACK_END_API_URL}/comments/${comment.id}`,
+      comment
+    );
+    return res;
+  } catch (error) {
+    throw error;
+  }
+};
 
 export const getRepliesByCommentId = async (id: number) => {
   const res = await axios.get<Reply[]>(
     `${process.env.NEXT_PUBLIC_BACK_END_API_URL}/replies/comment/${id}`
   );
   return res;
-}
+};
 
 export const createReply = async (reply: ReplyRequest) => {
+  try {
   const res = await axios.post<Reply>(
     `${process.env.NEXT_PUBLIC_BACK_END_API_URL}/replies`,
     reply
   );
   return res;
-}
+  } catch (error) {
+    throw error;
+  }
+};
 
 export const getComments = async (id: number) => {
   const res = await getCommentsByArticleId(id);
