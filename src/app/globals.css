@@ -4,6 +4,11 @@
 
 @import "../assets/css/prism-dracula.css";
 
+.is-active-li {
+  color: #000;
+  font-weight: bold;
+}
+
 @layer base {
     :root {
       --font-sans: Inter;
