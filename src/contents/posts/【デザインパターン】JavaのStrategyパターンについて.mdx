@@ -1,0 +1,404 @@
+---
+title: 【デザインパターン】JavaのStrategyパターンについて
+slug: design-pattern/java-strategy-pattern
+icon: ☕️
+description: 今回はJavaのStrategyパターンについて紹介します。
+date: "2023-09-23"
+tags:
+  - Java
+  - デザインパターン
+categories:
+  - プログラミング
+---
+
+## Strategy
+
+Strategy=戦略　です。
+このデザインパターンでは戦略に当たる部分（=アルゴリズム）を分離して色々な戦略をメインの実装に関わらず変更することができるようにするものです。
+
+## 実装
+
+今回はポケモンバトルを再現したいと思います。
+
+### Pokemon
+
+いきなり長いコードですが、ここではポケモンの基本的な情報とそれを用いた処理を記述します。
+また、[Singletonパターン](https://kurimatsugpt.com/posts/design-pattern/java-singleton-pattern)を採用しており、各ポケモンは必ず一体しか存在しません。（簡単のためこのような設計としています。）
+
+```java:java
+public enum Pokemon {
+    IVYSAUR(Type.GRASS, 60, 62, 63, 80, 80, 60),
+    CHARIZARD(Type.FIRE, 78, 84, 78, 109, 85, 100),
+    SQUIRTLE(Type.WATER, 44, 48, 65, 50, 64, 43),
+    SQUIRT(Type.WATER, 40, 48, 50, 55, 60, 45),
+    TANGLEA(Type.GRASS, 65, 55, 115, 100, 40, 60),
+    MAGMAR(Type.FIRE, 65, 95, 57, 100, 85, 93);
+
+    private final Type type;
+    private int hp;
+    private final int atk;
+    private final int def;
+    private final int spAtk;
+    private final int spDef;
+    private final int spd;
+
+    Pokemon(Type type, int hp, int atk, int def, int spAtk, int spDef, int spd) {
+        this.type = type;
+        this.hp = hp;
+        this.atk = atk;
+        this.def = def;
+        this.spAtk = spAtk;
+        this.spDef = spDef;
+        this.spd = spd;
+    }
+
+    public int getHp() {
+        return this.hp;
+    }
+
+    public boolean isGreaterDef(Pokemon pokemon) {
+        return this.def > pokemon.def;
+    }
+
+    public boolean isSuperEffective(Pokemon pokemon) {
+        return this.type.isSuperEffectiveType(pokemon.type);
+    }
+
+    public boolean isWeak(Pokemon pokemon) {
+        return this.type.isWeakType(pokemon.type);
+    }
+
+    public boolean willMoveFirst(Pokemon opponent) {
+        if (this.spd > opponent.spd) {
+            return true;
+        } else if (this.spd < opponent.spd) {
+            return false;
+        } else {
+            return Math.random() < 0.5;
+        }
+    }
+
+    public void processDamage(Pokemon opponent, boolean shouldPhysicalAttack) {
+        int baseDamage = calculateDamage(opponent, shouldPhysicalAttack);
+        setDamage(opponent, baseDamage);
+    }
+
+    public int calculateDamage(Pokemon opponent, boolean shouldPhysicalAttack) {
+        double usedAtk = shouldPhysicalAttack ? this.atk : this.spAtk;
+        double usedDef = shouldPhysicalAttack ? opponent.def : opponent.spDef;
+        double baseDamage = (usedAtk / usedDef) * 10;
+
+        if (this.isSuperEffective(opponent)) {
+            baseDamage *= 2.0;
+            System.out.println("It's super effective!");
+        } else if (this.isWeak(opponent)) {
+            System.out.println("It's not very effective...");
+            baseDamage *= 0.5;
+        }
+        return (int) baseDamage;
+    }
+
+    private void setDamage(Pokemon opponent, int damage) {
+        opponent.hp = Math.max(opponent.hp - damage, 0);
+    }
+}
+```
+
+### Strategy
+
+戦略のインターフェースを実装していきます。
+インターフェースにしている理由は、
+どのような戦略を使うかだけ定義しています。
+インターフェースを実装したクラスで具体的な戦略は記述します。
+
+```java:java
+import java.util.List;
+
+public interface Strategy {
+    public boolean shouldAttackPhysically(Pokemon targetPokemon, Pokemon currentBattlingPokemon);
+    public boolean shouldChangePokemon(Pokemon targetPokemon, Pokemon currentBattlingPokemon);
+    public Pokemon WhoShouldPickForNext(Pokemon targetPokemon, List<Pokemon> myPokemon);
+}
+```
+
+### SmartStrategy
+
+Strategyインターフェースの実装クラスです。
+Pokemon型の中にあるメソッドを使ってステータスの優劣を計算してその結果を利用して攻撃、ポケモン交換をどうするか戦略を考えるようにしています。
+
+```java:java
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+public class SmartStrategy implements Strategy {
+    public SmartStrategy() {
+    }
+
+    @Override
+    public boolean shouldAttackPhysically(Pokemon targetPokemon, Pokemon currentBattlingPokemon) {
+        return currentBattlingPokemon.isGreaterDef(targetPokemon);
+    }
+
+    @Override
+    public boolean shouldChangePokemon(Pokemon targetPokemon, Pokemon currentBattlingPokemon) {
+        return currentBattlingPokemon.isWeak(targetPokemon);
+    }
+
+    @Override
+    public Pokemon WhoShouldPickForNext(Pokemon targetPokemon, List<Pokemon> myPokemon) {
+        List<Pokemon> advantageous = new ArrayList<>();
+        List<Pokemon> neutral = new ArrayList<>();
+        List<Pokemon> disadvantageous = new ArrayList<>();
+
+        for (Pokemon pokemon : myPokemon) {
+            if (pokemon.isSuperEffective(targetPokemon)) {
+                advantageous.add(pokemon);
+            } else if (pokemon.isWeak(targetPokemon)) {
+                disadvantageous.add(pokemon);
+            } else {
+                neutral.add(pokemon);
+            }
+        }
+
+        if (!advantageous.isEmpty()) {
+            return getRandomPokemon(advantageous);
+        } else if (!neutral.isEmpty()) {
+            return getRandomPokemon(neutral);
+        } else {
+            return getRandomPokemon(disadvantageous);
+        }
+    }
+
+    private Pokemon getRandomPokemon(List<Pokemon> pokemonList) {
+        Random rand = new Random();
+        return pokemonList.get(rand.nextInt(pokemonList.size()));
+    }
+}
+```
+
+### NormalStrategy
+
+こちらは戦略はランダムに決定するようにしています。
+SmartStrategyとの対比用です。弱いNPC。
+
+```java:java
+import java.util.List;
+import java.util.Random;
+
+public class NormalStrategy implements Strategy {
+    private final Random random;
+    public NormalStrategy() {
+        this.random = new Random();
+    }
+    @Override
+    public boolean shouldChangePokemon(Pokemon targetPokemon, Pokemon currentBattlingPokemon) {
+        return random.nextInt() % 4 == 0;
+    }
+
+    @Override
+    public boolean shouldAttackPhysically(Pokemon targetPokemon, Pokemon currentBattlingPokemon) {
+        return random.nextInt() % 2 == 0;
+    }
+    @Override
+    public Pokemon WhoShouldPickForNext(Pokemon targetPokemon, List<Pokemon> myPokemon) {
+        return myPokemon.get(random.nextInt(myPokemon.size()));
+    }
+}
+```
+
+### Trainer
+
+実際にポケモンバトルを行うトレーナークラスです。
+上記で実装した戦略を用いてターン制のバトルを行います。
+トレーナーには手持ちのポケモンが与えられ、そのポケモンを元に与えられた戦略を利用して戦うイメージです。
+
+```java:java
+import java.util.List;
+
+public class Trainer {
+    private Strategy strategy;
+    private List<Pokemon> myPokemon;
+    private Pokemon battlePokemon;
+    private int changePokemonCount = 0;
+    private Trainer opponentTrainer;
+    private Pokemon targetPokemon;
+
+    public Trainer(Strategy strategy, List<Pokemon> myPokemon) {
+        this.strategy = strategy;
+        this.myPokemon = myPokemon;
+        this.battlePokemon = myPokemon.get(0);
+    }
+    public void setOpponentTrainer(Trainer opponentTrainer) {
+        this.opponentTrainer = opponentTrainer;
+        this.targetPokemon = opponentTrainer.battlePokemon;
+    }
+    private void setChangePokemonCount(int changePokemonCount) {
+        this.changePokemonCount = changePokemonCount;
+    }
+    public boolean isNextPlayer() {
+        return battlePokemon.willMoveFirst(targetPokemon);
+    }
+    public void turn() {
+        turnStart();
+        battle();
+        turnEnd();
+    }
+
+    public void turnStart() {
+        System.out.println("------Turn start------");
+        System.out.println("Trainer " + this + " is playing");
+    }
+
+    public void battle() {
+        if (strategy.shouldChangePokemon(targetPokemon, battlePokemon)) {
+            changePokemon();
+        } else {
+            attack();
+        }
+    }
+    public void turnEnd() {
+        if (targetPokemon.getHp() <= 0) {
+            processOpponentPokemonDefeated();
+        }
+        System.out.println("-----Turn end-----");
+    }
+    public void processOpponentPokemonDefeated() {
+        opponentTrainer.removeDownedPokemon();
+        if(opponentTrainer.myPokemon.isEmpty()) {
+            System.out.println("Trainer " + opponentTrainer + " has no more Pokemon left!");
+            System.out.println("Trainer " + this.strategy.toString() + " wins!");
+            System.exit(0);
+        }
+        opponentTrainer.setChangePokemonCount(0);
+        opponentTrainer.changePokemon();
+        targetPokemon = opponentTrainer.battlePokemon;
+    }
+    private void attack () {
+        System.out.println("Target Pokemon: " + targetPokemon);
+        System.out.println("My Pokemon: " + battlePokemon);
+        System.out.println("TARGET HP: " + targetPokemon.getHp());
+        boolean result = strategy.shouldAttackPhysically(targetPokemon, battlePokemon);
+        battlePokemon.processDamage(targetPokemon, result);
+        System.out.println("TARGET HP: " + targetPokemon.getHp());
+    }
+    private void changePokemon() {
+        if (changePokemonCount == 0) {
+            battlePokemon = strategy.WhoShouldPickForNext(targetPokemon, myPokemon);
+            System.out.println("Trainer " + this + " changed Pokemon to " + battlePokemon);
+            changePokemonCount++;
+        } else {
+            attack();
+            changePokemonCount = 0;
+        }
+    }
+    private void removeDownedPokemon() {
+        myPokemon.removeIf(pokemon -> pokemon.getHp() <= 0);
+        System.out.println("Trainer " + this + " has " + myPokemon.size() + " Pokemon left!");
+    }
+}
+```
+
+## 実行
+
+### Mainクラス
+
+それぞれの手持ちのポケモンをListで作ります。
+その後戦略を作成し、トレーナーにポケモンと戦略をそれぞれ与えることで準備完了です。
+あとはバトルを繰り返すことができます。
+書いてみるとわかる通り、戦略が綺麗に分離されています。
+これのおかげで、新しい戦略を実装したとしてもすぐに適用することができます。
+
+```java:java
+import java.util.ArrayList;
+import java.util.List;
+
+public class Main {
+    public static void main(String[] args) {
+        List<Pokemon> smartTrainersPokemon = new ArrayList<>();
+        smartTrainersPokemon.add(Pokemon.SQUIRT);
+        smartTrainersPokemon.add(Pokemon.CHARIZARD);
+        smartTrainersPokemon.add(Pokemon.IVYSAUR);
+
+        List<Pokemon> normalTrainersPokemon = new ArrayList<>();
+        normalTrainersPokemon.add(Pokemon.MAGMAR);
+        normalTrainersPokemon.add(Pokemon.TANGLEA);
+        normalTrainersPokemon.add(Pokemon.SQUIRTLE);
+
+        Strategy smartStrategy = new SmartStrategy();
+        Strategy normalStrategy = new NormalStrategy();
+
+        Trainer smartTrainer = new Trainer(smartStrategy, smartTrainersPokemon);
+        Trainer normalTrainer = new Trainer(normalStrategy, normalTrainersPokemon);
+
+        smartTrainer.setOpponentTrainer(normalTrainer);
+        normalTrainer.setOpponentTrainer(smartTrainer);
+
+        while (true) {
+            if (smartTrainer.isNextPlayer()) {
+                smartTrainer.turn();
+                normalTrainer.turn();
+            } else {
+                normalTrainer.turn();
+                smartTrainer.turn();
+            }
+        }
+    }
+}
+```
+
+ちなみに、ポケモンはそれぞれのトレーナーで別のものを持たせなければなりません。
+同じのを持たせると残りHPなどを共有してしまいます（Singletonのため）
+実際には、ポケモンクラスは別のデータベースからポケモンを参照して取り込みインスタンス化してからトレーナーの手持ちに与えるべきでしょう。繰り返しますが今回は簡単のため下記の設計になります。
+
+実行結果
+
+```
+------Turn start------
+Trainer strategy.Trainer@e9e54c2 is playing
+Target Pokemon: SQUIRT
+My Pokemon: MAGMAR
+TARGET HP: 40
+It's not very effective...
+TARGET HP: 32
+-----Turn end-----
+------Turn start------
+Trainer strategy.Trainer@3b07d329 is playing
+Target Pokemon: MAGMAR
+My Pokemon: SQUIRT
+TARGET HP: 65
+It's super effective!
+TARGET HP: 53
+-----Turn end-----
+------Turn start------
+Trainer strategy.Trainer@e9e54c2 is playing
+Target Pokemon: SQUIRT
+My Pokemon: MAGMAR
+TARGET HP: 32
+It's not very effective...
+TARGET HP: 23
+-----Turn end-----
+
+~省略~
+
+------Turn start------
+Trainer strategy.Trainer@e9e54c2 is playing
+Target Pokemon: CHARIZARD
+My Pokemon: SQUIRTLE
+TARGET HP: 47
+It's super effective!
+TARGET HP: 35
+-----Turn end-----
+------Turn start------
+Trainer strategy.Trainer@3b07d329 is playing
+Target Pokemon: SQUIRTLE
+My Pokemon: IVYSAUR
+TARGET HP: 13
+It's super effective!
+TARGET HP: 0
+Trainer strategy.Trainer@e9e54c2 has 0 Pokemon left!
+Trainer strategy.Trainer@e9e54c2 has no more Pokemon left!
+Trainer strategy.SmartStrategy@16b98e56 wins!
+```
+
+See you later 👋
