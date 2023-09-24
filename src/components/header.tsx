@@ -91,7 +91,7 @@ const Header = () => {
           <Hamburger toggled={isClicked} toggle={setIsClicked} size={24} />
         </button>
         <aside
-          className={`flex flex-col items-center bg-inherit justify-cente shadow-sm absolute top-full right-0 h-screen w-8/12 
+          className={`flex flex-col items-center bg-inherit justify-cente shadow-sm absolute top-full right-0 h-screen w-8/12
       ${
         isClicked ? "translate-x-0" : "translate-x-full"
       } transition-all duration-500 ease-in-out`}
@@ -102,7 +102,7 @@ const Header = () => {
           </InfoLink>
           <InfoLink href="/search" setIsClicked={setIsClicked}>
             <SearchIcon />
-            <span className="text-md">Search Articles</span>
+            <span className="text-md">Search</span>
           </InfoLink>
           <InfoLink href="/tags" setIsClicked={setIsClicked}>
             <LocalOfferIcon />

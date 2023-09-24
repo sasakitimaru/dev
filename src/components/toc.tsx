@@ -16,12 +16,12 @@ const Toc = () => {
   }, []);
 
   return (
-    <div className="lg:sticky flex-shrink-1 mx-auto sm:mx-4 top-20 p-4 m-4 rounded-lg cursor-pointer select-none w-80 sm:w-96 h-fit bg-white dark:bg-gray-800">
+    <div className="fixed border-y border-gray-200 dark:border-gray-700 sm:border-none top-12 z-20 sm:z-0 sm:static lg:sticky sm:mx-auto lg:mx-8 sm:mb-4 sm:top-20 p-2 sm:p-4 sm:rounded-lg cursor-pointer select-none w-full sm:w-96 h-fit bg-white dark:bg-gray-800">
       <p
-        className={`text-center text-2xl ml-4 font-bold relative
+        className={`text-center text-md sm:text-2xl ml-4 font-bold relative
       before:absolute
       before:left-3
-      before:content-['▶']
+      before:content-['▶︎']
       before:duration-300
       ${isClicked ? "before:rotate-90" : "before:rotate-0"}
       `}
