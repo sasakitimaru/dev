@@ -16,9 +16,9 @@ const Toc = () => {
   }, []);
 
   return (
-    <div className="fixed border-y border-gray-200 dark:border-gray-700 sm:border-none top-12 z-20 sm:z-0 sm:static lg:sticky sm:mx-auto lg:mx-8 sm:mb-4 sm:top-20 p-2 sm:p-4 sm:rounded-lg cursor-pointer select-none w-full sm:w-96 h-fit bg-white dark:bg-gray-800">
+    <div className="fixed border-y border-gray-200 dark:border-gray-700 sm:border-none top-12 z-20 sm:z-0 sm:static lg:sticky sm:mx-auto lg:mx-8 sm:mb-4 sm:top-20 p-2 sm:p-4 sm:rounded-lg cursor-pointer select-none h-fit w-full sm:w-96 bg-white dark:bg-gray-800">
       <p
-        className={`text-center text-md sm:text-2xl ml-4 font-bold relative
+        className={`text-center text-md ml-4 font-bold relative
       before:absolute
       before:left-3
       before:content-['▶︎']
@@ -30,7 +30,7 @@ const Toc = () => {
         目次
       </p>
       <nav
-        className={`toc prose prose-xl dark:prose-invert prose-a:no-underline duration-300
+        className={`toc prose dark:prose-invert prose-a:no-underline
       ${isClicked ? "block" : "hidden"}
       `}
       />
