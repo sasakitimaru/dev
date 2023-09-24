@@ -88,7 +88,7 @@ export default function RootLayout({
         <Providers>
           <Header />
           <main
-            className={`flex flex-col mt-20 mb-10 sm:px-20 mx-auto
+            className={`flex flex-col mt-20 mb-10 sm:px-20 mx-auto max-w-screen-2xl
           ${cn("min-h-screen font-sans antialiased", fontSans.variable)}
           `}
           >

@@ -80,7 +80,7 @@ function RootLayout(_a) {
         React.createElement("body", { className: "bg-blue-50 dark:bg-gray-900 " + inter.className },
             React.createElement(providers_1["default"], null,
                 React.createElement(header_1["default"], null),
-                React.createElement("main", { className: "flex flex-col mt-20 mb-10 sm:px-20 mx-auto\n          " + utils_1.cn("min-h-screen font-sans antialiased", fonts_1.fontSans.variable) + "\n          " },
+                React.createElement("main", { className: "flex flex-col mt-20 mb-10 sm:px-20 mx-auto max-w-screen-2xl\n          " + utils_1.cn("min-h-screen font-sans antialiased", fonts_1.fontSans.variable) + "\n          " },
                     children,
                     React.createElement(react_1.Analytics, null)),
                 React.createElement(footer_1["default"], null)))));
