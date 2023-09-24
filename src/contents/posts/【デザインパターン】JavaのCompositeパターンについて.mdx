@@ -1,0 +1,150 @@
+---
+title: 【デザインパターン】JavaのCompositeパターンについて
+slug: design-pattern/java-composite-pattern
+icon: ☕️
+description: 今回はCompositeパターンについて解説します。
+date: "2023-09-24"
+tags:
+    - Java
+    - デザインパターン
+categories:
+    - プログラミング
+---
+
+## Composite
+
+階層構造を作る際に用いるデザインパターンです。
+例えばディレクトリ構造などを表現する時、フォルダとファイルに分かれたクラスを想像すると思います。
+この倍、フォルダの中にはフォルダもファイルも存在することが想定されます。
+フォルダの中にフォルダがあると、その中にまたフォルダとファイルが…と再起的に続いていくはずです。
+Compositeパターンでは、ファイルとフォルダを同一視した「**容器**」のようなものを定義することになります。
+この容器を用いることで再起的に表現がしやすくなります。
+
+## 実装
+
+今回はコメントとリプライを作っていきます。
+ぜひ先ほど紹介したディレクトリ構造に照らし合わせてご自身でどのような構造になるか想像してみてください。
+
+### Conversation
+
+先ほど示した`容器`に当たる部分になります。
+この容器があることで、後ほど再起的にメソッドを参照する際にそれが**コメント**なのか**リプライ**なのかを意識する必要が無くなります。
+ここではコメントもしくはリプライがついている際にどのスレッドで返信しているのかを示すために深さ（インデント）を定義しています。
+また、コメントを取得するための抽象メソッドも定義しておきます。
+
+```java:java
+import java.util.Arrays;
+
+public abstract class Conversation {
+    protected int depth = 0;
+    protected String getIndent() {
+        char[] chars = new char[depth * 4];
+        Arrays.fill(chars, ' ');
+        return new String(chars);
+    }
+    public abstract void getComment();
+}
+```
+
+### Comment
+
+Conversationのサブクラスになります。
+コメントにはコメントorリプライが付随するイメージです。
+ここで、コメントは返信を受け付けるメッセージ、リプライはこれ以上返信を受け付けないメッセージとします。
+コメントはConversation型のリストを持ち、そこに何某かのメッセージが追加されていきます。
+先ほど示した通り、Conversationは容器として定義されています。
+そしてコメントを取得するgetCommentメソッドで再起的に容器の中身を取得します。
+容器の中身がリプライなのか、コメントなのかを意識せずともこれでコメントの一覧を取得することに成功しました。
+
+```java:java
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+public class Comment extends Conversation {
+    private final String comment;
+    private final List<Conversation> conversations = new ArrayList<>();
+    public Comment(String comment) {
+        this.comment = comment;
+    }
+
+    public void add(Conversation cv) {
+        cv.depth = this.depth + 1;
+        this.conversations.add(cv);
+    }
+    @Override
+    public void getComment() {
+        if (this.depth == 0) System.out.println(this.comment);
+        else System.out.println(this.getIndent() + "|-" + this.comment);
+        for (Conversation cv : this.conversations) {
+            cv.getComment();
+        }
+    }
+}
+```
+
+### Reply
+
+Conversationのサブクラスになります。
+コメントクラスからConversationという容器を次々と参照していく際に、このReplyのgetCommentメソッドが参照されます。
+容器で抽象化されているためリプライなのかコメントなのかを意識することはないです。
+
+```java:java
+public class Reply extends Conversation {
+    private String comment;
+    public Reply(String comment) {
+        this.comment = comment;
+    }
+    @Override
+    public void getComment() {
+        System.out.println(this.getIndent() + "|-" + this.comment);
+    }
+}
+```
+
+## 実行
+
+### Main
+
+コメントを作成し、コメントに対してコメントもしくはリプライを追加していきます。
+最後にコメントのgetCommentメソッドからコメントが持っているコメント、リプライを全て表示します。
+
+```java:java
+import java.util.ArrayList;
+import java.util.List;
+
+public class Main {
+    public static void main(String[] args) {
+        List<Comment> comments = new ArrayList<>();
+        Comment c1 = new Comment("こんにちは");
+        c1.add(new Reply("はじめまして"));
+        c1.add(new Reply("こんにちは！"));
+        Comment c1_1 = new Comment("名前を教えてください");
+        c1.add(c1_1);
+        c1_1.add(new Reply("私は栗松です"));
+        Comment c2 = new Comment("こんばんは");
+        c2.add(new Reply("こんばんは！"));
+        c2.add(new Reply("おやすみなさい"));
+        comments.add(c1);
+        comments.add(c2);
+        for (Comment c : comments) {
+            c.getComment();
+        }
+    }
+}
+```
+
+実行結果
+
+```
+こんにちは
+    |-はじめまして
+    |-こんにちは！
+    |-名前を教えてください
+        |-私は栗松です
+こんばんは
+    |-こんばんは！
+    |-おやすみなさい
+```
+
+See you later 👋
