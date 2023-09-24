@@ -1,0 +1,232 @@
+---
+title: 【デザインパターン】JavaのDecoratorパターンについて
+slug: design-pattern/java-decorator-pattern
+icon: ☕️
+description: 今回はdecoratorパターンについて解説します。
+date: "2023-09-24"
+tags:
+    - Java
+    - デザインパターン
+categories:
+    - プログラミング
+---
+
+## Decorator
+
+文字通り、元となるクラスをデコレーションしていくものになります。
+様々なケーキを作るパターンで考えましょう。
+スポンジがあって、フルーツを乗せて、クリームを選ぶイメージです。
+これらを分離して、好きな種類のケーキが作れます。
+
+## 実装
+
+今回は文字列をデコレーションします。
+
+### Display
+
+複数行からなる文字列を表示するための抽象クラスです。
+getRowsで何列あるかを取得し１列ずつ出力します。
+
+```java:java
+public abstract class Display {
+    public abstract int getColumns();
+    public abstract int getRows();
+    public abstract String getRowText(int row);
+    public final void show() {
+        for (int i = 0; i < getRows(); i++) {
+            System.out.println(getRowText(i));
+        }
+    }
+}
+```
+
+### StringDisplay
+
+装飾される文字列をここで作ります。
+ケーキで言うスポンジにあたります。
+
+```java:java
+public class StringDisplay extends Display {
+    private String string;
+    public StringDisplay(String string) {
+        this.string = string;
+    }
+    @Override
+    public int getColumns() {
+        return string.getBytes().length;
+    }
+    @Override
+    public int getRows() {
+        return 1;
+    }
+    public String getRowText(int row) {
+        if (row == 0) {
+            return string;
+        } else {
+            throw new IndexOutOfBoundsException();
+        }
+    }
+}
+```
+
+### Border
+
+飾りの部分です。
+いちごとか生クリームとか、そんなイメージです。
+文字列表現を行うDisplayクラスのサブクラスとして定義しています。
+これによりサブクラスでは途中までデコレーションがされているケーキを受け取り、その上からさらに装飾をしていくことができます。
+
+```java:java
+public abstract class Border extends Display {
+    protected Display display;
+    protected Border(Display display) {
+        this.display = display;
+    }
+}
+```
+
+### WrapBorder
+
+Borderクラスのサブクラスです。
+getColumnsでもらったDisplayクラスの文字数（横幅）を元に装飾をします。
+ここでは受け取ったDisplayクラスの文字列を任意の文字で囲みます。
+
+```java:java
+public class WrapBorder extends Border {
+    private char borderChar;
+    public WrapBorder(Display display, char borderChar) {
+        super(display);
+        this.borderChar = borderChar;
+    }
+    @Override
+    public int getColumns() {
+        return 1 + display.getColumns() + 1;
+    }
+    @Override
+    public int getRows() {
+        return 1 + display.getRows() + 1;
+    }
+    @Override
+    public String getRowText(int row) {
+        if (row == 0 || row == display.getRows() + 1) {
+            return makeLine(borderChar, display.getColumns() + 2);
+        } else {
+            return borderChar + display.getRowText(row - 1) + borderChar;
+        }
+    }
+    private String makeLine(char ch, int count) {
+        StringBuffer buf = new StringBuffer();
+        for (int i = 0; i < count; i++) {
+            buf.append(ch);
+        }
+        return buf.toString();
+    }
+}
+```
+
+### UnderBorder
+
+Borderクラスのサブクラスです。下線を装飾します。
+
+```java:java
+public class UnderBorder extends Border {
+    private char borderChar;
+
+    public UnderBorder(Display display, char borderChar) {
+        super(display);
+        this.borderChar = borderChar;
+    }
+
+    @Override
+    public int getColumns() {
+        return display.getColumns();
+    }
+
+    @Override
+    public int getRows() {
+        return 1 + display.getRows();
+    }
+
+    @Override
+    public String getRowText(int row) {
+        if (row == display.getRows()) {
+            return makeLine(borderChar, display.getColumns());
+        } else if (display.getRows() == 1) {
+            return display.getRowText(row);
+        } else {
+            return display.getRowText(row);
+        }
+    }
+
+    private String makeLine(char ch, int count) {
+        StringBuffer buf = new StringBuffer();
+        for (int i = 0; i < count; i++) {
+            buf.append(ch);
+        }
+        return buf.toString();
+    }
+}
+```
+
+## 実行
+
+### Main
+
+上記で実装したデコレーションを実際におこないます。
+b1はプレーンなスポンジ
+b2は「#」クリームで塗りたくる
+b3は「-」フルーツをトッピング
+といった具合です。
+また、b4を見ていただくと分かる通り装飾は重ねて何度でも行えます。
+中身の実装にも依存せず、次々機能追加ができるのです。
+装飾をして見た目は変わっても、最初にDisplayでどのように装飾をしていくのかを抽象メソッドで定義していたのでこれが実現しています。
+
+```java:java
+public class Main {
+    public static void main(String[] args) {
+        Display b1 = new StringDisplay("Hello, world.");
+        Display b2 = new WrapBorder(b1, '#');
+        Display b3 = new UnderBorder(b1, '-');
+        b1.show();
+        b2.show();
+        b3.show();
+        Display b4 = new WrapBorder(
+            new UnderBorder(
+                new WrapBorder(
+                    new UnderBorder(
+                        new StringDisplay("Hello, world."),
+                        '-'
+                    ),
+                    '='
+                ),
+                '+'
+            ),
+            '*'
+        );
+        b4.show();
+    }
+}
+```
+
+実行結果
+
+```
+Hello, world.
+
+###############
+#Hello, world.#
+###############
+
+Hello, world.
+-------------
+
+*****************
+*===============*
+*=Hello, world.=*
+*=-------------=*
+*===============*
+*+++++++++++++++*
+*****************
+```
+
+See you later 👋
