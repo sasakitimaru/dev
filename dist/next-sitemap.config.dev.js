@@ -1,7 +1,7 @@
 "use strict";
 
 module.exports = {
-  siteUrl: 'https://kurimatsugpt.com/',
+  siteUrl: 'https://www.kurimatsugpt.com/',
   generateRobotsTxt: true,
   sitemapSize: 7000
 };
