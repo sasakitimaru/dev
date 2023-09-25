@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://kurimatsugpt.com/
+
+# Sitemaps
+Sitemap: https://kurimatsugpt.com/sitemap.xml

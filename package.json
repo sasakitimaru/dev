@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "postbuild": "next-sitemap --config ./next-sitemap.config.js",
     "start": "next start",
     "lint": "next lint",
     "storybook": "storybook dev -p 6006",
@@ -38,6 +39,7 @@
     "hamburger-react": "^2.5.0",
     "next": "13.4.19",
     "next-contentlayer": "^0.3.4",
+    "next-sitemap": "^4.2.3",
     "next-themes": "^0.2.1",
     "postcss": "8.4.29",
     "react": "18.2.0",
