@@ -1,0 +1,402 @@
+---
+title: 【デザインパターン】JavaのAbstract Factoryパターンについて
+slug: design-pattern/java-AbstractFactory-pattern
+icon: ☕️
+description: 今回はAbstractFactoryパターンについて解説します。
+date: "2023-09-19"
+tags:
+  - Java
+  - デザインパターン
+categories:
+  - プログラミング
+---
+
+## AbstractFactory
+
+今回はプレイヤーの装備を作ります。
+
+## 実装（framework）
+
+frameworkパッケージでは
+
+- **部品**として抽象的な装備
+- **製品**として装備した一式
+- 1と2を作る**工場**
+- 装備する**プレイヤー**
+
+を実装します。
+
+### Equipment
+
+EquipmentクラスではTemplateメソッドを使用して装備のスーパークラスを実装します。
+ここでは装備があり、装備に共通した処理だけ（装備する、装備に必要な能力があるか判定する）を記載しています。
+
+```java:java
+package framework;
+
+public abstract class Equipment {
+    protected String name;
+    protected int requiredStatus;
+
+    public Equipment(String name, int requiredStatus) {
+        this.name = name;
+        this.requiredStatus = requiredStatus;
+    }
+		// 装備に必要な能力を満たしていれば装着する
+    public void checkAndEquip(Player player, int requiredStatus) {
+        if (isSatisfiedRequiredStatus(requiredStatus)) {
+            Equip(player);
+        } else {
+            System.out.println("YOU CAN'T EQUIP THIS WEAPON");
+            System.out.println("YOU NEED " + this.requiredStatus + " STATUS");
+            System.out.println("YOUR STATUS IS " + this.requiredStatus);
+        }
+    }
+		// 装備する、具体的な処理は装備ごとに異なる
+    public abstract void Equip(Player player);
+		
+		// 装備に必要なコストを満たしているか判定する
+    public boolean isSatisfiedRequiredStatus(int playerStatus) {
+        return playerStatus >= this.requiredStatus;
+    }
+}
+```
+
+### Weapon
+
+WeaponクラスはEquipmentクラスのサブクラスであり、抽象クラスでもあります。
+最も抽象的な`装備`から少し抽象度を落とした（より具体的な）`武器`のクラスを作るイメージです。
+ここでは具体的な装備（Equip）メソッドを定義します。
+武器なので装備したらプレイヤーの攻撃力と防御力を上昇させます。
+
+```java:java
+package framework;
+
+public abstract class Weapon extends Equipment {
+    private final int attackStatus;
+    private final int defenseStatus;
+    public Weapon(String name, int attackStatus, int defenseStatus, int requiredStatus) {
+        super(name, requiredStatus);
+        this.attackStatus = attackStatus;
+        this.defenseStatus = defenseStatus;
+    }
+    @Override
+    public void Equip(Player player) {
+        player.setEquipments(this);
+        player.setStatus(this.attackStatus, this.defenseStatus);
+        System.out.println("~~~~~~EQUIPPED~~~~~~");
+        System.out.println("WEAPON NAME: " + this.name);
+        System.out.println("ATTACK: " + this.attackStatus);
+        System.out.println("DEFENSE: " + this.defenseStatus);
+        System.out.println("~~~~~~~~~~~~~~~~~~~~");
+    }
+    @Override
+    public String toString() {
+        return "WEAPON NAME: " + this.name + "\nATTACK: " + this.attackStatus + "\nDEFENSE: " + this.defenseStatus;
+    }
+}
+```
+
+### Protector
+
+ProtectorクラスもWeaponクラス同様にEquipmentクラスのサブクラスであり、抽象クラスでもあります。
+防具を装備した時の具体的な処理を実装します。（防御力の上昇）
+
+```java:java
+package framework;
+
+public abstract class Protector extends Equipment {
+    private final int defenseStatus;
+    public Protector(String name, int requiredStatus, int defenseStatus) {
+        super(name, requiredStatus);
+        this.defenseStatus = defenseStatus;
+    }
+    @Override
+    public void Equip(Player player) {
+        player.setEquipments(this);
+        player.setStatus(null,this.defenseStatus);
+        System.out.println("~~~~~~EQUIPPED~~~~~~");
+        System.out.println("ARMOR NAME: " + this.name);
+        System.out.println("DEFENSE: " + this.defenseStatus);
+        System.out.println("~~~~~~~~~~~~~~~~~~~~");
+    }
+    @Override
+    public String toString() {
+        return "ARMOR NAME: " + this.name + "\nDEFENSE: " + this.defenseStatus;
+    }
+}
+```
+
+### FullGear
+
+FullGearでは装備一式を装備します。抽象的な装備を身につけるイメージです。
+なのでここの装備一式を着用した状態も抽象的なものになります。
+Listに装備を追加していき、装備が揃ったらSetUpEquipmentsで着用します。
+
+```java:java
+package framework;
+
+import java.util.*;
+
+public abstract class FullGear {
+    protected List<Equipment> equipments = new ArrayList<>();
+    public void add(List<Equipment> _equipments) {
+        equipments.addAll(_equipments);
+    }
+    public abstract void SetUpEquipments(Player player);
+}
+```
+
+### Factory
+
+上記の装備を作る抽象的な工場です。
+今後、装備は戦士職や魔法職など色々なジョブに合わせて製造していく予定なのでそれらのジョブに応じた装備一式が作れるようにクラス名に依存しないようにします。
+そのため、getFactoryではクラス名を引数としてそれに応じたクラスを返すようにしています。
+どの工場でも共通して武器と防具は作ることとしたいのでそれ用の抽象メソッドも定義しておきます。
+
+```java:java
+package framework;
+
+public abstract class Factory {
+    public static Factory getFactory(String classname) {
+        Factory factory = null;
+        try {
+            factory = (Factory) Class.forName(classname).getDeclaredConstructor().newInstance();
+        } catch (ClassNotFoundException e) {
+            System.out.println("Class " + classname + " not found.");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return factory;
+    }
+
+    public abstract Weapon createWeapon(String classname, String name, int attackStatus, int defenseStatus, int requiredStatus);
+    public abstract Protector createProtector(String classname, String name, int requiredStatus, int defenseStatus);
+    public abstract FullGear createFullGear();
+}
+```
+
+### Player
+
+装備を着用するプレイヤーです。
+ジョブごとに分ける場合、抽象的なクラスとして定義してサブクラスで実装しても良いですが簡単のためプレイヤーは共通のものとします。
+プレイヤーが武器を装備するため、EquipmentクラスのEquipメソッドを使用して装備を着用、ステータスに反映させる処理を実装しています。
+
+```java:java
+package framework;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Player {
+    private final String name;
+    private final List<Equipment> equipments = new ArrayList<Equipment>();
+
+		private int attackStatus;
+    private int defenseStatus;
+    private final int strengthStatus;
+    private final int weightStatus;
+
+    public Player(String name, int attackStatus, int defenseStatus, int strengthStatus, int weightStatus) {
+        this.name = name;
+        this.attackStatus = attackStatus;
+        this.defenseStatus = defenseStatus;
+        this.strengthStatus = strengthStatus;
+        this.weightStatus = weightStatus;
+    }
+
+    public void setStatus(Integer attackStatus, Integer defenseStatus) {
+        if (attackStatus != null) {
+            this.attackStatus += attackStatus;
+        }
+        if (defenseStatus != null) {
+            this.defenseStatus += defenseStatus;
+        }
+    }
+    public void setEquipments(Equipment equipment) {
+        this.equipments.add(equipment);
+    }
+    public void showEquipments() {
+        if(this.equipments.isEmpty()) {
+            System.out.println("NO EQUIPMENTS");
+            return;
+        }
+        System.out.println("-------EQUIPMENTS-------");
+        for (Equipment equipment : this.equipments) {
+            System.out.println(equipment.toString());
+        }
+        System.out.println("------------------------");
+    }
+
+    public int getAttackStatus() { return this.attackStatus; }
+
+    public int getDefenseStatus() { return this.defenseStatus; }
+
+    public int getStrengthStatus() { return this.strengthStatus; }
+
+    public int getWeightStatus() { return this.weightStatus; }
+
+    public void showStatus() {
+        System.out.println("====PLAYER STATUS====");
+        System.out.println("Player: " + name);
+        showEquipments();
+        System.out.println("Attack: " + attackStatus);
+        System.out.println("Defense: " + defenseStatus);
+        System.out.println("=====================");
+    }
+}
+```
+
+抽象的な部分の実装が終わったためいよいよ具体的な実装に入っていきます。
+
+## 実装（warriorfactory）
+
+warriorfactoryパッケージ内では戦士職向けの具体的な武器・防具、装備一式とそれらを製造する工場を作っていきます。
+
+### Sword
+
+Weaponクラスのサブクラスです。
+剣は攻撃ができる、ということを示すためにAttackメソッドを追加しています。
+（他の武器クラスと差別するために加えているだけなので今回は使用しません。）
+
+```java:java
+package warriorfactory;
+
+import framework.Weapon;
+
+public class Sword extends Weapon {
+    public Sword(String name, int attackStatus, int defenseStatus, int requiredStatus) {
+        super(name, attackStatus, defenseStatus, requiredStatus);
+    }
+    public void Attack() {
+        System.out.println("ATTACKED WITH " + this.name);
+    }
+}
+```
+
+### Shield
+
+Weaponクラスのサブクラスです。
+こちらでは盾特有のメソッドとしてDefendメソッドをつけています。
+（Swordクラス同様今回のコードの中では使ってません。）
+
+```java:java
+package warriorfactory;
+
+import abstruct_framework.Weapon;
+
+public class Shield extends Weapon {
+    public Shield(String name, int attackStatus, int defenseStatus, int requiredStatus) {
+        super(name, attackStatus, defenseStatus, requiredStatus);
+    }
+    public void Defend() {
+        System.out.println("DEFENDED WITH " + this.name);
+    }
+}
+```
+
+### WarriorFullGear
+
+FullGearクラスのサブクラスになります。
+装備が戦士が着用可能なSword, Shield, ArmorであればスーパークラスのcheckAndEquipメソッドを用いて着用します。
+
+```java:java
+package warriorfactory;
+
+import framework.Equipment;
+import framework.Protector;
+import framework.FullGear;
+import framework.Player
+
+public class WarriorFullGear extends FullGear {
+    @Override
+    public void SetUpEquipments(Player player) {
+        for (Equipment equipment : equipments) {
+            if ((equipment instanceof Sword) || (equipment instanceof Shield)) {
+                equipment.checkAndEquip(player, player.getStrengthStatus());
+            } else if (equipment instanceof Armor) {
+                equipment.checkAndEquip(player, player.getWeightStatus());
+            } else {
+                System.out.println("ERROR: UNKNOWN EQUIPMENT TYPE");
+            }
+        }
+    }
+}
+```
+
+## 実装（Mainクラス）
+
+コードを見ていただければ分かる通り、Mainクラスはframeworkパッケージにしか依存していません。
+具体的な処理はMainから隠蔽できました。
+今回は戦士職の装備を作ることが目的なので、warriorfactoryのクラス名さえ分かればそれをframeworkで定義した抽象的な工場に渡すことで簡単に装備一式を作って装着し、ステータスの反映まで行ってくれます。
+
+```java:java
+package warriorfactory;
+
+import framework.Equipment;
+import framework.Factory;
+import framework.FullGear;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Main {
+    public static void main(String[] args) {
+        Player player = new Player("KURIMATSU", 100, 100, 100, 100);
+        player.showStatus();
+        Factory factory = Factory.getFactory("warriorfactory.WarriorFactory");
+        List<Equipment> equipments = new ArrayList<>();
+        equipments.add(factory.createWeapon("warriorfactory.Sword", "SWORD-X", 10, 0, 0));
+        equipments.add(factory.createWeapon("warriorfactory.Shield", "SHIELD-X", 0, 10, 0));
+        equipments.add(factory.createProtector("warriorfactory.Armor", "ARMOR-X", 10, 50));
+        FullGear fullGear = factory.createFullGear();
+        fullGear.add(equipments);
+        fullGear.SetUpEquipments(player);
+        player.showStatus();
+    }
+}
+```
+
+### 実行結果
+
+```
+====PLAYER STATUS====
+Player: KURIMATSU
+NO EQUIPMENTS
+Attack: 100
+Defense: 100
+=====================
+~~~~~~EQUIPPED~~~~~~
+WEAPON NAME: SWORD-X
+ATTACK: 10
+DEFENSE: 0
+~~~~~~~~~~~~~~~~~~~~
+~~~~~~EQUIPPED~~~~~~
+WEAPON NAME: SHIELD-X
+ATTACK: 0
+DEFENSE: 10
+~~~~~~~~~~~~~~~~~~~~
+~~~~~~EQUIPPED~~~~~~
+ARMOR NAME: ARMOR-X
+DEFENSE: 50
+~~~~~~~~~~~~~~~~~~~~
+====PLAYER STATUS====
+Player: KURIMATSU
+-------EQUIPMENTS-------
+WEAPON NAME: SWORD-X
+ATTACK: 10
+DEFENSE: 0
+WEAPON NAME: SHIELD-X
+ATTACK: 0
+DEFENSE: 10
+ARMOR NAME: ARMOR-X
+DEFENSE: 50
+------------------------
+Attack: 110
+Defense: 160
+=====================
+```
+
+今回は戦士職しか作りませんでしたが、frameworkパッケージを使えば簡単に魔法職用の装備も追加することができます。（杖やコードなど）
+
+See you later 👋
