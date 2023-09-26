@@ -22,7 +22,6 @@ var ThemeButton = function (_a) {
         if (!mode)
             mode = "dark";
     }, []);
-    console.log(mode);
     return (react_1["default"].createElement(react_1["default"].Fragment, null,
         react_1["default"].createElement("input", { type: "checkbox" }),
         react_1["default"].createElement("svg", { className: "swap-on fill-current w-6 h-6", 
