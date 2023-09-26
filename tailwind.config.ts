@@ -70,17 +70,26 @@ const config: Config = {
         DEFAULT: {
           css: {
             h3: {
-              paddingBottom: "1.5rem",
               position: "relative",
+              padding: "0.5rem 1rem",
+              backgroundColor: "rgb(229 231 235 / var(--tw-bg-opacity));",
+              ".dark &" : {
+                backgroundColor: "rgb(17 24 39 / var(--tw-bg-opacity));",
+              },
               "&::before": {
                 content: '""',
                 display: "block",
                 position: "absolute",
-                width: "100%",
-                height: "2px",
+                width: "4px",
+                height: "100%",
                 left: 0,
-                top: '80%',
+                top: 0,
                 backgroundColor: "#3182ce",
+              },
+              a: {
+                "&::after": {
+                  display: "none",
+                },
               },
             },
             h4: {

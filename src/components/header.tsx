@@ -65,31 +65,43 @@ const InfoLink: React.FC<InfoLinkProps> = ({
   );
 };
 
+function isScrollToBottom() {
+  const scrollHeight = document.documentElement.scrollHeight;
+  const scrollTop = document.documentElement.scrollTop;
+  const clientHeight = document.documentElement.clientHeight;
+  return scrollHeight - scrollTop === clientHeight;
+}
+
 const Header = () => {
   const [isClicked, setIsClicked] = useState(false);
-  const [headerVisible, setHeaderVisible] = useState(false);
+  const [headerVisible, setHeaderVisible] = useState(true);
+  const [scrollTopButtonVisible, setScrollTopButtonVisible] = useState(false);
   const [lastScrollTop, setLastScrollTop] = useState(0);
-  const [currentScrollTop, setCurrentScrollTop] = useState(0);
   const headerRef = useRef<HTMLElement>(null);
   useEffect(() => {
     const handleScroll = () => {
-      const scrollTop = window.scrollY;
-      setCurrentScrollTop(scrollTop);
-      if (scrollTop < lastScrollTop) {
-        setHeaderVisible(false);
-      } else {
-        setHeaderVisible(true);
-      }
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      setHeaderVisible(scrollTop < lastScrollTop || scrollTop <= 0);
+      setScrollTopButtonVisible(
+        scrollTop < lastScrollTop || isScrollToBottom()
+      );
       setLastScrollTop(scrollTop);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollTop]);
+
+  useEffect(() => {
+    const timerId = setTimeout(() => {
+      setScrollTopButtonVisible(false);
+    }, 3000);
+    return () => clearTimeout(timerId);
+  }, [scrollTopButtonVisible]);
   return (
     <>
       <nav
         className={`md:px-24 lg:px-32 px-6 bg-white dark:bg-gray-800 shadow-md flex flex-wrap items-center md:py-2 fixed z-30 w-full top-0 duration-100
-       ${headerVisible ? "-translate-y-full" : "translate-y-0"}
+       ${headerVisible ? "translate-y-0" : "-translate-y-full"}
        sm:translate-y-0
       `}
         ref={headerRef}
@@ -155,7 +167,10 @@ const Header = () => {
       <Fab
         color="primary"
         // area-aria-label="scroll to top"
-        className={`fixed bottom-10 left-10 z-30 bg-blue-500 transition-all duration-300 ${headerVisible ? "opacity-0 invisible" : "opacity-100 visible"}`}
+        className={`fixed bottom-10 left-10 z-30 bg-blue-500 transition-all duration-300 
+        ${
+          scrollTopButtonVisible ? "opacity-100 visible" : "opacity-0 invisible"
+        }`}
         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
       >
         <ArrowUpwardIcon />

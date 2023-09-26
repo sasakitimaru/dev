@@ -15,7 +15,7 @@ const Toc = () => {
   }, []);
 
   return (
-    <div className="border-none z-0 static lg:sticky mx-auto lg:mx-8 mb-4 top-20 p-4 sm:rounded-lg cursor-pointer select-none h-fit w-full sm:w-96 bg-white dark:bg-gray-800">
+    <div className="border-none z-0 static lg:sticky mx-auto lg:mx-8 mb-8 top-20 p-4 sm:rounded-lg cursor-pointer select-none h-fit w-full sm:w-96 bg-white dark:bg-gray-800">
       <p
         className={`text-center text-md ml-4 font-bold relative
       before:absolute
