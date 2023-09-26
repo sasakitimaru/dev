@@ -3,10 +3,9 @@ import { useEffect, useState } from "react";
 import tocbot from "tocbot";
 
 const Toc = () => {
-  const [isClicked, setIsClicked] = useState(false);
+  const [isClicked, setIsClicked] = useState(true);
 
   useEffect(() => {
-    setIsClicked(window.innerWidth > 640);
     tocbot.init({
       tocSelector: ".toc",
       contentSelector: ".post",
@@ -16,7 +15,7 @@ const Toc = () => {
   }, []);
 
   return (
-    <div className="fixed border-y border-gray-200 dark:border-gray-700 sm:border-none top-12 z-20 sm:z-0 sm:static lg:sticky sm:mx-auto lg:mx-8 sm:mb-4 sm:top-20 p-2 sm:p-4 sm:rounded-lg cursor-pointer select-none h-fit w-full sm:w-96 bg-white dark:bg-gray-800">
+    <div className="border-none z-0 static lg:sticky mx-auto lg:mx-8 mb-4 top-20 p-4 sm:rounded-lg cursor-pointer select-none h-fit w-full sm:w-96 bg-white dark:bg-gray-800">
       <p
         className={`text-center text-md ml-4 font-bold relative
       before:absolute

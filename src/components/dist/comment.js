@@ -64,10 +64,10 @@ var CommentField = function (_a) {
         }); };
         getAndSetComments();
     }, [articleId]);
-    return (react_1["default"].createElement("div", { className: "bg-white dark:bg-gray-800 mx-auto w-full sm:rounded-lg prose prose-sm lg:prose-base dark:prose-invert p-4 mt-10 mb-10 lg:px-8 " },
+    return (react_1["default"].createElement("div", { className: "bg-white dark:bg-gray-800 w-full sm:rounded-lg prose prose-sm lg:prose-base dark:prose-invert p-4 mt-10 mb-10 mx-auto lg:mx-0 lg:px-8 " },
         react_1["default"].createElement(exports.CommentContext.Provider, { value: { comments: comments, setComments: setComments } },
             react_1["default"].createElement(exports.SnackOpenContext.Provider, { value: { successOpen: successOpen, errorOpen: errorOpen, setSuccessOpen: setSuccessOpen, setErrorOpen: setErrorOpen } },
-                react_1["default"].createElement("h3", { className: "mb-2 p-2 text-center te border-b-[1px] border-gray-300 dark:border-gray-700" }, "Conversation"),
+                react_1["default"].createElement("p", { className: "mb-2 p-2 text-center te border-b-[1px] border-gray-300 dark:border-gray-700" }, "Conversation"),
                 comments &&
                     comments.map(function (comment, index) {
                         var _a;
