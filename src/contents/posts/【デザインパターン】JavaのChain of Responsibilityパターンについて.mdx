@@ -1,0 +1,217 @@
+---
+title: 【デザインパターン】JavaのChain of Responsibilityパターンについて
+slug: design-pattern/java-chain-of-responsibility-pattern
+icon: ☕️
+description: 今回はChain of Responsibilityパターンについて解説します。
+date: "2023-09-26"
+tags:
+    - Java
+    - デザインパターン
+categories:
+    - プログラミング
+---
+
+## Chain of Responsibility
+
+責任のたらい回しです。
+職場でとあるシステムのログデータが欲しかったとしましょう。
+まずシステム開発部のAさんに聞きます。
+するとAさんはログ取得はシステム運用部の担当と言いました。
+仕方がないので運用部のBさんに聞いてみたところ、ログ取得はベンダーに依頼しており情報システム部でないと連絡先がわからないと言います。
+このように次々とタスクをたらい回しにしながら解決へ近づくための設計がChain of Responsibilityです。
+
+## 実装
+
+今回は単純に発生したトラブルをナンバーで管理し、番号に応じたサポート役に辿り着ければ解決するというプログラムを組みます。
+
+### Trouble
+
+発生したトラブルを表現するクラスです。
+番号で管理します。
+
+```java:java
+public class Trouble {
+    private int number;
+
+    public Trouble(int number) {
+        this.number = number;
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+    public String toString() {
+        return "[Trouble " + number + "]";
+    }
+}
+```
+
+### Support
+
+問題解決をしてくれるサポート役の人の抽象クラスです。
+ここでは共通のロジックとして、問題が解決しなければセットされている次のサポート役に回すという処理を実装します。
+具体的な実装はそれぞれのサポート役の人に応じて実装します。
+
+```java:java
+public abstract class Support {
+    private String name;
+    private Support next;
+
+    public Support(String name) {
+        this.name = name;
+    }
+
+    public Support setNext(Support next) {
+        this.next = next;
+        return next;
+    }
+
+    public final void support(Trouble trouble) {
+        if (resolve(trouble)) {
+        done(trouble);
+        } else if (next != null) {
+        next.support(trouble);
+        } else {
+        fail(trouble);
+        }
+    }
+
+    public String toString() {
+        return "[" + name + "]";
+    }
+
+    protected abstract boolean resolve(Trouble trouble);
+
+    protected void done(Trouble trouble) {
+        System.out.println(trouble + " is resolved by " + this + ".");
+    }
+
+    protected void fail(Trouble trouble) {
+        System.out.println(trouble + " cannot be resolved.");
+    }
+}
+```
+
+### NoSupport
+
+問題解決をしないクラスです。
+~~何もしない人はどこにでもいる~~
+
+```java:java
+public class NoSupport extends Support {
+    public NoSupport(String name) {
+        super(name);
+    }
+    @Override
+    protected boolean resolve(Trouble trouble) {
+        return false;
+    }
+}
+```
+
+### LimitSupport
+
+設定されたナンバー以下のトラブルであれば解決することができるクラスです。
+
+```java:java
+public class LimitSupport extends Support {
+    private int limit;
+
+    public LimitSupport(String name, int limit) {
+        super(name);
+        this.limit = limit;
+    }
+
+    @Override
+    protected boolean resolve(Trouble trouble) {
+        if (trouble.getNumber() < limit) {
+        return true;
+        } else {
+        return false;
+        }
+    }
+}
+```
+
+### OddSupport
+
+奇数のナンバーのトラブルなら解決することができるクラスです。
+
+```java:java
+public class OddSupport extends Support {
+    public OddSupport(String name) {
+        super(name);
+    }
+    @Override
+    protected boolean resolve(Trouble trouble) {
+        return trouble.getNumber() % 2 == 1;
+    }
+}
+```
+
+## 実行
+
+### Main
+
+どの順番でたらい回していくかはsetNextで設定します。
+あとは回すだけです。
+
+```java:java
+public class Main {
+    public static void main(String[] args) {
+        Support alice = new NoSupport("Alice");
+        Support bob = new LimitSupport("Bob", 100);
+        Support diana = new LimitSupport("Diana", 200);
+        Support elmo = new OddSupport("Elmo");
+        Support fred = new LimitSupport("Fred", 300);
+
+        // Set up the chain of responsibility
+        alice.setNext(bob).setNext(diana).setNext(elmo).setNext(fred);
+
+        // Make various requests
+        for (int i = 0; i < 500; i += 33) {
+            alice.support(new Trouble(i));
+        }
+    }
+}
+```
+
+実行結果
+
+```
+[Trouble 0] is resolved by [Bob].
+[Trouble 33] is resolved by [Bob].
+[Trouble 66] is resolved by [Bob].
+[Trouble 99] is resolved by [Bob].
+[Trouble 132] is resolved by [Diana].
+[Trouble 165] is resolved by [Diana].
+[Trouble 198] is resolved by [Diana].
+[Trouble 231] is resolved by [Elmo].
+[Trouble 264] is resolved by [Fred].
+[Trouble 297] is resolved by [Elmo].
+[Trouble 330] cannot be resolved.
+[Trouble 363] is resolved by [Elmo].
+[Trouble 396] cannot be resolved.
+[Trouble 429] is resolved by [Elmo].
+[Trouble 462] cannot be resolved.
+[Trouble 495] is resolved by [Elmo].
+```
+
+## なんで必要なの？
+
+サポート役をたくさん立ててたらい回しにするより、どこかにタスクを振り分ける機能を集中させて条件分岐させた方が処理も早くわかりやすいようにも感じます。（実際そうであるパターンもある）
+しかし上記のパターンで考えるとタスクをたらい回しではなく、適切に振り分ける場合はその振り分け役が全てのサポート役の挙動を知っている必要があります。
+そうなるとクラス間での結びつきはより強くなります。
+また、その判断役は誰になるのかという話も出てきます。
+サポート役は自分の処理だけを実装することに意味がある以上、判断役は「要求を出す人」に集めるしかないです。
+そうなると要求を出す人が全てのサポート役の処理を把握する必要が出てきます。
+こうなると本末転倒です。
+単純なたらい回しの構造にすることで要求を出す人と要求を処理する人をゆるやかに結びつけることができます。
+これによって、処理が動的に増えても複雑なロジックもなしにサポート役を追加することができます。
+ただ、たらい回しなので最適な判断は下されていません。
+その分処理は遅くなっています。
+ここら辺はトレードオフの問題になっています。
+上記で提示したメリットと処理速度を天秤にかけてこのパターンを適用するか考える必要があります。
+
+See you later 👋
