@@ -66,6 +66,45 @@ const config: Config = {
           foreground: "hsl(var(--card-foreground))",
         },
       },
+      typography: (theme: any) => ({
+        DEFAULT: {
+          css: {
+            h3: {
+              paddingBottom: "1.5rem",
+              position: "relative",
+              "&::before": {
+                content: '""',
+                display: "block",
+                position: "absolute",
+                width: "100%",
+                height: "2px",
+                left: 0,
+                top: '80%',
+                backgroundColor: "#3182ce",
+              },
+            },
+            h4: {
+              position: "relative",
+              paddingLeft: "1rem",
+              "&::before": {
+                content: '""',
+                display: "block",
+                position: "absolute",
+                width: "4px",
+                height: "100%",
+                left: 0,
+                top: 0,
+                backgroundColor: "#3182ce",
+              },
+              a: {
+                "&::after": {
+                  display: "none",
+                },
+              },
+            },
+          },
+        },
+      }),
     },
   },
 };
