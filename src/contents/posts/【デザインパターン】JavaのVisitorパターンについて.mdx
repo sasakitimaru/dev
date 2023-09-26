@@ -1,0 +1,192 @@
+---
+title: 【デザインパターン】JavaのVisitorパターンについて
+slug: design-pattern/java-visitor-pattern
+icon: ☕️
+description: 今回はvisitorパターンについて解説します。
+date: "2023-09-26"
+tags:
+    - Java
+    - デザインパターン
+categories:
+    - プログラミング
+---
+
+## Visitor
+
+処理と実態を分離して考えるパターンです。
+デリヘルの例で考えてみます（これしか思いつかん）
+デリヘルがVisitor、待機している人が実態です。
+デリヘル側にもさまざまなプレイが存在し、各家を回りながらその処理を施していきます。
+もちろん待機している人は男かもしれませんし、女かもしれません。
+それぞれに合わせたプレイが存在します。
+これらの処理を分離して各家を循環して回る、という構造になります。
+しょうもない話は置いておいて実装に移りましょう。
+
+## 実装
+
+今回は[Compositeパターン](https://www.kurimatsugpt.com/posts/design-pattern/java-composite-pattern)の時に用いたコメント機能を分離していきます。
+
+### Visitor
+
+Visitorクラスは訪問先のクラスに依存しています。
+ここではまだ抽象的な訪問者です。
+メソッドをオーバーライドしてコメント、リプライがそれぞれ渡された際の処理をサブクラスで実装します。
+
+```java:java
+public abstract class Visitor {
+    public abstract void visit(Comment comment);
+    public abstract void visit(Reply reply);
+}
+```
+
+### ListVisitor
+
+具体的な訪問者です。
+コメントを一つもらったらそのコメントの中身を再起的に調べて出力するようになっています。
+コメント、リプライクラスが持っている処理は後ほど実装します。
+
+```java:java
+public class ListVisitor extends Visitor {
+    @Override
+    public void visit(Comment comment) {
+        if (comment.depth == 0) System.out.println(comment);
+        else System.out.println(comment.getIndent() + "|-" + comment);
+        for (Conversation cv : comment) {
+            cv.accept(this);
+        }
+    }
+
+    @Override
+    public void visit(Reply reply) {
+        System.out.println(reply.getIndent() + "|-" + reply);
+    }
+}
+```
+
+### Element
+
+訪問者を受け入れる人のインターフェースです。
+あとで記載するConversationクラスにacceptメソッドを追加してもいいですが、Elementインターフェースを作りそれを実装することでVisitorの受け入れ先であることを明記します。
+
+```java:java
+public interface Element {
+    public void accept(Visitor visitor);
+}
+```
+
+### Conversation
+
+Compositeパターンで用いたものとほぼ同じです。
+サブクラスでコメントとリプライを実装します。
+それぞれが共通して持つ`インデントの深さ`をここで実装します。
+また、先ほどのElementインターフェースを実装することで受け入れ先であることがわかります。
+サブクラスでacceptメソッドは実装します。
+
+```java:java
+public abstract class Conversation implements Element {
+    protected int depth = 0;
+
+    protected String getIndent() {
+        char[] chars = new char[depth * 4];
+        java.util.Arrays.fill(chars, ' ');
+        return new String(chars);
+    }
+}
+```
+
+### Comment
+
+Compositeパターンのものとほぼ同じですが、ここにはコメントという実態だけを残し具体的な処理は来訪者（Visitor)が行なっていくように変えています。
+acceptで来訪者を受け入れて処理を任せます。
+どんな処理をする来訪者なのかはこのクラスは知る必要はありません。
+また、処理を外側で行いやすいように[Iteratorパターン](https://www.kurimatsugpt.com/posts/design-pattern/java-iterator)を使用してコメント型のインスタンスを直接for文で回せるようにしています。
+
+```java:java
+import java.util.*;
+
+public class Comment extends Conversation implements Iterable<Conversation> {
+    private final String comment;
+    private final List<Conversation> conversations = new ArrayList<>();
+    public Comment(String comment) {
+        this.comment = comment;
+    }
+
+    public void add(Conversation cv) {
+        cv.depth = this.depth + 1;
+        this.conversations.add(cv);
+    }
+    @Override
+    public void accept(Visitor v) {
+        v.visit(this);
+    }
+    @Override
+    public Iterator<Conversation> iterator() {
+        return conversations.iterator();
+    }
+    @Override
+    public String toString() {
+        return this.comment;
+    }
+}
+```
+
+### Reply
+
+こちらもCompositeパターンのものとほぼ同じです。
+コメントという容器の中に存在するものです。
+
+```java:java
+public class Reply extends Conversation {
+    private String comment;
+    public Reply(String comment) {
+        this.comment = comment;
+    }
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
+    }
+    @Override
+    public String toString() {
+        return this.comment;
+    }
+}
+```
+
+## 実行
+
+### Main
+
+```java:java
+public class Main {
+    public static void main(String[] args) {
+        Comment c1 = new Comment("こんにちは");
+        c1.add(new Reply("はじめまして"));
+        c1.add(new Reply("こんにちは！"));
+        Comment c1_1 = new Comment("名前を教えてください");
+        c1.add(c1_1);
+        c1_1.add(new Reply("私は栗松です"));
+        Comment c1_2 = new Comment("私も栗松です");
+        c1_1.add(c1_2);
+        c1_2.add(new Reply("よろしくお願いします"));
+        Visitor v = new ListVisitor();
+        c1.accept(v);
+    }
+}
+```
+
+実行結果
+
+```
+こんにちは
+    |-はじめまして
+    |-こんにちは！
+    |-名前を教えてください
+        |-私は栗松です
+        |-私も栗松です
+            |-よろしくお願いします
+```
+
+Compositeパターンと掛け合わせることで、再起的な処理をシンプルに実装できかつ、具体的な処理はVisitorに委ねることができました。
+上記に新しいVisitor、例えばコメント全体の容量を調べる処理を追加したい場合は新たにCaluculateVisitorを作るだけで簡単に使用することができるはずです。
+
+See you later 👋

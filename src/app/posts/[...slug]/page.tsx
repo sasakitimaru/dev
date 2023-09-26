@@ -65,13 +65,13 @@ const PostPage: React.FC<PostProps> = async ({ params }) => {
   }
   const articleData = await getArticlesData(post.title);
   return (
-    <div className="md:flex md:flex-col relative lg:flex-row items-center lg:items-start">
+    <div className="flex flex-shrink flex-col relative lg:flex-row items-center lg:items-start">
       <Toc />
-      <div className="items-center">
-        <article className="post relative p-4 lg:px-10 prose bg-white dark:bg-gray-800 sm:rounded-lg dark:prose-invert mb-10 min-w-0">
+      <div className="w-full">
+        <article className="post relative p-4 lg:px-10 prose bg-white dark:bg-gray-800 sm:rounded-lg dark:prose-invert mb-10 mx-auto lg:mx-0 w-full">
           <Suspense fallback={<div>Loading...</div>}>
             <header>
-              <h1 className="mb-2">{post.title}</h1>
+              <h1 className="mb-2 text-2xl">{post.title}</h1>
               {post.description && (
                 <p className="text-xl mt-0 mb-6 text-gray-700 dark:text-gray-200">
                   {post.description}
