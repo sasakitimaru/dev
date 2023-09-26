@@ -10,6 +10,8 @@ var Search_1 = require("@mui/icons-material/Search");
 var GitHub_1 = require("@mui/icons-material/GitHub");
 var hamburger_react_1 = require("hamburger-react");
 var Home_1 = require("@mui/icons-material/Home");
+var Fab_1 = require("@mui/material/Fab");
+var ArrowUpward_1 = require("@mui/icons-material/ArrowUpward");
 var HeadeInfoListLargerThanSm = function () {
     return (react_1["default"].createElement("ul", { className: "text-xl text-center items-center lg:text-lg flex lg:pt-0" },
         react_1["default"].createElement("li", null,
@@ -27,9 +29,28 @@ var InfoLink = function (_a) {
     return (react_1["default"].createElement(link_1["default"], { href: href, className: "flex items-center gap-x-1 w-10/12 pb-1 mb-4 border-b custom-border", onClick: function () { return setIsClicked(false); }, target: target }, children));
 };
 var Header = function () {
-    var _a = react_1["default"].useState(false), isClicked = _a[0], setIsClicked = _a[1];
+    var _a = react_1.useState(false), isClicked = _a[0], setIsClicked = _a[1];
+    var _b = react_1.useState(false), headerVisible = _b[0], setHeaderVisible = _b[1];
+    var _c = react_1.useState(0), lastScrollTop = _c[0], setLastScrollTop = _c[1];
+    var _d = react_1.useState(0), currentScrollTop = _d[0], setCurrentScrollTop = _d[1];
+    var headerRef = react_1.useRef(null);
+    react_1.useEffect(function () {
+        var handleScroll = function () {
+            var scrollTop = window.scrollY;
+            setCurrentScrollTop(scrollTop);
+            if (scrollTop < lastScrollTop) {
+                setHeaderVisible(false);
+            }
+            else {
+                setHeaderVisible(true);
+            }
+            setLastScrollTop(scrollTop);
+        };
+        window.addEventListener("scroll", handleScroll);
+        return function () { return window.removeEventListener("scroll", handleScroll); };
+    }, [lastScrollTop]);
     return (react_1["default"].createElement(react_1["default"].Fragment, null,
-        react_1["default"].createElement("nav", { className: "md:px-24 lg:px-32 px-6 bg-white dark:bg-gray-800 shadow-md flex flex-wrap items-center md:py-2 fixed z-30 w-full top-0" },
+        react_1["default"].createElement("nav", { className: "md:px-24 lg:px-32 px-6 bg-white dark:bg-gray-800 shadow-md flex flex-wrap items-center md:py-2 fixed z-30 w-full top-0 duration-100\n       " + (headerVisible ? "-translate-y-full" : "translate-y-0") + "\n       sm:translate-y-0\n      ", ref: headerRef },
             react_1["default"].createElement("div", { className: "flex-1 flex items-center" },
                 react_1["default"].createElement(image_1["default"], { src: "/draw1.svg", alt: "homeicon", className: "w-10 h-10 overflow-hidden rounded-full", width: 100, height: 100 }),
                 react_1["default"].createElement(link_1["default"], { href: "/", className: "m-3" },
@@ -39,18 +60,24 @@ var Header = function () {
             react_1["default"].createElement("button", { className: "md:hidden", "aria-label": "toggle menu", onClick: function () { return setIsClicked(!isClicked); } },
                 react_1["default"].createElement(hamburger_react_1["default"], { toggled: isClicked, toggle: setIsClicked, size: 24 })),
             react_1["default"].createElement("aside", { className: "flex flex-col items-center bg-inherit justify-cente shadow-sm absolute top-full right-0 h-screen w-8/12\n      " + (isClicked ? "translate-x-0" : "translate-x-full") + " transition-all duration-500 ease-in-out" },
+                react_1["default"].createElement("p", { className: "text-xl w-full mt-4 mb-4 pl-8" }, "Menu"),
+                react_1["default"].createElement("hr", { className: "w-10/12 mb-4 border-blue-500" }),
                 react_1["default"].createElement(InfoLink, { href: "/", setIsClicked: setIsClicked },
                     react_1["default"].createElement(Home_1["default"], null),
-                    react_1["default"].createElement("span", { className: "text-md" }, "Home")),
+                    react_1["default"].createElement("span", { className: "text-md p-1" }, "Home")),
                 react_1["default"].createElement(InfoLink, { href: "/search", setIsClicked: setIsClicked },
                     react_1["default"].createElement(Search_1["default"], null),
-                    react_1["default"].createElement("span", { className: "text-md" }, "Search")),
+                    react_1["default"].createElement("span", { className: "text-md p-1" }, "Search")),
                 react_1["default"].createElement(InfoLink, { href: "/tags", setIsClicked: setIsClicked },
                     react_1["default"].createElement(LocalOffer_1["default"], null),
-                    react_1["default"].createElement("span", { className: "text-md" }, "Tags")),
+                    react_1["default"].createElement("span", { className: "text-md p-1" }, "Tags")),
                 react_1["default"].createElement(InfoLink, { href: "https://github.com/sasakitimaru", setIsClicked: setIsClicked, target: "blank" },
                     react_1["default"].createElement(GitHub_1["default"], null),
-                    react_1["default"].createElement("span", { className: "text-md" }, "Github")))),
-        react_1["default"].createElement("div", { className: "fixed top-0 w-screen h-screen bg-black z-20 transition-all duration-300 " + (isClicked ? "opacity-50 visible" : "opacity-0 invisible"), onClick: function () { return setIsClicked(false); } })));
+                    react_1["default"].createElement("span", { className: "text-md p-1" }, "Github")))),
+        react_1["default"].createElement("div", { className: "fixed top-0 w-screen h-screen bg-black z-20 transition-all duration-300 " + (isClicked ? "opacity-50 visible" : "opacity-0 invisible"), onClick: function () { return setIsClicked(false); } }),
+        react_1["default"].createElement(Fab_1["default"], { color: "primary", 
+            // area-aria-label="scroll to top"
+            className: "fixed bottom-10 left-10 z-30 bg-blue-500 transition-all duration-300 " + (isClicked ? "opacity-100 visible" : "opacity-0 invisible"), onClick: function () { return window.scrollTo({ top: 0, behavior: "smooth" }); } },
+            react_1["default"].createElement(ArrowUpward_1["default"], null))));
 };
 exports["default"] = Header;

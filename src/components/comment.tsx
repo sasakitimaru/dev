@@ -33,12 +33,12 @@ const CommentField = ({ articleId }: { articleId: number }) => {
   }, [articleId]);
 
   return (
-    <div className="bg-white dark:bg-gray-800 mx-auto w-full sm:rounded-lg prose prose-sm lg:prose-base dark:prose-invert p-4 mt-10 mb-10 lg:px-8 ">
+    <div className="bg-white dark:bg-gray-800 w-full sm:rounded-lg prose prose-sm lg:prose-base dark:prose-invert p-4 mt-10 mb-10 mx-auto lg:mx-0 lg:px-8 ">
       <CommentContext.Provider value={{ comments, setComments }}>
         <SnackOpenContext.Provider value={{ successOpen, errorOpen, setSuccessOpen, setErrorOpen }}>
-          <h3 className="mb-2 p-2 text-center te border-b-[1px] border-gray-300 dark:border-gray-700">
+          <p className="mb-2 p-2 text-center te border-b-[1px] border-gray-300 dark:border-gray-700">
             Conversation
-          </h3>
+          </p>
           {comments &&
             comments.map((comment, index) => (
               <React.Fragment key={index}>

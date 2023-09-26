@@ -1,13 +1,15 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Search from "./searchIcon";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import SearchIcon from "@mui/icons-material/Search";
 import GitHub from "@mui/icons-material/GitHub";
 import Hamburger from "hamburger-react";
 import HomeIcon from "@mui/icons-material/Home";
+import Fab from "@mui/material/Fab";
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 
 const HeadeInfoListLargerThanSm = () => {
   return (
@@ -64,10 +66,34 @@ const InfoLink: React.FC<InfoLinkProps> = ({
 };
 
 const Header = () => {
-  const [isClicked, setIsClicked] = React.useState(false);
+  const [isClicked, setIsClicked] = useState(false);
+  const [headerVisible, setHeaderVisible] = useState(false);
+  const [lastScrollTop, setLastScrollTop] = useState(0);
+  const [currentScrollTop, setCurrentScrollTop] = useState(0);
+  const headerRef = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      setCurrentScrollTop(scrollTop);
+      if (scrollTop < lastScrollTop) {
+        setHeaderVisible(false);
+      } else {
+        setHeaderVisible(true);
+      }
+      setLastScrollTop(scrollTop);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [lastScrollTop]);
   return (
     <>
-      <nav className="md:px-24 lg:px-32 px-6 bg-white dark:bg-gray-800 shadow-md flex flex-wrap items-center md:py-2 fixed z-30 w-full top-0">
+      <nav
+        className={`md:px-24 lg:px-32 px-6 bg-white dark:bg-gray-800 shadow-md flex flex-wrap items-center md:py-2 fixed z-30 w-full top-0 duration-100
+       ${headerVisible ? "-translate-y-full" : "translate-y-0"}
+       sm:translate-y-0
+      `}
+        ref={headerRef}
+      >
         <div className="flex-1 flex items-center">
           <Image
             src="/draw1.svg"
@@ -96,17 +122,19 @@ const Header = () => {
         isClicked ? "translate-x-0" : "translate-x-full"
       } transition-all duration-500 ease-in-out`}
         >
+          <p className="text-xl w-full mt-4 mb-4 pl-8">Menu</p>
+          <hr className="w-10/12 mb-4 border-blue-500" />
           <InfoLink href="/" setIsClicked={setIsClicked}>
             <HomeIcon />
-            <span className="text-md">Home</span>
+            <span className="text-md p-1">Home</span>
           </InfoLink>
           <InfoLink href="/search" setIsClicked={setIsClicked}>
             <SearchIcon />
-            <span className="text-md">Search</span>
+            <span className="text-md p-1">Search</span>
           </InfoLink>
           <InfoLink href="/tags" setIsClicked={setIsClicked}>
             <LocalOfferIcon />
-            <span className="text-md">Tags</span>
+            <span className="text-md p-1">Tags</span>
           </InfoLink>
           <InfoLink
             href="https://github.com/sasakitimaru"
@@ -114,7 +142,7 @@ const Header = () => {
             target="blank"
           >
             <GitHub />
-            <span className="text-md">Github</span>
+            <span className="text-md p-1">Github</span>
           </InfoLink>
         </aside>
       </nav>
@@ -123,7 +151,15 @@ const Header = () => {
           isClicked ? "opacity-50 visible" : "opacity-0 invisible"
         }`}
         onClick={() => setIsClicked(false)}
-      ></div>
+      />
+      <Fab
+        color="primary"
+        // area-aria-label="scroll to top"
+        className={`fixed bottom-10 left-10 z-30 bg-blue-500 transition-all duration-300 ${isClicked ? "opacity-100 visible" : "opacity-0 invisible"}`}
+        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+      >
+        <ArrowUpwardIcon />
+      </Fab>
     </>
   );
 };
