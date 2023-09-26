@@ -77,7 +77,7 @@ var Header = function () {
         react_1["default"].createElement("div", { className: "fixed top-0 w-screen h-screen bg-black z-20 transition-all duration-300 " + (isClicked ? "opacity-50 visible" : "opacity-0 invisible"), onClick: function () { return setIsClicked(false); } }),
         react_1["default"].createElement(Fab_1["default"], { color: "primary", 
             // area-aria-label="scroll to top"
-            className: "fixed bottom-10 left-10 z-30 bg-blue-500 transition-all duration-300 " + (isClicked ? "opacity-100 visible" : "opacity-0 invisible"), onClick: function () { return window.scrollTo({ top: 0, behavior: "smooth" }); } },
+            className: "fixed bottom-10 left-10 z-30 bg-blue-500 transition-all duration-300 " + (headerVisible ? "opacity-0 invisible" : "opacity-100 visible"), onClick: function () { return window.scrollTo({ top: 0, behavior: "smooth" }); } },
             react_1["default"].createElement(ArrowUpward_1["default"], null))));
 };
 exports["default"] = Header;

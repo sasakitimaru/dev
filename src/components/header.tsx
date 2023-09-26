@@ -155,7 +155,7 @@ const Header = () => {
       <Fab
         color="primary"
         // area-aria-label="scroll to top"
-        className={`fixed bottom-10 left-10 z-30 bg-blue-500 transition-all duration-300 ${isClicked ? "opacity-100 visible" : "opacity-0 invisible"}`}
+        className={`fixed bottom-10 left-10 z-30 bg-blue-500 transition-all duration-300 ${headerVisible ? "opacity-0 invisible" : "opacity-100 visible"}`}
         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
       >
         <ArrowUpwardIcon />
