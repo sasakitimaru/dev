@@ -72,6 +72,7 @@
     "@storybook/react": "^7.4.0",
     "@storybook/testing-library": "^0.2.0",
     "@tailwindcss/typography": "^0.5.9",
+    "daisyui": "^3.8.0",
     "eslint-plugin-storybook": "^0.6.13",
     "storybook": "^7.4.0"
   }

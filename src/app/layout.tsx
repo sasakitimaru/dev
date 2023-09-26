@@ -82,13 +82,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className=" bg-blue-700" suppressHydrationWarning>
       <meta name="google-site-verification" content="YYnLOmFRKGKait3EcIcuDRlp95PKkUiocLkLhcwIK3E" />
-      <body className={`bg-blue-50 dark:bg-gray-900 ${inter.className}`}>
+      <body className={`bg-blue-50 dark:bg-gray-900 w-full h-full ${inter.className}`}>
         <Providers>
           <Header />
           <main
-            className={`flex flex-col mt-20 mb-10 sm:px-20 mx-auto max-w-screen-2xl
+            className={`flex flex-col pt-20 mb-10 sm:px-20 mx-auto max-w-screen-2xl
           ${cn("min-h-screen font-sans antialiased", fontSans.variable)}
           `}
           >

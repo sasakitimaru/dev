@@ -75,12 +75,12 @@ exports.metadata = {
 };
 function RootLayout(_a) {
     var children = _a.children;
-    return (React.createElement("html", { lang: "en", suppressHydrationWarning: true },
+    return (React.createElement("html", { lang: "en", className: " bg-blue-700", suppressHydrationWarning: true },
         React.createElement("meta", { name: "google-site-verification", content: "YYnLOmFRKGKait3EcIcuDRlp95PKkUiocLkLhcwIK3E" }),
-        React.createElement("body", { className: "bg-blue-50 dark:bg-gray-900 " + inter.className },
+        React.createElement("body", { className: "bg-blue-50 dark:bg-gray-900 w-full h-full " + inter.className },
             React.createElement(providers_1["default"], null,
                 React.createElement(header_1["default"], null),
-                React.createElement("main", { className: "flex flex-col mt-20 mb-10 sm:px-20 mx-auto max-w-screen-2xl\n          " + utils_1.cn("min-h-screen font-sans antialiased", fonts_1.fontSans.variable) + "\n          " },
+                React.createElement("main", { className: "flex flex-col pt-20 mb-10 sm:px-20 mx-auto max-w-screen-2xl\n          " + utils_1.cn("min-h-screen font-sans antialiased", fonts_1.fontSans.variable) + "\n          " },
                     children,
                     React.createElement(react_1.Analytics, null)),
                 React.createElement(footer_1["default"], null)))));

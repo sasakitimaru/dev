@@ -10,10 +10,14 @@ import Hamburger from "hamburger-react";
 import HomeIcon from "@mui/icons-material/Home";
 import Fab from "@mui/material/Fab";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import ThemeSwitch from "./themeSwitch";
 
 const HeadeInfoListLargerThanSm = () => {
   return (
     <ul className="text-xl text-center items-center lg:text-lg flex lg:pt-0">
+      <li className="flex mr-4">
+        <ThemeSwitch />
+      </li>
       <li>
         <Search />
       </li>
@@ -56,7 +60,7 @@ const InfoLink: React.FC<InfoLinkProps> = ({
   return (
     <Link
       href={href}
-      className="flex items-center gap-x-1 w-10/12 pb-1 mb-4 border-b custom-border"
+      className="flex items-center gap-x-1 w-10/12 pb-1 mb-4"
       onClick={() => setIsClicked(false)}
       target={target}
     >
@@ -121,6 +125,9 @@ const Header = () => {
         <div className="hidden md:flex flex-wrap items-center text-base justify-center">
           <HeadeInfoListLargerThanSm />
         </div>
+        <div className="flex mr-4 md:hidden">
+          <ThemeSwitch />
+        </div>
         <button
           className="md:hidden"
           aria-label="toggle menu"
@@ -129,13 +136,24 @@ const Header = () => {
           <Hamburger toggled={isClicked} toggle={setIsClicked} size={24} />
         </button>
         <aside
-          className={`flex flex-col items-center bg-inherit justify-cente shadow-sm absolute top-full right-0 h-screen w-8/12
+          className={`flex flex-col items-center justify-cente absolute top-full right-0 w-8/12 text-white
       ${
         isClicked ? "translate-x-0" : "translate-x-full"
       } transition-all duration-500 ease-in-out`}
         >
-          <p className="text-xl w-full mt-4 mb-4 pl-8">Menu</p>
-          <hr className="w-10/12 mb-4 border-blue-500" />
+          <p
+            className="text-xl w-10/12 mt-4 mb-4 pl-4 relative 
+            before:content-['']
+            before:absolute
+            before:top-0
+            before:left-0
+            before:w-1
+            before:h-full
+            before:bg-blue-500
+          "
+          >
+            Menu
+          </p>
           <InfoLink href="/" setIsClicked={setIsClicked}>
             <HomeIcon />
             <span className="text-md p-1">Home</span>
@@ -160,7 +178,7 @@ const Header = () => {
       </nav>
       <div
         className={`fixed top-0 w-screen h-screen bg-black z-20 transition-all duration-300 ${
-          isClicked ? "opacity-50 visible" : "opacity-0 invisible"
+          isClicked ? "opacity-75 visible" : "opacity-0 invisible"
         }`}
         onClick={() => setIsClicked(false)}
       />

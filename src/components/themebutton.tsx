@@ -29,20 +29,27 @@ const ThemeButton: React.FC<ThemeButtonProps> = ({
   useEffect(() => {
     if (!mode) mode = "dark";
   }, []);
+  console.log(mode);
   return (
-    <button
-      className={`inline-flex flex-row justify-center items-center rounded-2xl p-1
-       ${mode === "dark" && "mr-1"} 
-       ${selected[mode] && "bg-gray-400"}
-        bg-opacity-50
-       `}
-      disabled={selected[mode]}
-      onClick={() => handleSetSelected(mode)}
-    >
-      {mode === "dark" && <NightIcon />}
-      {mode === "light" && <LightIcon />}
-      {mode === "system" && <SystemIcon />}
-    </button>
+    <>
+      <input type="checkbox" />
+      <svg
+        className="swap-on fill-current w-6 h-6"
+        // xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        onClick={() => handleSetSelected("light")}
+      >
+        <NightIcon fontSize="small"/>
+      </svg>
+      <svg
+        className="swap-off fill-current w-6 h-6"
+        // xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        onClick={() => handleSetSelected("dark")}
+      >
+        <LightIcon fontSize="small"/>
+      </svg>
+    </>
   );
 };
 export default ThemeButton;

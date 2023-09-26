@@ -7,7 +7,6 @@ import Link from "next/link";
 const Footer = () => {
   return (
     <footer className="flex flex-col justify-center items-center w-full border-t bg-white dark:bg-slate-900">
-      <ThemeSwitch />
       <div className="flex flex-row justify-center items-center my-4">
         <Link href={"https://github.com/sasakitimaru"} target={"blank"} className="flex flex-row justify-center items-center hover:opacity-50 mr-4 cursor-pointer">
           <GitHubIcon fontSize={"large"} />

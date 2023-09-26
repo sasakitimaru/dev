@@ -10,10 +10,21 @@ const ThemeSwitch = () => {
     system: false,
   });
   return (
-    <div className="inline-flex flex-row border border-gray-300 rounded-3xl p-1 m-4">
-      <ThemeButton mode="dark" selected={selected} setSelected={setSelected}/>
-      <ThemeButton mode="light" selected={selected} setSelected={setSelected}/>
-    </div>
+    <label className="swap swap-rotate">
+      {selected.light ? (
+        <ThemeButton
+          mode="dark"
+          selected={selected}
+          setSelected={setSelected}
+        />
+      ) : (
+        <ThemeButton
+          mode="light"
+          selected={selected}
+          setSelected={setSelected}
+        />
+      )}
+    </label>
   );
 };
 
