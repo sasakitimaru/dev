@@ -91,9 +91,9 @@ const PostPage: React.FC<PostProps> = async ({ params }) => {
                 </span>
               </div>
             </header>
-            <hr className="my-6" />
+            <hr className="my-6 custom-border" />
             <Mdx code={post.body.code} />
-            <hr />
+            <hr className="custom-border"/>
             <div className="flex flex-row items-center justify-between mx-auto w-10/12">
               <FavoriteIconAnim article={articleData} />
               <Twittershare title={post.title} />
