@@ -1,0 +1,327 @@
+---
+title: 【デザインパターン】JavaのMediatorパターンについて
+slug: design-pattern/java-mediator-pattern
+icon: ☕️
+description: 今回はmediatorパターンについて解説します。
+date: "2023-09-27"
+tags:
+    - Java
+    - デザインパターン
+categories:
+    - プログラミング
+---
+
+## Mediator
+
+このパターンでは複数の処理の状態を管理する役をつくります。
+チームで仕事をする時、毎回メンバーと話し合っていて揉めていたとします。
+例えばあなたがこの仕事が終わったら次の実装に入れるから教えて、とAさんに伝えます。
+Aさんも実は同様にBさんの仕事待ちでした。
+そしてBさんからあなたへは別の仕事を任されていて、実はそれが終わらないとBさんが仕事を進められないのです。
+
+どこで何が起こっているか誰も把握してなくてめちゃくちゃになってしまいます。
+これを防ぐために相談役を立てます。
+全員は相談役の人に状況を知らせ、変化があれば相談役は各員にそれを知らせます。
+こうすることで状況の管理と実際の処理を分離できます。
+
+これがMediatorパターンです。早速実践に入りましょう。
+
+## 実装
+
+今回は車の機能についての実装とします。
+サイドブレーキをリリースして、シフトをドライブに入れ、エンジンをかけてアクセルを踏み発進します。
+
+### Mediator
+
+相談役のインターフェースです。
+具体的な相談役はこのインターフェースを経由して実装します。
+相談役が一緒に働いている同僚を定義し、彼らに変化を知らせます。
+
+```java:java
+public interface Mediator {
+    public abstract void createColleagues();
+    public abstract void colleaguesChanged();
+}
+```
+
+### Colleague
+
+同僚のインターフェースです。
+相談役を設定し、相談役が変化を知らせてきた際にそれに基づいて状態を変えます。
+
+```java:java
+public interface Colleague {
+    public abstract void setMediator(Mediator mediator);
+
+    public abstract void setColleagueEnabled(boolean enabled);
+
+    public abstract boolean isEnabled();
+}
+```
+
+### ConcreteColleague
+
+ここでは具体的な同僚を設定します。
+簡単のため、全ての実装において走れる状態をenabledとしています。
+各クラスの状態がenabled=trueであれば走れる状態にあると考えます。
+
+#### Engine
+
+```java:java
+public class Engine implements Colleague {
+    private Mediator mediator;
+    private boolean enabled;
+
+    public Engine() {
+        this.enabled = false;
+    }
+
+    public void setMediator(Mediator mediator) {
+        this.mediator = mediator;
+    }
+
+    public void setColleagueEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void engineStarted() {
+        this.enabled = true;
+        mediator.colleaguesChanged();
+    }
+}
+```
+
+#### GearShift
+
+```java:java
+public class GearShift implements Colleague {
+    private Mediator mediator;
+    private boolean enabled;
+
+    public GearShift() {
+        this.enabled = false;
+    }
+
+    public void setMediator(Mediator mediator) {
+        this.mediator = mediator;
+    }
+
+    public void setColleagueEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void gearShiftChangedToDrive() {
+        this.enabled = true;
+        mediator.colleaguesChanged();
+    }
+}
+```
+
+#### Accelerator
+
+```java:java
+public class Accelerator implements Colleague {
+    private Mediator mediator;
+    private boolean enabled;
+
+    public Accelerator() {
+        this.enabled = false;
+    }
+
+    public void setMediator(Mediator mediator) {
+        this.mediator = mediator;
+    }
+
+    public void setColleagueEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void acceleratorPressed() {
+        this.enabled = true;
+        mediator.colleaguesChanged();
+    }
+}
+```
+
+#### HandBrake
+
+```java:java
+public class HandBrake implements Colleague {
+    private Mediator mediator;
+    private boolean enabled;
+
+    public HandBrake() {
+        this.enabled = false;
+    }
+
+    public void setMediator(Mediator mediator) {
+        this.mediator = mediator;
+    }
+
+    public void setColleagueEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void handBrakeReleased() {
+        this.enabled = true;
+        mediator.colleaguesChanged();
+    }
+}
+```
+
+### CarDeparture
+
+具体的な相談役です。
+各クラスの状態を監視し、変化があれば他のクラスに指示を出します。
+例えば以下ではエンジンがかかっていない状態でシフトをドライブに入れようとしてもエンジンがかかっていなければ、最初にエンジンをかけるように促しています。（これ交通ルールとしてはダメなんだっけ）
+
+まあ便宜上で設定していて、ロジック自体に深い意味はないです。
+とにかくこの相談役が同僚たちから通知を受け、現在の各同僚の状態を元にどのような指示を出すかというロジックを持っています。
+
+```java:java
+public class CarDeparture implements Mediator {
+    private Accelerator accelerator;
+    private GearShift gearShift;
+    private HandBrake handBrake;
+    private Engine engine;
+
+    public CarDeparture(Accelerator accelerator, GearShift gearShift, HandBrake handBrake, Engine engine) {
+        this.accelerator = accelerator;
+        this.gearShift = gearShift;
+        this.handBrake = handBrake;
+        this.engine = engine;
+        createColleagues();
+    }
+
+    public void createColleagues() {
+        accelerator.setMediator(this);
+        gearShift.setMediator(this);
+        handBrake.setMediator(this);
+        engine.setMediator(this);
+    }
+
+    public void colleaguesChanged() {
+        if (!engine.isEnabled()) {
+            System.out.println("You should start the engine first.");
+            accelerator.setColleagueEnabled(false);
+            gearShift.setColleagueEnabled(false);
+            handBrake.setColleagueEnabled(false);
+        } else if (!handBrake.isEnabled() || !gearShift.isEnabled() || !accelerator.isEnabled()) {
+            System.out.println("You still have something to do.");
+            accelerator.setColleagueEnabled(false);
+        } else {
+            System.out.println("You can depart now.");
+        }
+    }
+    public void isReadyToDepart() {
+        if (accelerator.isEnabled() && gearShift.isEnabled() && handBrake.isEnabled() && engine.isEnabled()) {
+            System.out.println("Car is ready to depart.");
+        } else if (!accelerator.isEnabled()) {
+            System.out.println("Accelerator is not pressed.");
+        } else if (!gearShift.isEnabled()) {
+            System.out.println("Gear shift is not in drive.");
+        } else if (!handBrake.isEnabled()) {
+            System.out.println("Hand brake is not released.");
+        } else if (!engine.isEnabled()) {
+            System.out.println("Engine is not started.");
+        }
+    }
+}
+```
+
+### Driver
+
+運転手のクラスです。
+ここでは運転に成功する順番で処理をしていくパターンと失敗するパターンを意図的に書いてます。
+
+```java:java
+public class Driver {
+    private Engine engine;
+    private Accelerator accelerator;
+    private HandBrake handBrake;
+    private GearShift gearShift;
+    private CarDeparture departure;
+    public Driver() {
+        engine = new Engine();
+        accelerator = new Accelerator();
+        handBrake = new HandBrake();
+        gearShift = new GearShift();
+        departure = new CarDeparture(accelerator, gearShift, handBrake, engine);
+    }
+    public void failToDepart() {
+        System.out.println("Driver fail pattern.");
+        accelerator.acceleratorPressed();
+        engine.engineStarted();
+        handBrake.handBrakeReleased();
+        gearShift.gearShiftChangedToDrive();
+        departure.isReadyToDepart();
+    }
+    public void succeedToDepart() {
+        System.out.println("Driver success pattern.");
+        engine.engineStarted();
+        handBrake.handBrakeReleased();
+        gearShift.gearShiftChangedToDrive();
+        accelerator.acceleratorPressed();
+        departure.isReadyToDepart();
+    }
+}
+```
+
+## 実行
+
+### Main
+
+ドライバーに成功パターンと失敗パターンで運転してもらうだけです。
+
+```java:java
+public class Main {
+    public static void main(String[] args) {
+        Driver driver = new Driver();
+        driver.failToDepart();
+        driver.succeedToDepart();
+    }
+}
+```
+
+実行結果
+
+```
+Driver fail pattern.
+You should start the engine first.
+You still have something to do.
+You still have something to do.
+You still have something to do.
+Accelerator is not pressed.
+
+Driver success pattern.
+You still have something to do.
+You still have something to do.
+You still have something to do.
+You can depart now.
+Car is ready to depart.
+```
+
+ちょっとロジック自体は適当ですが、今回大切なのは運転をする処理とそれらの状態を監視して各クラスに指示を出す部分で分けることです。
+
+これにより、各部品は自分たちのことしか知らなくて大丈夫になります。
+相談役のCarDepartureは再利用しづらいですが、他の部品は簡単に再利用できます。
+
+各状態に基づいたロジックも今回適当でした、もし修正するとなってもCarDepartureクラスだけ修正すればいいです。例えばシフトをドライブに入れてからでないとサイドブレーキを外してはいけないとか。
+
+See you later 👋
