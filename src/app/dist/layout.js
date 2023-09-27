@@ -56,8 +56,8 @@ exports.metadata = {
     ],
     creator: "sasakitimiaru",
     themeColor: [
-        { media: "(prefers-color-scheme: light)", color: "white" },
-        { media: "(prefers-color-scheme: dark)", color: "black" },
+        { media: "(prefers-color-scheme: light)", color: "#3B82F6" },
+        { media: "(prefers-color-scheme: dark)", color: "#3B82F6" },
     ],
     twitter: {
         card: "summary",
@@ -71,6 +71,10 @@ exports.metadata = {
         url: process.env.NEXT_PUBLIC_BASE_URL,
         title: title,
         description: description
+    },
+    appleWebApp: {
+        title: title,
+        statusBarStyle: "default"
     }
 };
 function RootLayout(_a) {
