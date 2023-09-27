@@ -3,22 +3,53 @@ import ThemeSwitch from "./themeSwitch";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import Link from "next/link";
+import LinkedinIcon from "@mui/icons-material/LinkedIn";
 
 const Footer = () => {
   return (
-    <footer className="flex flex-col justify-center items-center w-full border-t bg-white dark:bg-slate-900">
-      <div className="flex flex-row justify-center items-center my-4">
-        <Link href={"https://github.com/sasakitimaru"} target={"blank"} className="flex flex-row justify-center items-center hover:opacity-50 mr-4 cursor-pointer">
-          <GitHubIcon fontSize={"large"} />
-        </Link>
-        <Link href={"https://twitter.com/sasakiti_maru"} target={"blank"} className="flex flex-row justify-center items-center hover:opacity-50 cursor-pointer">
-          <TwitterIcon fontSize={"large"} />
-        </Link>
-      </div>
-      <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
-        &copy; 2023 sasakitimaru All rights reserved.
-      </p>
-    </footer>
+    <div className="flex flex-col items-center bg-white dark:bg-blue-950">
+      <footer className="footer p-6 sm:p-10 text-base-content max-w-6xl">
+        <div className="flex flex-col justify-center items-center mx-auto">
+          <nav className="md:place-self-center md:justify-self-end">
+            <div className="grid grid-flow-col gap-4">
+              <Link
+                href={"https://github.com/sasakitimaru"}
+                target={"blank"}
+                className="flex flex-row justify-center items-center hover:opacity-50 cursor-pointer"
+              >
+                <GitHubIcon fontSize={"medium"} />
+              </Link>
+              <Link
+                href={"https://twitter.com/sasakiti_maru"}
+                target={"blank"}
+                className="flex flex-row justify-center items-center hover:opacity-50 cursor-pointer"
+              >
+                <TwitterIcon fontSize={"medium"} />
+              </Link>
+              <Link
+                href={"https://www.linkedin.com/in/tomoya-ohki-35aa79213/"}
+                target={"blank"}
+                className="flex flex-row justify-center items-center hover:opacity-50 cursor-pointer"
+              >
+                <LinkedinIcon fontSize={"medium"} />
+              </Link>
+            </div>
+          </nav>
+          <p> &copy; 2023 sasakitimaru All rights reserved.</p>
+        </div>
+        <nav>
+          <header className="footer-title">Categories</header>
+        </nav>
+        <nav>
+          <header className="footer-title">Tags</header>
+        </nav>
+        <nav>
+          <header className="footer-title">Contact</header>
+          <a className="link link-hover">About</a>
+          <a className="link link-hover">Policy</a>
+        </nav>
+      </footer>
+    </div>
   );
 };
 

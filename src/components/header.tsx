@@ -142,7 +142,7 @@ const Header = () => {
       } transition-all duration-500 ease-in-out`}
         >
           <p
-            className="text-xl w-10/12 mt-4 mb-4 pl-4 relative bg-slate-900 py-1
+            className="text-xl w-10/12 mt-4 mb-4 pl-4 relative dark:bg-slate-900 py-1
             before:content-['']
             before:absolute
             before:top-0
