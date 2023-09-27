@@ -9,6 +9,6 @@ var ThemeSwitch = function () {
         light: false,
         system: false
     }), selected = _a[0], setSelected = _a[1];
-    return (react_1["default"].createElement("label", { className: "swap swap-rotate" }, selected.light ? (react_1["default"].createElement(themebutton_1["default"], { mode: "dark", selected: selected, setSelected: setSelected })) : (react_1["default"].createElement(themebutton_1["default"], { mode: "light", selected: selected, setSelected: setSelected }))));
+    return (react_1["default"].createElement("label", { className: "swap swap-rotate p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600" }, selected.light ? (react_1["default"].createElement(themebutton_1["default"], { mode: "dark", selected: selected, setSelected: setSelected })) : (react_1["default"].createElement(themebutton_1["default"], { mode: "light", selected: selected, setSelected: setSelected }))));
 };
 exports["default"] = ThemeSwitch;

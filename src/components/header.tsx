@@ -136,13 +136,13 @@ const Header = () => {
           <Hamburger toggled={isClicked} toggle={setIsClicked} size={24} />
         </button>
         <aside
-          className={`flex flex-col items-center justify-cente absolute top-full right-0 w-8/12 text-white
+          className={`flex flex-col items-center justify-cente absolute top-full right-0 w-6/12 text-white
       ${
         isClicked ? "translate-x-0" : "translate-x-full"
       } transition-all duration-500 ease-in-out`}
         >
           <p
-            className="text-xl w-10/12 mt-4 mb-4 pl-4 relative 
+            className="text-xl w-10/12 mt-4 mb-4 pl-4 relative bg-slate-900 py-1
             before:content-['']
             before:absolute
             before:top-0
