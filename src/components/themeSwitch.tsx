@@ -10,7 +10,7 @@ const ThemeSwitch = () => {
     system: false,
   });
   return (
-    <label className="swap swap-rotate">
+    <label className="swap swap-rotate p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600">
       {selected.light ? (
         <ThemeButton
           mode="dark"
