@@ -62,6 +62,10 @@ exports.metadata = {
         creator: "@sasakiti_miaru",
         images: process.env.NEXT_PUBLIC_BASE_URL + "/draw1.svg"
     },
+    themeColor: [
+        { media: "(prefers-color-scheme: light)", color: "#3B82F6" },
+        { media: "(prefers-color-scheme: dark)", color: "#3B82F6" },
+    ],
     openGraph: {
         type: "website",
         url: process.env.NEXT_PUBLIC_BASE_URL,

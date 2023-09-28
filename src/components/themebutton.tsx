@@ -23,9 +23,6 @@ const ThemeButton: React.FC<ThemeButtonProps> = ({
       [mode]: true,
     });
   };
-  useEffect(() => {
-    if (!mode) mode = "dark";
-  }, []);
   return (
     <>
       <input type="checkbox" />

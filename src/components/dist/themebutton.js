@@ -16,10 +16,6 @@ var ThemeButton = function (_a) {
             _a[mode] = true,
             _a));
     };
-    react_1.useEffect(function () {
-        if (!mode)
-            mode = "dark";
-    }, []);
     return (react_1["default"].createElement(react_1["default"].Fragment, null,
         react_1["default"].createElement("input", { type: "checkbox" }),
         react_1["default"].createElement("svg", { className: "swap-on fill-current w-6 h-6", xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", onClick: function () { return handleSetSelected("light"); } },

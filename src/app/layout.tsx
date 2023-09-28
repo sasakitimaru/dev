@@ -64,6 +64,10 @@ export const metadata: Metadata = {
     creator: "@sasakiti_miaru",
     images: process.env.NEXT_PUBLIC_BASE_URL! + "/draw1.svg",
   },
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#3B82F6" },
+    { media: "(prefers-color-scheme: dark)", color: "#3B82F6" },
+  ],
   openGraph: {
     type: "website",
     url: process.env.NEXT_PUBLIC_BASE_URL!,
@@ -83,8 +87,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className=" bg-blue-700" suppressHydrationWarning>
-      <meta name="google-site-verification" content="YYnLOmFRKGKait3EcIcuDRlp95PKkUiocLkLhcwIK3E" />
-      <body className={`bg-blue-50 dark:bg-gray-900 w-full h-full ${inter.className}`}>
+      <meta
+        name="google-site-verification"
+        content="YYnLOmFRKGKait3EcIcuDRlp95PKkUiocLkLhcwIK3E"
+      />
+      <body
+        className={`bg-blue-50 dark:bg-gray-900 w-full h-full ${inter.className}`}
+      >
         <Providers>
           <Header />
           <main
