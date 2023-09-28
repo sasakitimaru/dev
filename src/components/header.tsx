@@ -8,8 +8,6 @@ import SearchIcon from "@mui/icons-material/Search";
 import GitHub from "@mui/icons-material/GitHub";
 import Hamburger from "hamburger-react";
 import HomeIcon from "@mui/icons-material/Home";
-import Fab from "@mui/material/Fab";
-import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ThemeSwitch from "./themeSwitch";
 
 const HeadeInfoListLargerThanSm = () => {
@@ -69,38 +67,21 @@ const InfoLink: React.FC<InfoLinkProps> = ({
   );
 };
 
-function isScrollToBottom() {
-  const scrollHeight = document.documentElement.scrollHeight;
-  const scrollTop = document.documentElement.scrollTop;
-  const clientHeight = document.documentElement.clientHeight;
-  return scrollHeight - scrollTop === clientHeight;
-}
-
 const Header = () => {
   const [isClicked, setIsClicked] = useState(false);
   const [headerVisible, setHeaderVisible] = useState(true);
-  const [scrollTopButtonVisible, setScrollTopButtonVisible] = useState(false);
   const [lastScrollTop, setLastScrollTop] = useState(0);
   const headerRef = useRef<HTMLElement>(null);
   useEffect(() => {
     const handleScroll = () => {
       const scrollTop = window.scrollY || document.documentElement.scrollTop;
       setHeaderVisible(scrollTop < lastScrollTop || scrollTop <= 0);
-      setScrollTopButtonVisible(
-        scrollTop < lastScrollTop || isScrollToBottom()
-      );
       setLastScrollTop(scrollTop);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollTop]);
 
-  useEffect(() => {
-    const timerId = setTimeout(() => {
-      setScrollTopButtonVisible(false);
-    }, 3000);
-    return () => clearTimeout(timerId);
-  }, [scrollTopButtonVisible]);
   return (
     <>
       <nav
@@ -182,17 +163,6 @@ const Header = () => {
         }`}
         onClick={() => setIsClicked(false)}
       />
-      <Fab
-        color="primary"
-        // area-aria-label="scroll to top"
-        className={`fixed bottom-10 left-10 z-30 bg-blue-500 transition-all duration-300 
-        ${
-          scrollTopButtonVisible ? "opacity-100 visible" : "opacity-0 invisible"
-        }`}
-        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-      >
-        <ArrowUpwardIcon />
-      </Fab>
     </>
   );
 };

@@ -10,8 +10,6 @@ var Search_1 = require("@mui/icons-material/Search");
 var GitHub_1 = require("@mui/icons-material/GitHub");
 var hamburger_react_1 = require("hamburger-react");
 var Home_1 = require("@mui/icons-material/Home");
-var Fab_1 = require("@mui/material/Fab");
-var ArrowUpward_1 = require("@mui/icons-material/ArrowUpward");
 var themeSwitch_1 = require("./themeSwitch");
 var HeadeInfoListLargerThanSm = function () {
     return (react_1["default"].createElement("ul", { className: "text-xl text-center items-center lg:text-lg flex lg:pt-0" },
@@ -31,34 +29,20 @@ var InfoLink = function (_a) {
     var children = _a.children, setIsClicked = _a.setIsClicked, href = _a.href, target = _a.target;
     return (react_1["default"].createElement(link_1["default"], { href: href, className: "flex items-center gap-x-1 w-10/12 pb-1 mb-4", onClick: function () { return setIsClicked(false); }, target: target }, children));
 };
-function isScrollToBottom() {
-    var scrollHeight = document.documentElement.scrollHeight;
-    var scrollTop = document.documentElement.scrollTop;
-    var clientHeight = document.documentElement.clientHeight;
-    return scrollHeight - scrollTop === clientHeight;
-}
 var Header = function () {
     var _a = react_1.useState(false), isClicked = _a[0], setIsClicked = _a[1];
     var _b = react_1.useState(true), headerVisible = _b[0], setHeaderVisible = _b[1];
-    var _c = react_1.useState(false), scrollTopButtonVisible = _c[0], setScrollTopButtonVisible = _c[1];
-    var _d = react_1.useState(0), lastScrollTop = _d[0], setLastScrollTop = _d[1];
+    var _c = react_1.useState(0), lastScrollTop = _c[0], setLastScrollTop = _c[1];
     var headerRef = react_1.useRef(null);
     react_1.useEffect(function () {
         var handleScroll = function () {
             var scrollTop = window.scrollY || document.documentElement.scrollTop;
             setHeaderVisible(scrollTop < lastScrollTop || scrollTop <= 0);
-            setScrollTopButtonVisible(scrollTop < lastScrollTop || isScrollToBottom());
             setLastScrollTop(scrollTop);
         };
         window.addEventListener("scroll", handleScroll);
         return function () { return window.removeEventListener("scroll", handleScroll); };
     }, [lastScrollTop]);
-    react_1.useEffect(function () {
-        var timerId = setTimeout(function () {
-            setScrollTopButtonVisible(false);
-        }, 3000);
-        return function () { return clearTimeout(timerId); };
-    }, [scrollTopButtonVisible]);
     return (react_1["default"].createElement(react_1["default"].Fragment, null,
         react_1["default"].createElement("nav", { className: "md:px-24 lg:px-32 px-6 bg-white dark:bg-gray-800 shadow-md flex flex-wrap items-center md:py-2 fixed z-30 w-full top-0 duration-100\n       " + (headerVisible ? "translate-y-0" : "-translate-y-full") + "\n       sm:translate-y-0\n      ", ref: headerRef },
             react_1["default"].createElement("div", { className: "flex-1 flex items-center" },
@@ -85,10 +69,6 @@ var Header = function () {
                 react_1["default"].createElement(InfoLink, { href: "https://github.com/sasakitimaru", setIsClicked: setIsClicked, target: "blank" },
                     react_1["default"].createElement(GitHub_1["default"], null),
                     react_1["default"].createElement("span", { className: "text-md p-1" }, "Github")))),
-        react_1["default"].createElement("div", { className: "fixed top-0 w-screen h-screen bg-black z-20 transition-all duration-300 " + (isClicked ? "opacity-75 visible" : "opacity-0 invisible"), onClick: function () { return setIsClicked(false); } }),
-        react_1["default"].createElement(Fab_1["default"], { color: "primary", 
-            // area-aria-label="scroll to top"
-            className: "fixed bottom-10 left-10 z-30 bg-blue-500 transition-all duration-300 \n        " + (scrollTopButtonVisible ? "opacity-100 visible" : "opacity-0 invisible"), onClick: function () { return window.scrollTo({ top: 0, behavior: "smooth" }); } },
-            react_1["default"].createElement(ArrowUpward_1["default"], null))));
+        react_1["default"].createElement("div", { className: "fixed top-0 w-screen h-screen bg-black z-20 transition-all duration-300 " + (isClicked ? "opacity-75 visible" : "opacity-0 invisible"), onClick: function () { return setIsClicked(false); } })));
 };
 exports["default"] = Header;

@@ -9,6 +9,7 @@ var google_1 = require("next/font/google");
 var header_1 = require("@/components/header");
 var footer_1 = require("@/components/footer");
 var react_1 = require("@vercel/analytics/react");
+var scrollToTopButton_1 = require("@/components/scrollToTopButton");
 var inter = google_1.Inter({ subsets: ["latin"] });
 var title = "ささきち開発ブログ";
 var description = "バックエンドエンジニアの個人開発ブログです。適当に日常での技術的なものでもそうでなくても出来事を書き残してます。";
@@ -87,6 +88,7 @@ function RootLayout(_a) {
                 React.createElement("main", { className: "flex flex-col pt-20 mb-10 sm:px-20 mx-auto max-w-screen-2xl\n          " + utils_1.cn("min-h-screen font-sans antialiased", fonts_1.fontSans.variable) + "\n          " },
                     children,
                     React.createElement(react_1.Analytics, null)),
-                React.createElement(footer_1["default"], null)))));
+                React.createElement(footer_1["default"], null)),
+            React.createElement(scrollToTopButton_1["default"], null))));
 }
 exports["default"] = RootLayout;

@@ -10,6 +10,8 @@ import { FavoriteIconAnim } from "@/components/likesButton";
 import Twittershare from "@/components/twittershare";
 import CommentField from "@/components/comment";
 import Toc from "@/components/toc";
+import ArticleCardList from "@/components/articlecardlist";
+import { getAllPosts } from "@/api/mdx/mdxAPI";
 
 interface PostProps {
   params: {
@@ -60,6 +62,13 @@ export async function generateStaticParams(): Promise<PostProps["params"][]> {
 
 const PostPage: React.FC<PostProps> = async ({ params }) => {
   const post = await getPostFromParams(params);
+  const articles = await getAllPosts();
+
+  // TODO: 記事のIDをタイトルから取得して、次の記事と前の記事を取得する
+  //       現状記事のIDはパスになっているので以下ではうまくいかない
+  // const nextArticle = articles.find((article) => Number(article.id) === Number(post!._id) + 1);
+  // const prevArticle = articles.find((article) => Number(article.id) === Number(post!._id) - 1);
+
   if (!post) {
     notFound();
   }
@@ -93,14 +102,18 @@ const PostPage: React.FC<PostProps> = async ({ params }) => {
             </header>
             <hr className="my-6 custom-border" />
             <Mdx code={post.body.code} />
-            <hr className="custom-border"/>
+            <hr className="custom-border" />
             <div className="flex flex-row items-center justify-between mx-auto w-10/12">
               <FavoriteIconAnim article={articleData} />
               <Twittershare title={post.title} />
             </div>
           </Suspense>
         </article>
-        {articleData && <CommentField articleId={articleData.id} />}
+        {/* TODO: 次と前の記事を載せる */}
+        {/* <ArticleCardList articles={
+          [prevArticle, nextArticle].filter((article) => article !== undefined) as any
+        }/>
+        {articleData && <CommentField articleId={articleData.id} />} */}
       </div>
     </div>
   );
