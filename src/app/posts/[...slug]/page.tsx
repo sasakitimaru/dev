@@ -112,8 +112,8 @@ const PostPage: React.FC<PostProps> = async ({ params }) => {
         {/* TODO: 次と前の記事を載せる */}
         {/* <ArticleCardList articles={
           [prevArticle, nextArticle].filter((article) => article !== undefined) as any
-        }/>
-        {articleData && <CommentField articleId={articleData.id} />} */}
+        }/>*/}
+        {articleData && <CommentField articleId={articleData.id} />}
       </div>
     </div>
   );
