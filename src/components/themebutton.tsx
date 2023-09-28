@@ -1,7 +1,4 @@
 import React, { useEffect } from "react";
-import { default as NightIcon } from "@mui/icons-material/Brightness3";
-import { default as LightIcon } from "@mui/icons-material/WbSunny";
-import { default as SystemIcon } from "@mui/icons-material/SettingsSuggest";
 import { useTheme } from "next-themes";
 import { Selected, Mode } from "@/types/type";
 

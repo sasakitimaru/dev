@@ -7,7 +7,7 @@ var link_1 = require("next/link");
 var LinkedIn_1 = require("@mui/icons-material/LinkedIn");
 var Footer = function () {
     return (react_1["default"].createElement("div", { className: "flex flex-col items-center bg-white dark:bg-blue-950" },
-        react_1["default"].createElement("footer", { className: "footer p-6 sm:p-10 text-base-content max-w-6xl" },
+        react_1["default"].createElement("footer", { className: "footer p-6 sm:p-10 max-w-6xl" },
             react_1["default"].createElement("div", { className: "flex flex-col justify-center items-center mx-auto" },
                 react_1["default"].createElement("nav", { className: "md:place-self-center md:justify-self-end" },
                     react_1["default"].createElement("div", { className: "grid grid-flow-col gap-4" },

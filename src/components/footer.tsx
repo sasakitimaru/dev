@@ -8,7 +8,7 @@ import LinkedinIcon from "@mui/icons-material/LinkedIn";
 const Footer = () => {
   return (
     <div className="flex flex-col items-center bg-white dark:bg-blue-950">
-      <footer className="footer p-6 sm:p-10 text-base-content max-w-6xl">
+      <footer className="footer p-6 sm:p-10 max-w-6xl">
         <div className="flex flex-col justify-center items-center mx-auto">
           <nav className="md:place-self-center md:justify-self-end">
             <div className="grid grid-flow-col gap-4">

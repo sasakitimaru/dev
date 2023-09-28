@@ -10,8 +10,10 @@ const config: Config = {
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   darkMode: "class",
+  lightMode: "class",
   plugins: [
     require("@tailwindcss/typography"),
+    require("daisyui"),
     plugin(({ addUtilities }: { addUtilities: any }) => {
       addUtilities({
         ".no-overflow-anchoring": {
@@ -19,11 +21,11 @@ const config: Config = {
         },
       });
     }),
-    require("daisyui"),
   ],
   daisyui: {
-    themes: [""], // true: all themes | false: only light + dark | array: specific themes like this ["light", "dark", "cupcake"]
+    themes: ["","light"], // true: all themes | false: only light + dark | array: specific themes like this ["light", "dark", "cupcake"]
     darkTheme: "dark", // name of one of the included themes for dark mode
+    lightTheme: "light", // name of one of the included themes for light mode
     base: true, // applies background color and foreground color for root element by default
     styled: true, // include daisyUI colors and design decisions for all components
     utils: true, // adds responsive and modifier utility classes

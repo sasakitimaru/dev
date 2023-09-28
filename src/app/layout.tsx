@@ -7,7 +7,6 @@ import { Inter } from "next/font/google";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import { Analytics } from "@vercel/analytics/react";
-import { colors } from "@mui/material";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -58,10 +57,6 @@ export const metadata: Metadata = {
     },
   ],
   creator: "sasakitimiaru",
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#3B82F6" },
-    { media: "(prefers-color-scheme: dark)", color: "#3B82F6"},
-  ],
   twitter: {
     card: "summary",
     title,
