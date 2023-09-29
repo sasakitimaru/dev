@@ -43,6 +43,15 @@ const config: Config = {
         sans: ["var(--font-sans)"],
         heading: ["var(--font-heading)", ...fontFamily.sans],
       },
+      animation: {
+        blinkBorder: "blinkBorder 1s ease-in-out infinite",
+      },
+      keyframes: {
+        blinkBorder: {
+          '0%, 49%': { borderColor: 'white' },
+          '50%, 100%': { borderColor: 'transparent' }
+        }
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

@@ -11,6 +11,7 @@ var GitHub_1 = require("@mui/icons-material/GitHub");
 var hamburger_react_1 = require("hamburger-react");
 var Home_1 = require("@mui/icons-material/Home");
 var themeSwitch_1 = require("./themeSwitch");
+var Info_1 = require("@mui/icons-material/Info");
 var HeadeInfoListLargerThanSm = function () {
     return (react_1["default"].createElement("ul", { className: "text-xl text-center items-center lg:text-lg flex lg:pt-0" },
         react_1["default"].createElement("li", { className: "flex mr-4" },
@@ -18,9 +19,9 @@ var HeadeInfoListLargerThanSm = function () {
         react_1["default"].createElement("li", null,
             react_1["default"].createElement(searchIcon_1["default"], null)),
         react_1["default"].createElement("li", null,
-            react_1["default"].createElement(link_1["default"], { href: "/tags", className: "hover:opacity-75 cursor-pointer flex justify-center items-center" },
-                react_1["default"].createElement(LocalOffer_1["default"], { className: "text-[20px] mr-1" }),
-                react_1["default"].createElement("p", { className: "text-sm" }, "Tags"))),
+            react_1["default"].createElement(link_1["default"], { href: "/about", className: "hover:opacity-75 cursor-pointer flex justify-center items-center" },
+                react_1["default"].createElement(Info_1["default"], { className: "text-[20px] mr-1" }),
+                react_1["default"].createElement("p", { className: "text-sm" }, "About"))),
         react_1["default"].createElement("li", { className: "block" },
             react_1["default"].createElement(link_1["default"], { href: "https://github.com/sasakitimaru", target: "blank" },
                 react_1["default"].createElement(image_1["default"], { src: "/myLovelyCat.jpg", alt: "cat", className: "w-10 h-10 ml-4 overflow-hidden rounded-full", width: 1000, height: 1000 })))));
@@ -63,6 +64,9 @@ var Header = function () {
                 react_1["default"].createElement(InfoLink, { href: "/search", setIsClicked: setIsClicked },
                     react_1["default"].createElement(Search_1["default"], null),
                     react_1["default"].createElement("span", { className: "text-md p-1" }, "Search")),
+                react_1["default"].createElement(InfoLink, { href: "/about", setIsClicked: setIsClicked },
+                    react_1["default"].createElement(Info_1["default"], null),
+                    react_1["default"].createElement("span", { className: "text-md p-1" }, "About")),
                 react_1["default"].createElement(InfoLink, { href: "/tags", setIsClicked: setIsClicked },
                     react_1["default"].createElement(LocalOffer_1["default"], null),
                     react_1["default"].createElement("span", { className: "text-md p-1" }, "Tags")),

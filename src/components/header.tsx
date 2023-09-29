@@ -9,6 +9,7 @@ import GitHub from "@mui/icons-material/GitHub";
 import Hamburger from "hamburger-react";
 import HomeIcon from "@mui/icons-material/Home";
 import ThemeSwitch from "./themeSwitch";
+import InfoIcon from '@mui/icons-material/Info';
 
 const HeadeInfoListLargerThanSm = () => {
   return (
@@ -21,11 +22,11 @@ const HeadeInfoListLargerThanSm = () => {
       </li>
       <li>
         <Link
-          href="/tags"
+          href="/about"
           className="hover:opacity-75 cursor-pointer flex justify-center items-center"
         >
-          <LocalOfferIcon className="text-[20px] mr-1" />
-          <p className="text-sm">Tags</p>
+          <InfoIcon className="text-[20px] mr-1" />
+          <p className="text-sm">About</p>
         </Link>
       </li>
       <li className="block">
@@ -142,6 +143,10 @@ const Header = () => {
           <InfoLink href="/search" setIsClicked={setIsClicked}>
             <SearchIcon />
             <span className="text-md p-1">Search</span>
+          </InfoLink>
+          <InfoLink href="/about" setIsClicked={setIsClicked}>
+            <InfoIcon />
+            <span className="text-md p-1">About</span>
           </InfoLink>
           <InfoLink href="/tags" setIsClicked={setIsClicked}>
             <LocalOfferIcon />
