@@ -257,7 +257,7 @@ const Terminal = () => {
             <p className="m-2 flex-shrink-0">Mac-mini:~ sasakiti$</p>
             <div className="w-full">
               <input
-                className={`ml-1 bg-inherit outline-none w-full border-l-4
+                className={`ml-1 bg-inherit outline-none w-full border-l-4 rounded-none
                 ${isFocus ? "caret-white border-none" : "animate-blinkBorder"}`}
                 value={inputValue}
                 ref={inputRef}

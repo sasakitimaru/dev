@@ -177,6 +177,6 @@ var Terminal = function () {
                 react_1["default"].createElement("div", { className: "flex items-center" },
                     react_1["default"].createElement("p", { className: "m-2 flex-shrink-0" }, "Mac-mini:~ sasakiti$"),
                     react_1["default"].createElement("div", { className: "w-full" },
-                        react_1["default"].createElement("input", { className: "ml-1 bg-inherit outline-none w-full border-l-4\n                " + (isFocus ? "caret-white border-none" : "animate-blinkBorder"), value: inputValue, ref: inputRef, onChange: function (e) { return setInputValue(e.target.value); }, onKeyDown: handleKeyDown, onFocus: function () { return setIsFocus(true); }, onBlur: function () { return setIsFocus(false); }, placeholder: "" + (!isFocus ? "alias: show all command" : "") })))))));
+                        react_1["default"].createElement("input", { className: "ml-1 bg-inherit outline-none w-full border-l-4 rounded-none\n                " + (isFocus ? "caret-white border-none" : "animate-blinkBorder"), value: inputValue, ref: inputRef, onChange: function (e) { return setInputValue(e.target.value); }, onKeyDown: handleKeyDown, onFocus: function () { return setIsFocus(true); }, onBlur: function () { return setIsFocus(false); }, placeholder: "" + (!isFocus ? "alias: show all command" : "") })))))));
 };
 exports["default"] = Terminal;
