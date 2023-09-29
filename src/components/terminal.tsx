@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect } from "react";
 
 const ShowAllCommand = () => {
   return (
@@ -29,7 +29,7 @@ const AliasCommand = () => {
 const SkillsCommand = () => {
   return (
     <>
-      <div className=" text-blue-200">
+      <div className=" text-green-200">
         <p className="text-lg m-2">{"> language"}</p>
         <p className="text-lg m-2">{"> framework"}</p>
       </div>
@@ -40,7 +40,7 @@ const SkillsCommand = () => {
 const SkillslanguageCommand = () => {
   return (
     <>
-      <div className=" text-blue-200">
+      <div className=" text-blue-300">
         <p className="text-lg m-2">{"> TypeScript"}</p>
         <p className="text-lg m-2">{"> Java"}</p>
       </div>
@@ -51,7 +51,7 @@ const SkillslanguageCommand = () => {
 const SkillsframeworkCommand = () => {
   return (
     <>
-      <div className="text-blue-200">
+      <div className="text-red-300">
         <p className="text-lg m-2">{"> React"}</p>
         <p className="text-lg m-2">{"> Next.js"}</p>
         <p className="text-lg m-2">{"> Tailwind CSS"}</p>
@@ -64,22 +64,25 @@ const SkillsframeworkCommand = () => {
 const ContactCommand = () => {
   return (
     <>
-      <div className=" text-blue-200 flex flex-col">
+      <div className=" text-purple-300 flex flex-col">
         <Link
           href={"https://github.com/sasakitimaru"}
-          className="text-lg m-2 text-inherit"
+          className="text-lg m-2 text-inherit w-fit"
+          target="blank"
         >
           {"> Github"}
         </Link>
         <Link
           href={"https://twitter.com/sasakiti_maru"}
-          className="text-lg m-2 text-inherit"
+          className="text-lg m-2 text-inherit w-fit"
+          target="blank"
         >
           {"> Twitter"}
         </Link>
         <Link
           href={"https://www.linkedin.com/in/tomoya-ohki-35aa79213/"}
-          className="text-lg m-2 text-inherit"
+          className="text-lg m-2 text-inherit w-fit"
+          target="blank"
         >
           {"> Linkedin"}
         </Link>
@@ -96,30 +99,59 @@ const Terminal = () => {
   const [commandElements, setCommandElements] = React.useState<
     React.ReactNode[]
   >([]);
+  const [isFocus, setIsFocus] = React.useState<boolean>(false);
   const inputRef = React.useRef<HTMLInputElement>(null);
   const title = "sasakiti-dev@Mac-mini";
+
+  const setValueToInputRef = (value: string) => {
+    if (inputRef.current != null) {
+      inputRef.current.value = value;
+      inputRef.current.focus();
+    }
+  };
+
+  function scrollToBottomOfConsole() {
+    const consoleElement = document.getElementById("console");
+    if (consoleElement) {
+      consoleElement.scrollTop = consoleElement.scrollHeight;
+    }
+  }
+
+  useEffect(() => {
+    scrollToBottomOfConsole();
+  }, [commandElements]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       doSelectedCommand();
       setInputValue("");
-      if (inputRef.current != null) inputRef.current.value = "";
+      setValueToInputRef("");
     }
     // 上矢印キーで履歴を遡る
     if (e.key === "ArrowUp") {
+      e.preventDefault();
       if (commandHistoryIndex > 0) {
-        setCommandHistoryIndex((prev) => prev - 1);
-        setInputValue(commandHistory[commandHistoryIndex - 1]);
+        const newIndex = commandHistoryIndex - 1;
+        setCommandHistoryIndex(newIndex);
+        const currentCommand = commandHistory[newIndex];
+        setInputValue(currentCommand);
+        setValueToInputRef(currentCommand);
+      } else {
+        setCommandHistoryIndex(0);
       }
     }
     // 下矢印キーで履歴を進める
     if (e.key === "ArrowDown") {
       if (commandHistoryIndex < commandHistory.length - 1) {
-        setCommandHistoryIndex((prev) => prev + 1);
-        setInputValue(commandHistory[commandHistoryIndex + 1]);
+        const newIndex = commandHistoryIndex + 1;
+        setCommandHistoryIndex(newIndex);
+        const currentCommand = commandHistory[newIndex];
+        setInputValue(currentCommand);
+        setValueToInputRef(currentCommand);
       } else {
         setCommandHistoryIndex(commandHistory.length);
         setInputValue("");
+        setValueToInputRef("");
       }
     }
   };
@@ -134,7 +166,7 @@ const Terminal = () => {
           <ShowAllCommand key={prev.length} />,
         ]);
         break;
-      case "alias" || "ls":
+      case "alias":
         setCommandElements((prev) => [
           ...prev,
           <AliasCommand key={prev.length} />,
@@ -200,7 +232,7 @@ const Terminal = () => {
           </div>
         </div>
         <div
-          className="p-1 h-auto  text-white font-mono text-xs bg-black rounded-b-lg"
+          className="p-1 h-[610px]  text-white font-mono text-xs bg-black rounded-b-lg overflow-y-auto"
           id="console"
           onClick={() => {
             if (inputRef.current != null) inputRef.current.focus();
@@ -223,18 +255,18 @@ const Terminal = () => {
           </div>
           <div className="flex items-center">
             <p className="m-2 flex-shrink-0">Mac-mini:~ sasakiti$</p>
-            <div className="relative w-full">
+            <div className="w-full">
               <input
-                className="absolute bg-inherit outline-none w-full caret-transparent text-transparent"
+                className={`ml-1 bg-inherit outline-none w-full border-l-4
+                ${isFocus ? "caret-white border-none" : "animate-blinkBorder"}`}
                 value={inputValue}
                 ref={inputRef}
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder="alias"
+                onFocus={() => setIsFocus(true)}
+                onBlur={() => setIsFocus(false)}
+                placeholder={`${!isFocus ? "alias: show all command" : ""}`}
               />
-              <span className="whitespace-pre border-r-4 animate-blinkBorder">
-                {inputValue}
-              </span>
             </div>
           </div>
         </div>

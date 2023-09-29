@@ -45,10 +45,15 @@ const config: Config = {
       },
       animation: {
         blinkBorder: "blinkBorder 1s ease-in-out infinite",
+        hoverBorder: "hoverBorder 1s ease-in-out infinite",
       },
       keyframes: {
         blinkBorder: {
           '0%, 49%': { borderColor: 'white' },
+          '50%, 100%': { borderColor: 'transparent' }
+        },
+        hoverBorder: {
+          '0%, 49%': { borderColor: 'gray' },
           '50%, 100%': { borderColor: 'transparent' }
         }
       },

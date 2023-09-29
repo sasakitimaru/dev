@@ -79,6 +79,7 @@ export const metadata: Metadata = {
     title,
     statusBarStyle: "default",
   },
+  viewport: "width=device-width, initial-scale=1, maximum-scale=1",
 };
 
 export default function RootLayout({
