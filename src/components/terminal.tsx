@@ -177,7 +177,7 @@ const Terminal = () => {
   };
 
   return (
-    <div className="w-full mx-auto">
+    <div className="w-full mx-auto mt-10">
       <div className="w-full shadow-md subpixel-antialiased rounded-lg bg-black border-black mx-auto">
         <div
           className="flex items-center h-6 rounded-t bg-gray-100 border-b border-gray-500 text-center text-black"
@@ -208,6 +208,10 @@ const Terminal = () => {
         >
           <p className="m-2">Last login: Wed May 26 10:30:00 on console</p>
           <div className="flex flex-col">
+            <p className="m-2 flex-shrink-0">
+              {"Mac-mini:~ sasakiti$ show all"}
+            </p>
+            <ShowAllCommand />
             {commandElements.map((commandElement, index) => (
               <div key={index}>
                 <p className="m-2 flex-shrink-0">
