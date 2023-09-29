@@ -65,8 +65,9 @@ var CommentPostField = function (_a) {
         comment_id: commentId,
         comment: ""
     }), reply = _c[0], setReply = _c[1];
+    var _d = react_1["default"].useState(false), commentLoading = _d[0], setCommentLoading = _d[1];
     var setComments = react_1.useContext(comment_1.CommentContext).setComments;
-    var _d = react_1.useContext(comment_1.SnackOpenContext), setSuccessOpen = _d.setSuccessOpen, setErrorOpen = _d.setErrorOpen;
+    var _e = react_1.useContext(comment_1.SnackOpenContext), setSuccessOpen = _e.setSuccessOpen, setErrorOpen = _e.setErrorOpen;
     var textareaRef = react_1.useRef(null);
     var inputRef = react_1.useRef(null);
     var clearSendedData = function () {
@@ -87,6 +88,7 @@ var CommentPostField = function (_a) {
                         alert("コメントは5文字以上100文字以下で入力してください。");
                         return [2 /*return*/];
                     }
+                    setCommentLoading(true);
                     _d.label = 1;
                 case 1:
                     _d.trys.push([1, 7, , 8]);
@@ -106,30 +108,32 @@ var CommentPostField = function (_a) {
                     return [4 /*yield*/, postgresAPI_2.getComments(articleId)];
                 case 6:
                     _a.apply(void 0, [_d.sent()]);
+                    setCommentLoading(false);
                     return [3 /*break*/, 8];
                 case 7:
                     e_1 = _d.sent();
                     setErrorOpen(true);
                     console.error("posting error:", e_1);
+                    setCommentLoading(false);
                     return [3 /*break*/, 8];
                 case 8: return [2 /*return*/];
             }
         });
     }); };
     return (react_1["default"].createElement("div", { className: "flex flex-col" },
-        react_1["default"].createElement("textarea", { className: "w-full h-28 px-4 p-4 bg-inherit outline-none no-overflow-anchoring resize-none border-b-[1px] border-gray-300 dark:border-gray-700 text-base", placeholder: "Comment", autoFocus: isReply, onChange: function (e) {
+        react_1["default"].createElement("textarea", { className: "w-full h-28 px-4 p-4 rounded-none bg-inherit outline-none no-overflow-anchoring resize-none border-b-[1px] border-gray-300 dark:border-gray-700 text-base", placeholder: "Comment", autoFocus: isReply, onChange: function (e) {
                 isReply
                     ? setReply(__assign(__assign({}, reply), { comment: e.target.value }))
                     : setComment(__assign(__assign({}, comment), { comment: e.target.value }));
             }, ref: textareaRef }),
         react_1["default"].createElement("div", { className: "flex flex-row justify-between items-center mt-2" },
-            react_1["default"].createElement("input", { type: "text", className: "w-28 h-10 px-4 p-4 bg-inherit outline-none border-b-[1px] border-gray-300 dark:border-gray-700 text-base placeholder:text-sm", placeholder: "Anonymous", onChange: function (e) {
+            react_1["default"].createElement("input", { type: "text", className: "w-28 h-10 px-4 p-4 bg-inherit outline-none rounded-none border-b-[1px] border-gray-300 dark:border-gray-700 text-base placeholder:text-sm", placeholder: "Anonymous", onChange: function (e) {
                     isReply
                         ? setReply(__assign(__assign({}, reply), { author: e.target.value }))
                         : setComment(__assign(__assign({}, comment), { author: e.target.value }));
                 }, ref: inputRef }),
-            react_1["default"].createElement("button", { className: "bg-blue-400 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-800 text-white font-bold py-2 px-4 rounded", onClick: function () {
+            react_1["default"].createElement("button", { className: "bg-blue-400 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-800 text-white font-bold w-20 h-10 py-2 px-4 rounded", onClick: function () {
                     return isReply ? handleSubmit(reply) : handleSubmit(comment);
-                } }, isReply ? "Reply" : "Submit"))));
+                } }, commentLoading ? (react_1["default"].createElement("span", { className: "loading loading-spinner loading-sm" })) : isReply ? ("Reply") : ("Submit")))));
 };
 exports["default"] = CommentPostField;

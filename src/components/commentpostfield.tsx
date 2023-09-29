@@ -29,6 +29,7 @@ const CommentPostField: React.FC<CommentPostFieldProps> = ({
     comment_id: commentId as number,
     comment: "",
   });
+  const [commentLoading, setCommentLoading] = React.useState<boolean>(false);
   const { setComments } = useContext(CommentContext);
   const { setSuccessOpen, setErrorOpen } = useContext(SnackOpenContext);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -47,22 +48,25 @@ const CommentPostField: React.FC<CommentPostFieldProps> = ({
       alert("コメントは5文字以上100文字以下で入力してください。");
       return;
     }
+    setCommentLoading(true);
     try {
       if (!isReply) await createComment(content as CommentRequest);
       else await createReply(content as ReplyRequest);
       setSuccessOpen(true);
       clearSendedData();
       setComments(await getComments(articleId));
+      setCommentLoading(false);
     } catch (e) {
       setErrorOpen(true);
       console.error("posting error:", e);
+      setCommentLoading(false);
     }
   };
 
   return (
     <div className="flex flex-col">
       <textarea
-        className="w-full h-28 px-4 p-4 bg-inherit outline-none no-overflow-anchoring resize-none border-b-[1px] border-gray-300 dark:border-gray-700 text-base"
+        className="w-full h-28 px-4 p-4 rounded-none bg-inherit outline-none no-overflow-anchoring resize-none border-b-[1px] border-gray-300 dark:border-gray-700 text-base"
         placeholder="Comment"
         autoFocus={isReply}
         onChange={(e) => {
@@ -75,7 +79,7 @@ const CommentPostField: React.FC<CommentPostFieldProps> = ({
       <div className="flex flex-row justify-between items-center mt-2">
         <input
           type="text"
-          className="w-28 h-10 px-4 p-4 bg-inherit outline-none border-b-[1px] border-gray-300 dark:border-gray-700 text-base placeholder:text-sm"
+          className="w-28 h-10 px-4 p-4 bg-inherit outline-none rounded-none border-b-[1px] border-gray-300 dark:border-gray-700 text-base placeholder:text-sm"
           placeholder="Anonymous"
           onChange={(e) => {
             isReply
@@ -85,12 +89,18 @@ const CommentPostField: React.FC<CommentPostFieldProps> = ({
           ref={inputRef}
         />
         <button
-          className="bg-blue-400 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-800 text-white font-bold py-2 px-4 rounded"
+          className="bg-blue-400 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-800 text-white font-bold w-20 h-10 py-2 px-4 rounded"
           onClick={() =>
             isReply ? handleSubmit(reply) : handleSubmit(comment)
           }
         >
-          {isReply ? "Reply" : "Submit"}
+          {commentLoading ? (
+            <span className="loading loading-spinner loading-sm" />
+          ) : isReply ? (
+            "Reply"
+          ) : (
+            "Submit"
+          )}
         </button>
       </div>
     </div>
