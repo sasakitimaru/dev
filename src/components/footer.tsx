@@ -42,10 +42,13 @@ const Footer = () => {
         </nav>
         <nav>
           <header className="footer-title">Tags</header>
+          <Link href="/tags/Java">Java</Link>
+          <Link href="/tags/TypeScript">TypeScript</Link>
+          <Link href="/tags">others</Link>
         </nav>
         <nav>
           <header className="footer-title">Contact</header>
-          <a className="link link-hover">About</a>
+          <Link href="/about">About</Link>
           <a className="link link-hover">Policy</a>
         </nav>
       </footer>
