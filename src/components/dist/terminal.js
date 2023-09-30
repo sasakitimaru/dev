@@ -21,7 +21,7 @@ var ShowAllCommand = function () {
 };
 var AliasCommand = function () {
     return (react_1["default"].createElement(react_1["default"].Fragment, null,
-        react_1["default"].createElement("p", { className: "ml-2" }, "Here are some commands you can try"),
+        react_1["default"].createElement("p", { className: "ml-2" }, "Here are some commands you can try :"),
         react_1["default"].createElement("p", { className: "ml-2" }, "show all"),
         react_1["default"].createElement("p", { className: "ml-2" }, "ls skills"),
         react_1["default"].createElement("p", { className: "ml-2" }, "ls skills/language"),
@@ -128,6 +128,11 @@ var Terminal = function () {
                     react_1["default"].createElement(AliasCommand, { key: prev.length }),
                 ]); });
                 break;
+            case "ls":
+                setCommandElements(function (prev) { return __spreadArrays(prev, [
+                    react_1["default"].createElement(AliasCommand, { key: prev.length }),
+                ]); });
+                break;
             case "ls skills":
                 setCommandElements(function (prev) { return __spreadArrays(prev, [
                     react_1["default"].createElement(SkillsCommand, { key: prev.length }),
@@ -150,7 +155,7 @@ var Terminal = function () {
                 break;
             default:
                 setCommandElements(function (prev) { return __spreadArrays(prev, [
-                    react_1["default"].createElement("p", { key: prev.length, className: "ml-2" }, "zsh: command not found: " + inputValue),
+                    react_1["default"].createElement("p", { key: prev.length, className: "ml-2" }, "command not found: " + inputValue),
                 ]); });
                 break;
         }

@@ -17,7 +17,7 @@ const ShowAllCommand = () => {
 const AliasCommand = () => {
   return (
     <>
-      <p className="ml-2">{"Here are some commands you can try"}</p>
+      <p className="ml-2">{"Here are some commands you can try :"}</p>
       <p className="ml-2">{"show all"}</p>
       <p className="ml-2">{"ls skills"}</p>
       <p className="ml-2">{"ls skills/language"}</p>
@@ -172,6 +172,12 @@ const Terminal = () => {
           <AliasCommand key={prev.length} />,
         ]);
         break;
+      case "ls":
+        setCommandElements((prev) => [
+          ...prev,
+          <AliasCommand key={prev.length} />,
+        ]);
+        break;
       case "ls skills":
         setCommandElements((prev) => [
           ...prev,
@@ -202,7 +208,7 @@ const Terminal = () => {
           <p
             key={prev.length}
             className="ml-2"
-          >{`zsh: command not found: ${inputValue}`}</p>,
+          >{`command not found: ${inputValue}`}</p>,
         ]);
         break;
     }
