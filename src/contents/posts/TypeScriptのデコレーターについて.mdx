@@ -1,0 +1,142 @@
+---
+
+title: TypeScriptのデコレーターについて
+slug: typescript_decorator
+icon: 🎀
+description: 
+date: "2023-10-07"
+tags:
+
+- TypeScript
+
+categories:
+
+- プログラミング
+
+---
+
+以前紹介した[decoratorパターン](https://www.kurimatsugpt.com/posts/design-pattern/java-decorator-pattern)が適用されているTypeScriptの構文です。
+Nest.jsとかでよく出てきます。
+
+アノテーションを使用して使われているアレです。
+@Controller　←これ
+
+↓の記事を読んで、自分の頭じゃ足りてなかった部分の補足メモになるのでぜひこちらを読んでみてください。
+
+[もう怖くないTypeScriptのDecorator機能](https://zenn.dev/miruoon_892/articles/365675fa5343ed)
+
+ほぼ記事の内容通りですが[公式ドキュメント](https://www.typescriptlang.org/docs/handbook/decorators.html)見て少しだけ今風の書き方に変えてます。
+
+## クラスデコレーター
+
+アノテーションでデコレートされたクラスにhello()というメソッドを追加するデコレーターです。
+実態はコンストラクタを引数に取り、そのプロトタイプにメソッドを付加するvoid関数です。
+
+```tsx:tsx
+type Constructor<T> = new (...args: any[]) => T;
+function BaseEntity<T>(ctr: Constructor<T>) {
+  ctr.prototype.hello = () => {
+    console.log('hello', ctr.name);
+  };
+}
+
+@BaseEntity
+class Cat {
+  public name = 'mei';
+  constructor() {
+    console.log('cat');
+  }
+}
+
+@BaseEntity
+class Dog {
+  public name = 'dog';
+  constructor() {
+    console.log('dog');
+  }
+}
+
+const cat = new Cat();
+const dog = new Dog();
+
+// eslintエラーを防ぐ用、デコレーターによる型定義はTSのコンパイラに伝わっていない
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+cat.hello();
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+dog.hello();
+```
+
+**`BaseEntity`**関数の**`T`**は**`Cat`**クラスの型になります。これはTypeScriptの型推論の一部として自動的に行われます。
+
+## メソッドデコレーター
+
+先ほど引用した記事の補足を追加しているだけです。
+
+```tsx:tsx
+function checkCalculate(num: number) {
+  return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+		// descriptor.valueはデコレーション対象のメソッド
+    const addFunc = descriptor.value;
+    descriptor.value = function (...args: number[]) {
+			// applyメソッドでCaluculateクラス（this）の
+			// sumメソッド（descriptor.value）を実行
+      const result = addFunc.apply(this, args);
+      // 元メソッドの返却値が10未満のときは、掛け算を実行する
+      return result < 10 ? result * num : result;
+    };
+  };
+}
+
+class Calculate {
+  @checkCalculate(10)
+  sum(a: number, b: number): number {
+    return a + b;
+  }
+}
+
+// 50 -> 1 + 4 = 5を実行した後に、5 < 10だったため更に5 x 10 = 50を返す
+console.log(new Calculate().sum(1, 4));
+// 21 -> 20 + 1 = 21を実行した後に、21 > 10だったため、掛け算は実行せずそのまま21を返す
+console.log(new Calculate().sum(20, 1));
+```
+
+returnしているfunctionがやっていること：
+sumメソッドを受け取り、その処理を下記の通り上書きする。
+
+```
+sumの結果が10未満の時だけ掛け算を実行する
+```
+
+## プロパティデコレーター
+
+プロパティにすらデコレーションが可能です。
+下記の通りPersonクラスのnameプロパティにはmeiという値が与えられていますがデコレーターで処理をラップすることで必ずkurimatsuしか返ってこないようになります。
+
+get, setは引数にあるpropertyNameのプロパティを変更か取得しようとした際の処理を表します。
+
+また、targetにはPersonクラスのプロトタイプ（クラスの参照）を表します。
+
+```tsx:tsx
+function ChangeToKurimatsu(target: any, propertyName: string) {
+  let value = target[propertyName];
+  Object.defineProperty(target, propertyName, {
+    get: () => 'kurimatsu',
+    set: () => {
+      value = 'kurimatsu';
+    },
+  });
+}
+
+class Person {
+  @ChangeToKurimatsu
+  public name = 'mei';
+}
+```
+
+## まとめ
+
+今回はメジャーな3つを紹介しましたが他にも触れていない部分はたくさんあるので気になる方はぜひ公式ドキュメントを参照してみてください。
+
+See you later 👋
