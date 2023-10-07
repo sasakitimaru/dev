@@ -34,7 +34,7 @@ const ScrollToTopButton = () => {
         <Fab
             color="primary"
             // area-aria-label="scroll to top"
-            className={`fixed bottom-10 left-10 z-30 bg-blue-500 transition-all duration-300 
+            className={`fixed bottom-10 right-10 z-30 bg-blue-500 transition-all duration-300 
         ${scrollTopButtonVisible ? "opacity-100 visible" : "opacity-0 invisible"
                 }`}
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
